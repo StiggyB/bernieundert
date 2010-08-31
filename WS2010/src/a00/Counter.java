@@ -18,7 +18,7 @@ package a00;
 
 
 public class Counter {
-	private int value;							// Ein Kommentar zu einer Variablen
+	private int value;							// Ein Kommentar zu einem Attribut
 	
 	private final int resetValue;
 	public Counter(){							// Ein Kommentar zum Konstruktor
