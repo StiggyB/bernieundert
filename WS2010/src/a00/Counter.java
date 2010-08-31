@@ -4,7 +4,6 @@ package a00;
  *
  * @author Jan-Tristan Rudat / 2007852 / Team Bernie und Ert
  * @version 31. August 2010 / 01:39
- * @deprecated
  * 
  * @TODO Hier muss der Zähle ausimplementiert werden.
  * 
