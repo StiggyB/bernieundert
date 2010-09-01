@@ -8,7 +8,7 @@ package a00;
  */
 public class Counter {
 	/**
-	 * Der aktuelle Wert des Counters.
+	 * Der aktuelle Wert des Counters. adadfad
 	 */
 	private int value;
 	/**
