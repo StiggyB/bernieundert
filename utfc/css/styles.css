@@ -12,7 +12,7 @@ div#main {
 div#topbanner {
 	width: 843px;
 	height: 136px;
-	background: url(http://utfc.weltclan.eu/image/utfc.jpg);
+	background: url(../images/utfc.jpg);
 	float: left;
 }
 
