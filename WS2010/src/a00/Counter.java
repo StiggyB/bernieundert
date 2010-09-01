@@ -5,7 +5,7 @@ package a00;
  * @author Jan-Tristan Rudat / 2007852 / Team Bernie und Ert
  * @version 31. August 2010 / 01:39
  * 
- * @TODO Hier muss der Zähle ausimplementiert werden.
+ * @TODO Hier muss der Zähler ausimplementiert werden.
  * 
  * Es fehlen Kommentare zu Methode XY, da ich heute keine Lust hatte Kommentare
  * zu schreiben.
