@@ -1,0 +1,121 @@
+@CHARSET "ISO-8859-1";
+
+
+
+div#main {
+	width: 843px;
+	height: 100%;
+	margin: 0 auto;
+	background-color: #FFF8E1;
+}
+
+div#topbanner {
+	width: 843px;
+	height: 136px;
+	background: url(http://utfc.weltclan.eu/image/utfc.jpg);
+	float: left;
+}
+
+div#leftCol {
+	width: 145px;
+	height: 842px;
+	background-color: #fee3ab;
+	float: left;
+	border: 1px solid;
+}
+
+div#mainCol {
+	text-align: justify;
+	width: 566px;
+	height: 842px;
+	float: left;
+	background-color: white;
+	border-bottom: 1px solid;
+	border-top: 1px solid;
+}
+
+div#mainText {
+	font: 12px verdana;
+	text-align: justify;
+	width: 500px;
+	height: auto;
+	float: left;
+	margin-left: 30px;
+	background-color: white;
+	}
+
+div#shadow_left { /* linker Schatten */
+	background: url(../images/shadow_left.png) repeat-y;
+	margin: 0 auto;
+	padding: 0 0 0 0; 
+	height: 980px;
+	width: 875px;
+	}
+ 
+div#shadow_right { /* linker Schatten */
+	background: url(../images/shadow_right.png) repeat-y right;
+	height: 980px;
+	}
+ 
+div#rightCol {
+	width: 128px;
+	height: 842px;
+	float: left;
+	background-color: #fee3ab;
+	border: 1px solid;
+}
+
+/* Es folgen diverse Stylesheets für das Menü. */ 
+/* Überschrift */
+div#leftHeader {
+	height: 100%;
+	width: 145px;
+	background-color: #dda864;
+}
+
+div#leftHeader h4 {
+	margin: 0 0 0 0;
+	font: 13px Verdana;
+	font-weight: bold;
+	background-color: #FEE3AB;
+	margin-left: 14px;
+	height: 17px;
+	border-left: 1px solid grey;
+	padding: 5px;
+}
+
+/* Block Hintergrund*/
+div#leftCol ul {
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	border-top: 1px solid grey;
+	background-color: #dda864;
+}
+
+div#leftCol li {
+	font: 13px Verdana;
+	height: 17px;
+	width: 137px;
+	border-left: 1px solid;
+	border-bottom: 1px solid;
+	border-color: grey;
+	background: url(../images/arrow-b.gif) left no-repeat;
+	background-position: 4px;
+	background-color: white;
+	list-style: none;
+	margin-left: 7px;
+}
+
+div#leftCol a {
+	color: black;
+	text-decoration: none;
+	margin-left: 20px;
+}
+
+div#leftCol li:hover {
+	background-color: #FEE3AB;
+}
+
+div#clearfix {
+margin-bottom: 165px;
+}
