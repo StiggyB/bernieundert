@@ -21,6 +21,8 @@ public class BMIFrame {
 	JLabel labelSize = new JLabel("Groeﬂe in cm");
 	JLabel labelTitle = new JLabel("<html><h1>BMI - Body Mass Index Rechner </h1></html>");
 	JLabel labelBMI = new JLabel("<html><h1>BMI</h1></html>");
+	JLabel labelWeightTopic = new JLabel("<html><h4>Gewicht in kg</h4></html>");
+	JLabel labelSizeTopic = new JLabel("<html><h4>Groeﬂe in cm</h4></html>");
 	JSlider sliderWeight = new JSlider(0, 250);
 	JSlider sliderSize = new JSlider(0, 220);
 	JButton buttonCalc = new JButton();
@@ -30,7 +32,7 @@ public class BMIFrame {
 
 	
 	//Listener f¸r die Slider
-	ChangeListener changelistenerWeight = new ChangeListener() {
+	ChangeListener changeListenerWeight = new ChangeListener() {
 
 		public void stateChanged(ChangeEvent e) {
 			
@@ -40,7 +42,7 @@ public class BMIFrame {
 		}
 	};
 	
-	ChangeListener changelistenerSize = new ChangeListener() {
+	ChangeListener changeListenerSize = new ChangeListener() {
 
 		public void stateChanged(ChangeEvent e) {
 			
@@ -81,27 +83,29 @@ public class BMIFrame {
 		frame.add(fieldBMI);
 		frame.add(labelBMI);
 		frame.add(labelTitle);
+		frame.add(labelSizeTopic);
+		frame.add(labelWeightTopic);
 		frame.add(buttonCalc);
 		
 		sliderWeight.setMinorTickSpacing(5);
 		sliderWeight.setMajorTickSpacing(25);
-		sliderWeight.setBounds(0, 100, 775, 80);
+		sliderWeight.setBounds(0, 120, 775, 80);
 		sliderWeight.setPaintTicks(true);
 		sliderWeight.setPaintLabels(true);
-		sliderWeight.addChangeListener(changelistenerWeight);
+		sliderWeight.addChangeListener(changeListenerWeight);
     	
 		sliderSize.setMinorTickSpacing(5);
 		sliderSize.setMajorTickSpacing(20);
-		sliderSize.setBounds(0, 200, 775, 80);
+		sliderSize.setBounds(0, 250, 775, 80);
 		sliderSize.setPaintTicks(true);
 		sliderSize.setPaintLabels(true);
-		sliderSize.addChangeListener(changelistenerSize);
+		sliderSize.addChangeListener(changeListenerSize);
 		
-		fieldWeight.setBounds(100, 280, 70, 30);
+		fieldWeight.setBounds(100, 330, 70, 30);
 		fieldWeight.setToolTipText("Gewicht in kg eingeben");
 		fieldWeight.setText(String.valueOf(sliderWeight.getValue()));
 		
-		fieldSize.setBounds(300, 280, 70, 30);
+		fieldSize.setBounds(300, 330, 70, 30);
 		fieldSize.setToolTipText("Groeﬂe in cm eingeben");
 		fieldSize.setText(String.valueOf(sliderSize.getValue()));
 		
@@ -110,16 +114,19 @@ public class BMIFrame {
 		fieldBMI.setEditable(false);
 		fieldBMI.setHorizontalAlignment(JTextField.CENTER); 
 		
-		labelWeight.setBounds(20, 280, 80, 30);
+		labelWeight.setBounds(20, 330, 80, 30);
 		
-		labelSize.setBounds(220, 280, 80, 30);
+		labelSize.setBounds(220, 330, 80, 30);
 		
 		labelBMI.setBounds(375, 400, 50, 30);
 				
 		labelTitle.setBounds(200, 10, 400, 80);
 		labelTitle.setBorder(BorderFactory.createLineBorder(Color.black));
 		labelTitle.setHorizontalAlignment(JLabel.CENTER);
-
+		
+		labelWeightTopic.setBounds(0, 90, 100, 30);
+		
+		labelSizeTopic.setBounds(0, 220, 80, 30);
 		
 		buttonCalc.addActionListener(listenerButtonCalc);
 		buttonCalc.setText("BMI berechnen");
