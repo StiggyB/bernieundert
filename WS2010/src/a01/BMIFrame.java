@@ -130,7 +130,7 @@ public class BMIFrame {
 		
 		buttonCalc.addActionListener(listenerButtonCalc);
 		buttonCalc.setText("BMI berechnen");
-		buttonCalc.setBounds(450, 280, 120, 30);
+		buttonCalc.setBounds(450, 330, 120, 30);
 		
 		
 	
