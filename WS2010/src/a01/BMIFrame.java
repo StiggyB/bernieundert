@@ -1,5 +1,16 @@
 package a01;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Klasse, die unseren Swing-Frame für den BMI Rechner erzeugt.
+ *         Die einzige Logikmethode calcBmi() haben wir nicht extra in eine einzelne Klasse
+ *         ausgelagert. Man hätte jedoch alles in die drei Klassen BMIStart, BMICalc und BMIFrame 
+ *         teilen können :)
+ * 
+ */
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

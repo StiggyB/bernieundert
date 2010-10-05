@@ -1,5 +1,14 @@
 package a01;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Klasse, welche unseren BMI Rechner startet und das Look&Feel des Systems setzt
+ *         für das GUI.
+ * 
+ */
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
