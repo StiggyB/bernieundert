@@ -148,14 +148,15 @@ public class BMIFrame {
 	}
 	
 	//BMI berechnen, Rückgabe als Float
+	//die auskommentierten Konsolenausgaben dienen nur zu Debugzwecken
 	public float calcBmi(){
-		System.out.println(sliderWeight.getValue());
+//		System.out.println(sliderWeight.getValue());
 		float gewicht = sliderWeight.getValue();
-		System.out.println("Gewicht: " + gewicht);
+//		System.out.println("Gewicht: " + gewicht);
 		float groesse = sliderSize.getValue();
-		System.out.println("Grösse: " + groesse);
+//		System.out.println("Grösse: " + groesse);
 		float bmi = gewicht / (groesse * groesse) * 10000;
-		System.out.println(bmi);
+//		System.out.println(bmi);
 		return bmi;
 		
 	}
