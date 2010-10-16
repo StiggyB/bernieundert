@@ -174,7 +174,11 @@ public class ExplorerTree {
 				.append("- Schreibrechte: ")
 				.append(file.canWrite() ? "ja" : "nein").append("\n")
 				.append("- Zuletzt geändert: ")
-				.append(sdf.format(file.lastModified()));
+				.append(sdf.format(file.lastModified()))
+				.append("\n\n- vollständiger Dateipfad: ")
+				.append(file.getAbsolutePath())
+				.append("\n- zugehöriges Oberverzeichnis: ")
+				.append(file.getParent());
 
 		fileInfoTextArea.setText(b.toString());
 	}
