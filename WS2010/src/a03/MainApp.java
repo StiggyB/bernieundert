@@ -4,9 +4,9 @@ package a03;
  * 
  * @author Bernie und Ert
  * 
- *         Klasse, welche unsere Sudokuoberfläche startet und das Look&Feel des Systems setzt
- *         für das GUI. Ein Objekt der Klasse SudokuIO wird vorab erzeugt und an bei der Erzeugung
- *         des SudokuFrame Objekts an dessen Konstruktor mit übergeben. So kann damit gearbeitet 
+ *         Klasse, welche unseren FileExplorer startet und das Look&Feel des Systems setzt
+ *         für das GUI. Ein Objekt der Klasse ExplorerIO wird vorab erzeugt und an bei der Erzeugung
+ *         des ExplorerTree Objekts an dessen Konstruktor mit übergeben. So kann damit gearbeitet 
  *         werden und es gibt weniger Querverweise und Abhängigkeiten.
  * 
  */
