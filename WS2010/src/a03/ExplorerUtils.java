@@ -30,7 +30,7 @@ public class ExplorerUtils {
 		} else if (size / ONE_KB > 0) {
 			displaySize = String.valueOf(size / ONE_KB) + " KB";
 		} else {
-			displaySize = String.valueOf(size) + " MB";
+			displaySize = String.valueOf(size) + " Bytes";
 		}
 		return displaySize;
 	}
