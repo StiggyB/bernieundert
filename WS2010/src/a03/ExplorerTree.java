@@ -12,6 +12,7 @@ package a03;
  */
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -68,9 +69,10 @@ public class ExplorerTree {
 
 		frame.setVisible(true);
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+		frame.setMinimumSize(new Dimension(640, 480));
 		// frame.pack(); // macht nur wieder das maximieren kaputt
 	}
-
+	
 	private JTree buildExplorerTree() throws IOException {
 		File rootDir = explorerIO.loadDir();
 
