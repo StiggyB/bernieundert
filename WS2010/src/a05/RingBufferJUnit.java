@@ -2,21 +2,20 @@ package a05;
 
 import static org.junit.Assert.*;
 
-import java.util.Queue;
-
 import org.junit.Before;
 import org.junit.Test;
 
 public class RingBufferJUnit {
 
 	private RingBuffer<Integer> primitive;
-//	private RingBuffer<String> objective;
+
+	// private RingBuffer<String> objective;
 
 	@Before
 	public void setUp() throws Exception {
 
 		primitive = new RingBuffer<Integer>(5);
-//		objective = new RingBuffer<String>(10);
+		// objective = new RingBuffer<String>(10);
 	}
 
 	@Test
@@ -56,12 +55,11 @@ public class RingBufferJUnit {
 			primitive.enqueue(i);
 		}
 		assertFalse(primitive.isFull());
-		
+
 		primitive.enqueue(1);
 		assertTrue(primitive.isFull());
 	}
 
-	
 	@Test
 	public void testPeek() {
 		primitive.enqueue(1);
