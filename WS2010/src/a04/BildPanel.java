@@ -16,7 +16,7 @@ public class BildPanel extends JPanel {
 
 	public static void main(final String[] args) {
 		final BildRotation hitAction = new BildRotation();
-		hitAction.bildlaufenlassen(500,500);
+		hitAction.bildlaufenlassen(200,200);
 	}
 
 	private Image katzenImage = new ImageIcon("src\\a04\\JPG\\01.jpg").getImage();
