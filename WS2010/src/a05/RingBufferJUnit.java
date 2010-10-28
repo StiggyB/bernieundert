@@ -1,5 +1,13 @@
 package a05;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Testklasse zum Testen unserer Implementierung mit JUnit.
+ * 
+ */
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -8,8 +16,8 @@ import org.junit.Test;
 public class RingBufferJUnit {
 
 	private RingBuffer<Integer> primitive;
-
-	// private RingBuffer<String> objective;
+	//Integer sind bereits Objekttypen, man kann primitive reinwerfen (int), autoboxing/unboxing
+	// private RingBuffer<String> objective; 
 
 	@Before
 	public void setUp() throws Exception {
