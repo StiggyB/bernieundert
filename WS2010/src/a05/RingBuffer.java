@@ -8,12 +8,11 @@ package a05;
  * 
  */
 
- 
 public class RingBuffer<T> implements IRingBuffer<T> {
-	private T[] elements; 
-	private int size = 0; 
-	private int head = 0; 
-	private int last = 0; 
+	private T[] elements;
+	private int size = 0;
+	private int head = 0;
+	private int last = 0;
 
 	// suppress unchecked warnings
 	@SuppressWarnings("unchecked")
@@ -37,32 +36,31 @@ public class RingBuffer<T> implements IRingBuffer<T> {
 	}
 
 	@Override
-	public void enqueue(T item) {
+	public void enqueue(T item) throws RuntimeException {
 		if (isFull()) {
-			throw new RuntimeException("Ring buffer overflow");
+			throw new RuntimeException("RingBuffer full: overflow");
 		}
 		elements[last] = item;
-		last = (last + 1) % elements.length; 
+		last = (last + 1) % elements.length;
 		size++;
 	}
 
 	@Override
-	public T dequeue() {
+	public T dequeue() throws RuntimeException {
 		if (isEmpty()) {
-			throw new RuntimeException("Ring buffer underflow");
+			throw new RuntimeException("RingBuffer empty: underflow");
 		}
 		T item = elements[head];
-		elements[head] = null; 
+		elements[head] = null;
 		size--;
-		head = (head + 1) % elements.length; 
+		head = (head + 1) % elements.length;
 		return item;
 	}
 
 	@Override
-	public T peek() {
-
+	public T peek() throws RuntimeException {
 		if (isEmpty()) {
-			throw new RuntimeException("Ring buffer underflow");
+			throw new RuntimeException("RingBuffer empty: underflow");
 		}
 		T item = elements[head];
 		return item;
