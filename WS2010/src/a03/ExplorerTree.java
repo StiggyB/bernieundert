@@ -55,7 +55,7 @@ public class ExplorerTree {
 		frame.setLayout(new BorderLayout());
 
 		fileInfoTextArea = new JTextArea("Fileinfo:");
-		frame.add(fileInfoTextArea);
+//		frame.add(fileInfoTextArea); //jetzt überflüssig wg. Zeile 64
 
 		JSplitPane splitPane = new JSplitPane();
 		JScrollPane scrollPane = new JScrollPane(buildExplorerTree());
@@ -65,7 +65,7 @@ public class ExplorerTree {
 
 		frame.getContentPane().add(buildMenuBar(), BorderLayout.NORTH);
 		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
-		frame.setSize(splitPane.getWidth(), splitPane.getHeight());
+//		frame.setSize(splitPane.getWidth(), splitPane.getHeight()); //überflüssig wg. Zeile 71
 
 		frame.setVisible(true);
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
