@@ -1,5 +1,14 @@
 package a01;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Implementierung einer doppelt verketteten Liste mittels
+ *         des vorgegebenen Interface Liste<E>
+ * 
+ */
+
 import java.util.NoSuchElementException;
 
 public class LinkedList<T> implements Liste<T> {
@@ -43,9 +52,9 @@ public class LinkedList<T> implements Liste<T> {
 				currentNode = currentNode.prev;
 			}
 		}
-		// [head] <-> [0] <-> [1] -> [2] -> [tail]
+		// [head] <-> [0] <-> [1] <-> [2] <-> [tail]
 		// einfügen in pos: 1
-		// [head] <-> [0] <-> [new1] -> [1] -> [2] -> [tail]
+		// [head] <-> [0] <-> [new1] <-> [1] <-> [2] <-> [tail]
 		newNode.prev = currentNode.prev;
 		newNode.next = currentNode;
 		currentNode.prev.next = newNode;
@@ -58,7 +67,7 @@ public class LinkedList<T> implements Liste<T> {
 		// add(size, element);
 		// [head] <-> [tail]
 		// einfügen in pos: $size
-		// [head] -> [0] -> [new1] -> [1] -> [2] -> [tail]
+		// [head] <-> [new1] <-> [tail]
 		Node newNode = new Node(element, null, null);
 		newNode.prev = tail.prev;
 		newNode.next = tail;
