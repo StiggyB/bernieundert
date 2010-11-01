@@ -51,9 +51,11 @@ public class RingBuffer<T> implements IRingBuffer<T> {
 			throw new RuntimeException("RingBuffer empty: underflow");
 		}
 		T item = elements[head];
+		//nach Ablauf der Methode wird das zurückgelieferte
+		//Element dem Garbagecollector geopfert
 		elements[head] = null;
-		size--;
 		head = (head + 1) % elements.length;
+		size--;
 		return item;
 	}
 
