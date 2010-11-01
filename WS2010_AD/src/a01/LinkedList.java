@@ -70,16 +70,16 @@ public class LinkedList<T> implements Liste<T> {
 	
 	@Override
 	public void add(T element) {
-		add(size, element);
+		// add(size, element);
 		// [head] <-> [tail]
 		// einfügen in pos: $size
 		// [head] -> [0] -> [new1] -> [1] -> [2] -> [tail]
-//		Node newNode = new Node(element, null, null);
-//		newNode.prev = tail.prev;
-//		newNode.next = tail;
-//		tail.prev.next = newNode;
-//		tail.prev = newNode;
-//		size++;
+		Node newNode = new Node(element, null, null);
+		newNode.prev = tail.prev;
+		newNode.next = tail;
+		tail.prev.next = newNode;
+		tail.prev = newNode;
+		size++;
 	}
 	
 	@Override
