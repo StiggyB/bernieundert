@@ -1,5 +1,13 @@
 package a01;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Testklasse mit JUnit Tests für die Implemetierungen
+ *         der beiden Listenstrukturen.
+ * 
+ */
 
 import static org.junit.Assert.*;
 

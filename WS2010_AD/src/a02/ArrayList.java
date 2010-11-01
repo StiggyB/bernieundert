@@ -1,5 +1,14 @@
 package a02;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Implementierung einer eigenen ArrayList mittels
+ *         des vorgegebenen Interface Liste<E>
+ * 
+ */
+
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
