@@ -8,38 +8,23 @@ public class LinkedList<T> implements Liste<T> {
 		private T data;
 		private Node next;
 		private Node prev;
-		
+
 		public Node(T data, Node next, Node prev) {
 			this.data = data;
 			this.next = next;
 			this.prev = prev;
 		}
 	}
-	
+
 	private Node head = new Node(null, null, null);
 	private Node tail = new Node(null, null, null);
 	private int size = 0;
-	
+
 	public LinkedList() {
 		head.next = tail;
 		tail.prev = head;
 	}
-	
-	@Override
-	public String toString() {
-		StringBuilder buf = new StringBuilder();
-		buf.append("[");
-		Node currentNode = head.next;
-		while (currentNode.next != null) {
-			buf.append(currentNode.data);
-			buf.append(", ");
-			currentNode = currentNode.next;
-		}
-		buf.setLength(buf.length() - 2);
-		buf.append("]");
-		return buf.toString();
-	}
-	
+
 	@Override
 	public void add(int pos, T element) throws IndexOutOfBoundsException {
 		if (pos > size) {
@@ -47,14 +32,14 @@ public class LinkedList<T> implements Liste<T> {
 		}
 		Node newNode = new Node(element, null, null);
 		Node currentNode = null;
-		if (pos <= size/2) {
+		if (pos <= size / 2) {
 			currentNode = head.next;
 			for (int i = 0; i < pos; i++) {
 				currentNode = currentNode.next;
-			}			
+			}
 		} else {
 			currentNode = tail;
-			for (int i = size - 1 ; i >= pos; i--) {
+			for (int i = size - 1; i >= pos; i--) {
 				currentNode = currentNode.prev;
 			}
 		}
@@ -67,7 +52,7 @@ public class LinkedList<T> implements Liste<T> {
 		currentNode.prev = newNode;
 		size++;
 	}
-	
+
 	@Override
 	public void add(T element) {
 		// add(size, element);
@@ -81,46 +66,29 @@ public class LinkedList<T> implements Liste<T> {
 		tail.prev = newNode;
 		size++;
 	}
-	
+
 	@Override
 	public T get(int pos) throws IndexOutOfBoundsException {
 		if (pos >= size) {
 			throw new IndexOutOfBoundsException();
 		}
-		
+
 		Node currentNode = getNodeOnPosition(pos);
 		return currentNode.data;
 	}
 
-	
 	@Override
 	public void remove(int pos) throws IndexOutOfBoundsException {
 		if (pos >= size) {
 			throw new IndexOutOfBoundsException();
 		}
-		
+
 		Node currentNode = getNodeOnPosition(pos);
 		currentNode.prev.next = currentNode.next;
 		currentNode.next.prev = currentNode.prev;
 		size--;
 	}
-	
-	private Node getNodeOnPosition(int pos) {
-		Node currentNode = null;
-		if (pos <= size/2) {
-			currentNode = head.next;
-			for (int i = 0; i < pos; i++) {
-				currentNode = currentNode.next;
-			}			
-		} else {
-			currentNode = tail;
-			for (int i = size; i > pos; i--) {
-				currentNode = currentNode.prev;
-			}
-		}
-		return currentNode;
-	}
-	
+
 	@Override
 	public void remove(T element) throws Exception {
 		boolean found = false;
@@ -138,20 +106,51 @@ public class LinkedList<T> implements Liste<T> {
 			}
 			currentNode = currentNode.next;
 		}
-		
+
 		if (!found) {
 			throw new NoSuchElementException();
 		}
-		
+
 	}
-	
+
+	private Node getNodeOnPosition(int pos) {
+		Node currentNode = null;
+		if (pos <= size / 2) {
+			currentNode = head.next;
+			for (int i = 0; i < pos; i++) {
+				currentNode = currentNode.next;
+			}
+		} else {
+			currentNode = tail;
+			for (int i = size; i > pos; i--) {
+				currentNode = currentNode.prev;
+			}
+		}
+		return currentNode;
+	}
+
 	@Override
 	public boolean isEmpty() {
 		return size == 0;
 	}
-	
+
 	@Override
 	public int size() {
 		return size;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder buf = new StringBuilder();
+		buf.append("[");
+		Node currentNode = head.next;
+		while (currentNode.next != null) {
+			buf.append(currentNode.data);
+			buf.append(", ");
+			currentNode = currentNode.next;
+		}
+		buf.setLength(buf.length() - 2);
+		buf.append("]");
+		return buf.toString();
 	}
 }
