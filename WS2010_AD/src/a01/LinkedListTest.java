@@ -23,9 +23,10 @@ public class LinkedListTest {
 	private Liste<String> list;
 
 	@Before
+	//Immer nur eins zur Zeit, anderes auscommenten!!!
 	public void setUp() throws Exception {
 		list = new LinkedList<String>();
-//		list = new ArrayList<String>();
+		list = new ArrayList<String>();
 	}
 	
 	@Test
