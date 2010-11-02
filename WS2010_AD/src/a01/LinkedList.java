@@ -36,7 +36,7 @@ public class LinkedList<T> implements Liste<T> {
 
 	@Override
 	public void add(int pos, T element) throws IndexOutOfBoundsException {
-		if (pos > size) {
+		if (pos > size || pos < 0) {
 			throw new IndexOutOfBoundsException();
 		}
 		Node newNode = new Node(element, null, null);
@@ -78,7 +78,7 @@ public class LinkedList<T> implements Liste<T> {
 
 	@Override
 	public T get(int pos) throws IndexOutOfBoundsException {
-		if (pos >= size) {
+		if (pos >= size || pos < 0) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -88,7 +88,7 @@ public class LinkedList<T> implements Liste<T> {
 
 	@Override
 	public void remove(int pos) throws IndexOutOfBoundsException {
-		if (pos >= size) {
+		if (pos >= size || pos < 0) {
 			throw new IndexOutOfBoundsException();
 		}
 

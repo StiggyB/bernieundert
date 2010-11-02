@@ -25,7 +25,7 @@ public class LinkedListTest {
 	@Before
 	public void setUp() throws Exception {
 		list = new LinkedList<String>();
-		list = new ArrayList<String>();
+//		list = new ArrayList<String>();
 	}
 	
 	@Test
