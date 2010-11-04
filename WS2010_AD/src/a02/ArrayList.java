@@ -51,13 +51,13 @@ public class ArrayList<T> implements Liste<T> {
 
 	private void extendArray(int newsize) {
 		if (this.elements.length < newsize) {
-			this.elements = Arrays.copyOf(this.elements, newsize);
+			this.elements = Arrays.copyOf(this.elements, this.size + this.size /2);
 		}
 	}
 
 	@Override
 	public T get(int pos) throws IndexOutOfBoundsException {
-		if (pos >= this.size) {
+		if (pos >= this.size || pos < 0) {
 			throw new IndexOutOfBoundsException();
 		}
 		return this.elements[pos];
