@@ -10,7 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -119,6 +118,20 @@ public class AppMain extends JFrame {
 			}
 		});
 		this.add(btnConfirmFloor, constraint);
+		
+	
+		JButton btnRandomize = new JButton("Random fahrn");
+		btnRandomize.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Double floor = (Math.random() * COUNT_FLOORS);
+				System.out.println(floor.intValue());
+			}
+		});
+		this.constraint.gridx = COUNT_ELEVATOR + 1;
+		this.constraint.gridy = 4;
+		
+		this.add(btnRandomize, constraint);
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
