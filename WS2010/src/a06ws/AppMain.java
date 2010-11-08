@@ -56,37 +56,67 @@ public class AppMain extends JFrame {
 		this.constraint.insets = new Insets(0, 5, 0, 5); // padding
 
 		this.initSimpleComponents(constraint);
-		this.initFloors();
 		
 		ElevatorController controller = new ElevatorController(COUNT_ELEVATOR, COUNT_FLOORS);
+		this.initFloors(controller);
 		
 		controller.setListener(new ElevatorListener() {
 			@Override
-			public void elevatorChangedFloor(int elevatorNr, int floor, int oldFloor) {
+			public void elevatorChangedFloor(int elevatorNr, int floor) {
 				int x = elevatorNr + 1;
 				int y = COUNT_FLOORS + 1 - floor;
-				int oldY = COUNT_FLOORS + 1 - oldFloor;
+				
+				int yAbove = COUNT_FLOORS  - floor;
+				int yUnder = COUNT_FLOORS + 2 - floor;
+				
 				labels[x][y].setText("[x]");
-				if (oldFloor >= 0) {
-					labels[x][oldY].setText("[ ]");
+				
+				if (yAbove > 1) {
+					labels[x][yAbove].setText("[ ]");
 				}
-				System.out.println("Listener got called: " + elevatorNr + "/" + floor + "/" + oldFloor);
+				
+				if (yUnder <= COUNT_FLOORS + 1) {
+					labels[x][yUnder].setText("[ ]");
+				}
+				System.out.println("Listener got called: " + elevatorNr + "/" + floor);
 			}
 		});
-		controller.callElevator(8, 1);
+		
+//		controller.callElevator(8, 1);
 	}
 
-	private void initFloors() {
+	private void initFloors(final ElevatorController controller) {
 		for (int i = 0; i <= AppMain.COUNT_FLOORS; i++) {
 			constraint.weightx = 10;
 			constraint.weighty = 50;
+			
 			constraint.gridx = 0;
+			constraint.gridy = i + 1;
+			final JTextField targetFloorTextField = new JTextField("Ziel", 15); 
+			this.add(targetFloorTextField, constraint);
+			
+			constraint.gridx = 1;
+			constraint.gridy = i + 1;
+			
+			final int floor = COUNT_FLOORS - i;
+			JButton callButton = new JButton("rufen");
+			callButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int targetFloor = Integer.parseInt(targetFloorTextField.getText());
+					System.out.println("floor: " + floor + " target: " + targetFloor);
+					controller.callElevator(floor, targetFloor);
+				}
+			});
+			this.add(callButton, constraint);
+			
+			constraint.gridx = 2;
 			constraint.gridy = i + 1;
 			this.add(new JLabel(String.valueOf(AppMain.COUNT_FLOORS - i)), constraint);
 		}
 
 		for (int i = 1; i <= AppMain.COUNT_ELEVATOR; i++) {
-			constraint.gridx = i;
+			constraint.gridx = i + 2;
 			constraint.gridy = 0;
 			this.add(new JLabel("Fahrstuhl - " + String.valueOf(i)), constraint);	
 			constraint.gridy = COUNT_FLOORS;
@@ -96,7 +126,7 @@ public class AppMain extends JFrame {
 		// Start einfärben
 		for (int x = 1; x <= AppMain.COUNT_ELEVATOR; x++) {
 			for (int y = 1; y <= AppMain.COUNT_FLOORS; y++) {
-				constraint.gridx = x;
+				constraint.gridx = x + 2;
 				constraint.gridy = y;
 				JLabel label = new JLabel("[ ]");
 				labels[x][y] = label;
@@ -106,7 +136,7 @@ public class AppMain extends JFrame {
 		
 		// Alle auf 0 setzen
 		for (int x = 1; x <= AppMain.COUNT_ELEVATOR; x++) {
-			constraint.gridx = x;
+			constraint.gridx = x + 2;
 			constraint.gridy = 11;
 			JLabel label = new JLabel("[x]");
 			labels[x][11] = label;

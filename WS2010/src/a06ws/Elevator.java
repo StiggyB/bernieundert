@@ -24,18 +24,20 @@ public class Elevator implements Runnable {
 	@Override
 	public void run() {
 		try {
-			synchronized (this) {
-				initialized = true;
-				this.wait();
+			while (true) {
+				synchronized (this) {
+					initialized = true;
+					this.wait();
+				}
+				busy = true;
+				
+				goToFloor(entryFloor);
+				System.out.println(nr + ": arrived at " + currentFloor);
+				
+				goToFloor(exitFloor);
+				System.out.println(nr + ": arrived at " + currentFloor);
+				busy = false;
 			}
-			busy = true;
-			
-			goToFloor(entryFloor);
-			System.out.println(nr + ": arrived at " + currentFloor);
-			
-			goToFloor(exitFloor);
-			System.out.println(nr + ": arrived at " + currentFloor);
-			busy = false;
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -46,16 +48,17 @@ public class Elevator implements Runnable {
 			if (dstFloor > currentFloor) {
 				for (; currentFloor < dstFloor; currentFloor++) {
 					Thread.sleep(300);
-					elevatorListener.elevatorChangedFloor(nr, currentFloor, currentFloor - 1);
+					elevatorListener.elevatorChangedFloor(nr, currentFloor);
 					System.out.println(nr + ": " + currentFloor);
 				}
 			} else {
 				for (; currentFloor > dstFloor; currentFloor--) {
 					Thread.sleep(300);
-					elevatorListener.elevatorChangedFloor(nr, currentFloor, currentFloor + 1);
+					elevatorListener.elevatorChangedFloor(nr, currentFloor);
 					System.out.println(nr + ": " + currentFloor);
 				}
 			}
+			elevatorListener.elevatorChangedFloor(nr, currentFloor);
 		}
 	}
 	

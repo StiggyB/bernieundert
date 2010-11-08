@@ -2,5 +2,5 @@ package a06ws;
 
 public interface ElevatorListener {
 
-	void elevatorChangedFloor(int elevatorNr, int floor, int oldFloor);
+	void elevatorChangedFloor(int elevatorNr, int floor);
 }
