@@ -18,14 +18,14 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class AppMain extends JFrame {
 
 	private static final long serialVersionUID = 2496796316068948959L;
-	public static final int COUNT_FLOORS = 10;
-	public static final int COUNT_ELEVATOR = 3;
+	private static final int COUNT_FLOORS = 10;
+	private static final int COUNT_ELEVATOR = 3;
 
 	private GridBagConstraints constraint;
 	private GridBagLayout layout;
+	
+	private JLabel[][] labels = new JLabel[COUNT_ELEVATOR+2][COUNT_FLOORS+2];
 
-	
-	
 	
 	/**
 	 * Initialisiert diesen <strong>JFrame</strong>, welcher eine simple 
@@ -57,6 +57,23 @@ public class AppMain extends JFrame {
 
 		this.initSimpleComponents(constraint);
 		this.initFloors();
+		
+		ElevatorController controller = new ElevatorController(COUNT_ELEVATOR, COUNT_FLOORS);
+		
+		controller.setListener(new ElevatorListener() {
+			@Override
+			public void elevatorChangedFloor(int elevatorNr, int floor, int oldFloor) {
+				int x = elevatorNr + 1;
+				int y = COUNT_FLOORS + 1 - floor;
+				int oldY = COUNT_FLOORS + 1 - oldFloor;
+				labels[x][y].setText("[x]");
+				if (oldFloor >= 0) {
+					labels[x][oldY].setText("[ ]");
+				}
+				System.out.println("Listener got called: " + elevatorNr + "/" + floor + "/" + oldFloor);
+			}
+		});
+		controller.callElevator(8, 1);
 	}
 
 	private void initFloors() {
@@ -65,8 +82,7 @@ public class AppMain extends JFrame {
 			constraint.weighty = 50;
 			constraint.gridx = 0;
 			constraint.gridy = i + 1;
-			this.add(new JLabel(String.valueOf(AppMain.COUNT_FLOORS - i)),
-					constraint);
+			this.add(new JLabel(String.valueOf(AppMain.COUNT_FLOORS - i)), constraint);
 		}
 
 		for (int i = 1; i <= AppMain.COUNT_ELEVATOR; i++) {
@@ -77,7 +93,25 @@ public class AppMain extends JFrame {
 			this.add(new JLabel(new ImageIcon("C:/elevator.jpg")), constraint);
 		}
 		
+		// Start einfärben
+		for (int x = 1; x <= AppMain.COUNT_ELEVATOR; x++) {
+			for (int y = 1; y <= AppMain.COUNT_FLOORS; y++) {
+				constraint.gridx = x;
+				constraint.gridy = y;
+				JLabel label = new JLabel("[ ]");
+				labels[x][y] = label;
+				this.add(label, constraint);
+			}
+		}
 		
+		// Alle auf 0 setzen
+		for (int x = 1; x <= AppMain.COUNT_ELEVATOR; x++) {
+			constraint.gridx = x;
+			constraint.gridy = 11;
+			JLabel label = new JLabel("[x]");
+			labels[x][11] = label;
+			this.add(label, constraint);
+		}
 	}
 
 	private void initSimpleComponents(GridBagConstraints constraint) {
@@ -129,6 +163,7 @@ public class AppMain extends JFrame {
 			}
 		});
 		buttonPane.add(btnRandomize, constraint);
+		this.add(buttonPane);
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
