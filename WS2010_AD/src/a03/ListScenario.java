@@ -1,5 +1,14 @@
 package a03;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Klasse zum Testen unserer eigenen Listen-Implementierungen
+ *         im Vergleich zu denen aus dem JDK.
+ * 
+ */
+
 import a01.Liste;
 
 
