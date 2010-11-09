@@ -16,7 +16,7 @@ import a01.Liste;
 
 public class ArrayList<T> implements Liste<T> {
 
-	public T[] elements;
+	private T[] elements;
 	private int size;
 
 	public ArrayList() {
