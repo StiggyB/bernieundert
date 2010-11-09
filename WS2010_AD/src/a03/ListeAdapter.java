@@ -1,5 +1,16 @@
 package a03;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Damit die Methode "doBenchmark()" in der Klasse ListScenario 
+ *         auch mit den Listen-Implementierungen des JDK funktionieren, 
+ *         wurde der ListeAdapter entworfen. Er implementiert unser Interface 
+ *         "Liste" aus a01/a02 und kapselt eine java.util.List.
+ *         
+ */
+
 import java.util.List;
 
 import a01.Liste;
@@ -11,7 +22,7 @@ public class ListeAdapter<T> implements Liste<T> {
 	public ListeAdapter(List<T> list) {
 		this.list = list;
 	}
-	
+
 	@Override
 	public void add(int pos, T element) throws IndexOutOfBoundsException {
 		list.add(pos, element);

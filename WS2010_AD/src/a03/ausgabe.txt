@@ -28,14 +28,3 @@ add(Element): Zeit: 6ms , Speicher: 1708752 byte
 get(pos): Zeit: 4ms
 remove("abc"): Zeit: 1437ms
 remove(pos): Zeit: 1397ms
-
-
-Erklärungen:
-- beide LinkedList benötigen mehr Speicher als die ArrayList-Varianten, da hier pro Element jeweils noch "prev" und "next" gespeichert werden
-- CopyOnWriteArrayList soviel Speicher, da das Array bei jedem Schreibzugriff geclont wird. Ein Durchlauf des Garbage-Collectors würde hier natürlich wieder viel Speicher freigeben.
-- Die ArrayListen sind bei get-Zugriffen wesentlich schneller da direkte Zugriffe auf die Felder erfolgen können. Die LinkedListen müssen hierbei immer maximal die Hälfte der Liste durchlaufen
-- Das Entfernen bei den LinkedListen ist wesentlich schneller da kein umkopieren der nachfolgenden Elemente erfolgen muss, sondern lediglich die Werte "next" und "prev" des vorhergehenden und des nachfolgenden Elements geändert werden müssen
-- Die extremen Unterschiede bei der Methode "remove("abc")" zwischen java.util.LinkedList und a01.LinkedList sowie java.util.ArrayList und a02.ArrayList kommen daher, dass die Implementierung der JVM lediglich das erste gefundene Element entfernt. Unsere Implementierung entfernt hingegen alle Elemente die mit dem angegebenen übereinstimmen.
-
-ListeAdapter: 
-Damit die Methode "doBenchmark()" in der Klasse ListScenario auch mit den Listen-Implementierungen des JDK funktionieren, wurder der ListAdapter entworfen. Er implementiert unser Interface "Liste" aus a01/a02 und kapselt eine java.util.List.
