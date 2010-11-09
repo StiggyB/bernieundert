@@ -1,5 +1,15 @@
 package a04;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Testklasse mit JUnit Tests für die Implemetierungen
+ *         des Deques. Klasse Deque wurde "Test-Driven" mittels
+ *         der JUnit-Testfälle hier erstellt.
+ * 
+ */
+
 import org.junit.Assert;
 import org.junit.Test;
 
