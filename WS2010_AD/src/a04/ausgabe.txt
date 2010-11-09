@@ -38,9 +38,3 @@ addLast(Element): Zeit: 7ms
 peekLast(): Zeit: 5ms
 removeLast(): Zeit: 7ms
 pollLast(): Zeit: 5ms
-
-
-Die Klasse Dequeue kapselt eine Liste und bietet alle Methoden aus Liste als Indirektion an, sowie alle weiteren die für die Dequeue-Funktionalität benötigt werden.
-
-- Auffällig ist, dass die ArrayDeque bei removeFirst, addFirst und pollFirst wesentlich schneller ist als unsere ArrayList-Implementierung. Der Grund hierfür ist, dass sich ArrayDeque head und tail der Elemente im Daten-Array merkt und so nicht bei jeder Größenänderung (wie z.B. das Entfernen oder hinzufügen des ersten Elements) teure Kopieroperationen durchführen muss.
-- Die Zeitunterschiede bei der Linked-Varianten sind wesentlich geringer. Zu beobachten ist, dass LinkedBlockingDeque bei addFirst() geringfügig länger benötigt. Dies könnte auf das intern verwendete Locking zurückzuführen sein.

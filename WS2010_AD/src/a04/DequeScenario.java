@@ -1,5 +1,14 @@
 package a04;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Klasse zum Testen unserer eigenen Deque-Implementierung
+ *         im Vergleich zu denen aus dem JDK.
+ * 
+ */
+
 import java.util.ArrayDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 

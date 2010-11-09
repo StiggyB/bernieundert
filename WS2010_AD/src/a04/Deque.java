@@ -1,5 +1,14 @@
 package a04;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Implementierung einer Double Ended Queue mittels
+ *         unserer beiden Listen aus a01 und a02
+ * 
+ */
+
 import a01.Liste;
 
 public class Deque<T> implements Liste<T> {
