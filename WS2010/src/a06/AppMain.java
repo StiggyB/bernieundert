@@ -193,7 +193,7 @@ public class AppMain extends JFrame {
 			}
 		});
 		buttonPane.add(btnRandomize, constraint);
-		this.add(buttonPane);
+//		this.add(buttonPane);		// Button Pane für Erweiterungen erstmal ausgeblendet.
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
