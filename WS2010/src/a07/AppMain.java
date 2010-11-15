@@ -2,14 +2,18 @@ package a07;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -19,12 +23,15 @@ public class AppMain extends JFrame {
 
 	private static final long serialVersionUID = 2496796316068948959L;
 	private static final int COUNT_FLOORS = 10;
-	private static final int COUNT_ELEVATOR = 3;
+	private static final int COUNT_ELEVATOR = 1;
 
 	private GridBagConstraints constraint;
 	private GridBagLayout layout;
 	
 	private JLabel[][] labels = new JLabel[COUNT_ELEVATOR+2][COUNT_FLOORS+2];
+	private JButton[] blockButtons = new JButton[COUNT_ELEVATOR];
+	private JButton[] entryButtons = new JButton[COUNT_ELEVATOR];
+	private ElevatorController controller;
 
 	
 	/**
@@ -57,7 +64,7 @@ public class AppMain extends JFrame {
 
 		this.initSimpleComponents(constraint);
 		
-		ElevatorController controller = new ElevatorController(COUNT_ELEVATOR, COUNT_FLOORS);
+		controller = new ElevatorController(COUNT_ELEVATOR, COUNT_FLOORS);
 		this.initFloors(controller);
 		
 		controller.setListener(new ElevatorListener() {
@@ -71,14 +78,26 @@ public class AppMain extends JFrame {
 				
 				labels[x][y].setText("[x]");
 				
-				if (yAbove > 1) {
+				if (yAbove >= 1) {
 					labels[x][yAbove].setText("[ ]");
 				}
 				
 				if (yUnder <= COUNT_FLOORS + 1) {
 					labels[x][yUnder].setText("[ ]");
 				}
-				System.out.println("Listener got called: " + elevatorNr + "/" + floor);
+//				System.out.println("Listener got called: " + elevatorNr + "/" + floor);
+			}
+
+			@Override
+			public void arrivedOnTargetFloor(int elevatorNr) {
+				blockButtons[elevatorNr].setEnabled(true);
+				entryButtons[elevatorNr].setEnabled(true);
+			}
+
+			@Override
+			public void leavingFloor(int elevatorNr) {
+				blockButtons[elevatorNr].setEnabled(false);
+				entryButtons[elevatorNr].setEnabled(false);
 			}
 		});
 		
@@ -87,24 +106,31 @@ public class AppMain extends JFrame {
 
 	private void initFloors(final ElevatorController controller) {
 		for (int i = 0; i <= AppMain.COUNT_FLOORS; i++) {
+			final int floor = COUNT_FLOORS - i;
+			
 			constraint.weightx = 10;
 			constraint.weighty = 50;
 			
 			constraint.gridx = 0;
 			constraint.gridy = i + 1;
-			final JTextField targetFloorTextField = new JTextField("Ziel", 15); 
-			this.add(targetFloorTextField, constraint);
+			final JButton vorrangfButton = new JButton("Vorrangf.");
+			vorrangfButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("floor: " + floor);
+					controller.callElevatorPriority(floor);
+				}
+			});
+			this.add(vorrangfButton, constraint);
 			
 			constraint.gridx = 1;
 			constraint.gridy = i + 1;
 			
-			final int floor = COUNT_FLOORS - i;
 			JButton callButton = new JButton("rufen");
 			callButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					int targetFloor = Integer.parseInt(targetFloorTextField.getText());
-					System.out.println("floor: " + floor + " target: " + targetFloor);
+					System.out.println("floor: " + floor);
 					controller.callElevator(floor);
 				}
 			});
@@ -118,7 +144,8 @@ public class AppMain extends JFrame {
 		for (int i = 1; i <= AppMain.COUNT_ELEVATOR; i++) {
 			constraint.gridx = i + 2;
 			constraint.gridy = 0;
-			this.add(new JLabel("Fahrstuhl - " + String.valueOf(i)), constraint);	
+			
+			this.add(getFsHeadPanel(i), constraint);	
 			constraint.gridy = COUNT_FLOORS;
 			this.add(new JLabel(new ImageIcon("C:/elevator.jpg")), constraint);
 		}
@@ -142,6 +169,53 @@ public class AppMain extends JFrame {
 			labels[x][11] = label;
 			this.add(label, constraint);
 		}
+	}
+
+	private JPanel getFsHeadPanel(final int fsNr) {
+		JPanel panel = new JPanel();
+		GridLayout layout = new GridLayout(3, 1);
+		panel.setLayout(layout);
+		panel.add(new JLabel("Fahrstuhl - " + String.valueOf(fsNr)));
+		
+		// Blockbutton
+		final JButton blockButton = new JButton("<>");
+		blockButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				controller.blockFahrstuhl(fsNr - 1);
+			}
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				controller.unblockFahrstuhl(fsNr - 1);
+			}
+		});
+		blockButton.setEnabled(false);
+		blockButtons[fsNr - 1] = blockButton;
+		
+		// Einsteigeknopf
+		final JButton entryButton = new JButton("-->");
+		entryButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Integer[] possibilities = new Integer[COUNT_FLOORS + 1];
+				for (int i = 0; i <= COUNT_FLOORS; i++) {
+					possibilities[i] = i;
+				}
+				int choice = (Integer) JOptionPane.showInputDialog(
+						AppMain.this, "Bitte Stockwerk auswählen",
+						"Stockwerk wählen", JOptionPane.PLAIN_MESSAGE, null,
+						possibilities, 0);
+
+				controller.driveTo(fsNr - 1, choice);
+			}
+		});
+		entryButton.setEnabled(false);
+		entryButtons[fsNr - 1] = entryButton;
+		
+		panel.add(blockButton);
+		panel.add(entryButton);
+		return panel;
 	}
 
 	private void initSimpleComponents(GridBagConstraints constraint) {
