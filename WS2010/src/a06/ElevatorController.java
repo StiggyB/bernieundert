@@ -1,8 +1,13 @@
 package a06;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+
 public class ElevatorController {
-	private Thread[] elevatorThreads;
 	private Elevator[] elevator;
+	
+	private ThreadPoolExecutor executor;
 	
 	public static void main(String[] args) throws InterruptedException {
 		ElevatorController controller = new ElevatorController(3, 10);
@@ -17,16 +22,16 @@ public class ElevatorController {
 	}
 	
 	public ElevatorController(int elevatorCount, int floorCount) {
-		elevatorThreads = new Thread[elevatorCount];
+		executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(elevatorCount);
+		
+//		((LinkedBlockingQueue<Runnable>) executor.getQueue()).clear();
+		
 		elevator = new Elevator[elevatorCount];
-        
 		for (int i = 0; i < elevator.length; i++) {
 			elevator[i] = new Elevator(i);
-			elevatorThreads[i] = new Thread(elevator[i]);
-			// Damit der Thread beendet wird, wenn das Programm geschlossen wird
-			elevatorThreads[i].setDaemon(true);
-			elevatorThreads[i].start();
-		}		
+			executor.execute(elevator[i]);
+		}	
+		
 	}
 	
 	public void callElevator(int entryFloor, int exitFloor) {
