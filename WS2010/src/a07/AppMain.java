@@ -23,7 +23,7 @@ public class AppMain extends JFrame {
 
 	private static final long serialVersionUID = 2496796316068948959L;
 	private static final int COUNT_FLOORS = 10;
-	private static final int COUNT_ELEVATOR = 1;
+	private static final int COUNT_ELEVATOR = 3;
 
 	private GridBagConstraints constraint;
 	private GridBagLayout layout;
@@ -194,7 +194,7 @@ public class AppMain extends JFrame {
 		blockButtons[fsNr - 1] = blockButton;
 		
 		// Einsteigeknopf
-		final JButton entryButton = new JButton("-->");
+		final JButton entryButton = new JButton("Einsteigen");
 		entryButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

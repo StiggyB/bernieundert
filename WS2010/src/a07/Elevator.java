@@ -3,24 +3,24 @@ package a07;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
-
 public class Elevator implements Runnable {
-	
+
 	private static final int MAXIMAL_BLOCK_TIME = 5000;
 	private int currentFloor;
 
 	private final int nr;
 	private ElevatorListener elevatorListener;
-	
+
 	private BlockingDeque<Integer> jobDeque = new LinkedBlockingDeque<Integer>();
 	private boolean isBlocked = false;
-//	private Object blockedMutex = new Object();
-	
+
+	// private Object blockedMutex = new Object();
+
 	public Elevator(int nr) {
 		this.nr = nr;
 		currentFloor = 0;
 	}
-	
+
 	@Override
 	public void run() {
 		try {
@@ -40,7 +40,7 @@ public class Elevator implements Runnable {
 					}
 					isBlocked = false;
 				}
-				
+
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -48,39 +48,31 @@ public class Elevator implements Runnable {
 	}
 
 	private void goToFloor(int dstFloor) throws InterruptedException {
-		if (dstFloor != currentFloor) {
+		while (dstFloor != currentFloor) {
 			if (dstFloor > currentFloor) {
-				for (; currentFloor < dstFloor; currentFloor++) {
-					Thread.sleep(300);
-					elevatorListener.elevatorChangedFloor(nr, currentFloor);
-					System.out.println(nr + ": " + currentFloor);
-				}
+				currentFloor++;
 			} else {
-				for (; currentFloor > dstFloor; currentFloor--) {
-					Thread.sleep(300);
-					elevatorListener.elevatorChangedFloor(nr, currentFloor);
-					System.out.println(nr + ": " + currentFloor);
-				}
+				currentFloor--;
 			}
+			Thread.sleep(300);
 			elevatorListener.elevatorChangedFloor(nr, currentFloor);
 		}
 	}
-	
-	
+
 	public void goTo(int floor) {
 		jobDeque.addLast(floor);
 	}
-	
+
 	public void goToPriority(int floor) {
 		System.out.println("-------------------vorrang nach " + floor);
 		jobDeque.clear();
 		jobDeque.addLast(floor);
 	}
-	
+
 	public int getCurrentFloor() {
 		return currentFloor;
 	}
-	
+
 	public void setListener(ElevatorListener elevatorListener) {
 		this.elevatorListener = elevatorListener;
 	}
@@ -107,5 +99,5 @@ public class Elevator implements Runnable {
 	public void driveTo(int floor) {
 		jobDeque.addFirst(floor);
 	}
-	
+
 }
