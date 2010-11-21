@@ -16,13 +16,11 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.text.SimpleDateFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -38,7 +36,6 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 public class ExplorerTree {
 
@@ -179,7 +176,7 @@ public class ExplorerTree {
 	}
 
 	private void fillTextAreaWithFileInfos(Object o) {
-		Class c = o.getClass();
+		Class<?> c = o.getClass();
 		StringBuilder sb = new StringBuilder();
 		sb.append("Objektinfo:\n").append("- Name: ").append(c.getSimpleName())
 				.append("\n").append("- Class Modifier: ").append(printModifiers(c)).append("\n")
@@ -192,15 +189,15 @@ public class ExplorerTree {
 		fileInfoTextArea.setText(sb.toString());
 	}
 
-	private String printModifiers(Class c) {
+	private String printModifiers(Class<?> c) {
 		int m = c.getModifiers();
 		return Modifier.isPublic(m) ? "public"	: (Modifier.isAbstract(m) ? "abstract" : "final");
 	}
 
 	private String printSuperclasses(Object o) {
 		StringBuilder sb = new StringBuilder();
-		Class subclass = o.getClass();
-		Class superclass = subclass.getSuperclass();
+		Class<?> subclass = o.getClass();
+		Class<?> superclass = subclass.getSuperclass();
 		while (superclass != null) {
 			String className = superclass.getName();
 			sb.append(className);
@@ -213,7 +210,7 @@ public class ExplorerTree {
 	
 	private String printInterfaces(Object o){
 		StringBuilder sb = new StringBuilder();
-		Class c = o.getClass();
+		Class<?> c = o.getClass();
 		Class[] theInterfaces = c.getInterfaces();
 		for (int i = 0; i < theInterfaces.length; i++) {
 			String interfaceName = theInterfaces[i].getName();
@@ -225,11 +222,11 @@ public class ExplorerTree {
 	
 	private String printFieldNames(Object o){
 		StringBuilder sb = new StringBuilder();
-		Class c = o.getClass();
+		Class<?> c = o.getClass();
 		Field[] publicFields = c.getFields();
 		for (int i = 0; i < publicFields.length; i++) {
 			String fieldName = publicFields[i].getName();
-			Class typeClass = publicFields[i].getType();
+			Class<?> typeClass = publicFields[i].getType();
 			String fieldType = typeClass.getName();
 			String fieldModifier = printModifiers(typeClass);
 			sb.append("Name: " + fieldName + ", Type: " + fieldType + ", Modifier: " + fieldModifier);
@@ -240,7 +237,7 @@ public class ExplorerTree {
 	
 	private String printConstructors(Object o) {
 		StringBuilder sb = new StringBuilder();
-		Class c = o.getClass();
+		Class<?> c = o.getClass();
 		Constructor[] theConstructors = c.getConstructors();
 		for (int i = 0; i < theConstructors.length; i++) {
 			Class[] parameterTypes = theConstructors[i].getParameterTypes();
@@ -255,7 +252,7 @@ public class ExplorerTree {
 	
 	private String printMethods(Object o) {
 		StringBuilder sb = new StringBuilder();
-		Class c = o.getClass();
+		Class<?> c = o.getClass();
 		Method[] theMethods = c.getMethods();
 		for (int i = 0; i < theMethods.length; i++) {
 			String methodString = theMethods[i].getName();
