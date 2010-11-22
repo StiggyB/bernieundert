@@ -13,16 +13,13 @@ package a08;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,19 +32,32 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreePath;
 
 public class ExplorerTree {
+
+	public class FieldAndValue {
+		private final Field field;
+		private final Object value;
+
+		public FieldAndValue(Field field, Object value) {
+			this.field = field;
+			this.value = value;
+			;
+		}
+	}
 
 	JFrame frame = new JFrame();
 	private JTextArea fileInfoTextArea;
 	private JTree tree;
 
 
-	public void buildFrame() throws IOException {
+	public void buildFrame() throws IOException, IllegalArgumentException, IllegalAccessException {
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("1337 FileLister (c) Bernie & Ert");
@@ -77,11 +87,9 @@ public class ExplorerTree {
 		// frame.pack(); // macht nur wieder das maximieren kaputt
 	}
 
-	private JTree buildExplorerTree(Object objectToInspect) throws IOException {
-		Object rootDir = objectToInspect;
-
-		DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(rootDir);
-		addMethodsAndFields(rootDirNode);
+	private JTree buildExplorerTree(Object objectToInspect) throws IOException, IllegalArgumentException, IllegalAccessException {
+		DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(objectToInspect);
+		addMethodsAndFields(rootDirNode, objectToInspect);
 
 		tree = new JTree(rootDirNode) {
 			@Override
@@ -90,8 +98,8 @@ public class ExplorerTree {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
 				Object userObject = node.getUserObject();
 				if (userObject != null) {
-					if (userObject instanceof Field) {
-						return ((Field) userObject).getName();
+					if (userObject instanceof FieldAndValue) {
+						return ((FieldAndValue) userObject).field.getName();
 					} else if (userObject instanceof Method) {
 						return ((Method) userObject).getName();
 					} else if (userObject.equals("Fields") || userObject.equals("Methods")) {
@@ -112,30 +120,69 @@ public class ExplorerTree {
 				fillTextAreaWithFileInfos(userObject);
 			}
 		});
+		tree.addTreeExpansionListener(new TreeExpansionListener() {
+			
+			@Override
+			public void treeExpanded(TreeExpansionEvent e) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
+				for (int i = 0; i < node.getChildCount(); i++) {
+					DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) node.getChildAt(i);
+					
+					Object userObject = currentNode.getUserObject();
+					if (userObject instanceof FieldAndValue) {
+						FieldAndValue fav = (FieldAndValue) userObject;
+						Field field = fav.field;
+						Class<?> type = field.getType();
+						if (!type.isPrimitive()) {
+							try {
+								addMethodsAndFields(currentNode, fav.value);
+							} catch (IllegalArgumentException e1) {
+								e1.printStackTrace();
+							} catch (IllegalAccessException e1) {
+								e1.printStackTrace();
+							}
+						}
+					} else if (userObject instanceof Method) {
+						Class<?> type = ((Method) userObject).getReturnType();
+						if (!type.isPrimitive()) {
+						}
+					}
+				}
+			}
+
+			@Override
+			public void treeCollapsed(TreeExpansionEvent e) {
+			}
+		});
 
 		return tree;
 	}
 
-	private void addMethodsAndFields(DefaultMutableTreeNode parentNode) {
-		Object object = parentNode.getUserObject();
-		
-		
+	private void addMethodsAndFields(DefaultMutableTreeNode parentNode, Object objectToInspect) throws IllegalArgumentException, IllegalAccessException {
 		DefaultMutableTreeNode fieldsChildNode = new DefaultMutableTreeNode("Fields");
 		parentNode.add(fieldsChildNode);
 
-		Field[] declaredFields = object.getClass().getDeclaredFields();
-		for (int i = 0; i < declaredFields.length; i++) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(declaredFields[i]);
-			fieldsChildNode.add(node);
-		}
-
-		DefaultMutableTreeNode methodsChildNode = new DefaultMutableTreeNode("Methods");
-		parentNode.add(methodsChildNode);
-		
-		Method[] declaredMethods = object.getClass().getDeclaredMethods();
-		for (int i = 0; i < declaredMethods.length; i++) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(declaredMethods[i]);
-			methodsChildNode.add(node);
+		if (objectToInspect != null) {
+			Field[] declaredFields = objectToInspect.getClass().getDeclaredFields();
+			for (int i = 0; i < declaredFields.length; i++) {
+				Field field = declaredFields[i];
+				if (!field.isAccessible()) {
+					field.setAccessible(true);
+				}
+				Object fieldValue = field.get(objectToInspect);
+				FieldAndValue fav = new FieldAndValue(field, fieldValue);
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(fav);
+				fieldsChildNode.add(node);
+			}
+	
+			DefaultMutableTreeNode methodsChildNode = new DefaultMutableTreeNode("Methods");
+			parentNode.add(methodsChildNode);
+			
+			Method[] declaredMethods = objectToInspect.getClass().getDeclaredMethods();
+			for (int i = 0; i < declaredMethods.length; i++) {
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(declaredMethods[i]);
+				methodsChildNode.add(node);
+			}
 		}
 	}
 
@@ -218,11 +265,13 @@ public class ExplorerTree {
 	private void fillTextAreaWithFileInfos(Object o) {
 		StringBuilder sb = new StringBuilder();
 		
-		if (o instanceof Field) {
+		if (o instanceof FieldAndValue) {
+			Field field = ((FieldAndValue) o).field;
 			sb.append("Feld:\n");
-			sb.append(printFieldNames((Field) o));
+			sb.append(printFieldNames(field));
 		} else if (o instanceof Method) {
 			sb.append("Methode:\n");
+			sb.append(printMethod((Method) o));
 		} else if (!o.equals("Fields") && !o.equals("Methods")) {
 			// Klasse
 			sb.append("Klasse:\n");
@@ -236,6 +285,8 @@ public class ExplorerTree {
 
 		fileInfoTextArea.setText(sb.toString());
 	}
+
+
 
 	private String printClassModifiers(Class<?> c) {
 		return Modifier.toString(c.getModifiers());
@@ -294,21 +345,19 @@ public class ExplorerTree {
 		return sb.toString();
 	}
 	
-	private String printMethods(Object o) {
+	
+	// TODO: Modifier
+	private String printMethod(Method method) {
 		StringBuilder sb = new StringBuilder();
-		Class<?> c = o.getClass();
-		Method[] theMethods = c.getMethods();
-		for (int i = 0; i < theMethods.length; i++) {
-			String methodString = theMethods[i].getName();
-			sb.append("Name: " + methodString);
-			String returnString = theMethods[i].getReturnType().getName();
-			sb.append(", Rückgabetyp: " + returnString);
-			Class[] parameterTypes = theMethods[i].getParameterTypes();
-			sb.append(", Übergabeparamtertyp:");
-			for (int k = 0; k < parameterTypes.length; k++) {
-				String parameterString = parameterTypes[k].getName();
-				sb.append(" " + parameterString + " ");
-			}
+		String methodString = method.getName();
+		sb.append("Name: " + methodString);
+		String returnString = method.getReturnType().getName();
+		sb.append(", Rückgabetyp: " + returnString);
+		Class[] parameterTypes = method.getParameterTypes();
+		sb.append(", Übergabeparamtertyp:");
+		for (int k = 0; k < parameterTypes.length; k++) {
+			String parameterString = parameterTypes[k].getName();
+			sb.append(" " + parameterString + " ");
 		}
 		return sb.toString();
 	}
