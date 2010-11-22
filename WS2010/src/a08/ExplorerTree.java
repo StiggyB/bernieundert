@@ -16,11 +16,13 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,6 +38,7 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
 
 public class ExplorerTree {
 
@@ -43,11 +46,6 @@ public class ExplorerTree {
 	private JTextArea fileInfoTextArea;
 	private JTree tree;
 
-	private Integer integerDetect;
-
-	public ExplorerTree() {
-		this.integerDetect = 10;
-	}
 
 	public void buildFrame() throws IOException {
 
@@ -60,7 +58,9 @@ public class ExplorerTree {
 		// frame.add(fileInfoTextArea); //jetzt überflüssig wg. Zeile 64
 
 		JSplitPane splitPane = new JSplitPane();
-		JScrollPane scrollPane = new JScrollPane(buildExplorerTree());
+//		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
+		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
+//		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
 
 		splitPane.setLeftComponent(scrollPane);
 		splitPane.setRightComponent(fileInfoTextArea);
@@ -72,31 +72,71 @@ public class ExplorerTree {
 		// //überflüssig wg. Zeile 71
 
 		frame.setVisible(true);
-		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+//		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setMinimumSize(new Dimension(640, 480));
 		// frame.pack(); // macht nur wieder das maximieren kaputt
 	}
 
-	private JTree buildExplorerTree() throws IOException {
-		Object rootDir = integerDetect;
+	private JTree buildExplorerTree(Object objectToInspect) throws IOException {
+		Object rootDir = objectToInspect;
 
 		DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(rootDir);
-//		addNodes(rootDirNode);
+		addMethodsAndFields(rootDirNode);
 
-		tree = new JTree(rootDirNode);
+		tree = new JTree(rootDirNode) {
+			@Override
+			public String convertValueToText(Object value, boolean selected,
+					boolean expanded, boolean leaf, int row, boolean hasFocus) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+				Object userObject = node.getUserObject();
+				if (userObject != null) {
+					if (userObject instanceof Field) {
+						return ((Field) userObject).getName();
+					} else if (userObject instanceof Method) {
+						return ((Method) userObject).getName();
+					} else if (userObject.equals("Fields") || userObject.equals("Methods")) {
+						return userObject.toString();
+					} else {
+						return userObject.getClass().getCanonicalName();
+					}
+				}
+				return "";
+			}
+		};
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
-				if (e.getNewLeadSelectionPath() != null) {
-					DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) e
-							.getNewLeadSelectionPath().getLastPathComponent();
-					Object selectedFile = (Integer) selectedNode.getUserObject();
-					fillTextAreaWithFileInfos(selectedFile);
-				}
+				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
+				Object userObject = selectedNode.getUserObject();
+				
+				fillTextAreaWithFileInfos(userObject);
 			}
 		});
 
 		return tree;
+	}
+
+	private void addMethodsAndFields(DefaultMutableTreeNode parentNode) {
+		Object object = parentNode.getUserObject();
+		
+		
+		DefaultMutableTreeNode fieldsChildNode = new DefaultMutableTreeNode("Fields");
+		parentNode.add(fieldsChildNode);
+
+		Field[] declaredFields = object.getClass().getDeclaredFields();
+		for (int i = 0; i < declaredFields.length; i++) {
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(declaredFields[i]);
+			fieldsChildNode.add(node);
+		}
+
+		DefaultMutableTreeNode methodsChildNode = new DefaultMutableTreeNode("Methods");
+		parentNode.add(methodsChildNode);
+		
+		Method[] declaredMethods = object.getClass().getDeclaredMethods();
+		for (int i = 0; i < declaredMethods.length; i++) {
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(declaredMethods[i]);
+			methodsChildNode.add(node);
+		}
 	}
 
 	private JMenuBar buildMenuBar() {
@@ -176,22 +216,29 @@ public class ExplorerTree {
 	}
 
 	private void fillTextAreaWithFileInfos(Object o) {
-		Class<?> c = o.getClass();
 		StringBuilder sb = new StringBuilder();
-		sb.append("Objektinfo:\n").append("- Name: ").append(c.getSimpleName())
-				.append("\n").append("- Class Modifier: ").append(printModifiers(c)).append("\n")
-				.append("- Superklasse: ").append(printSuperclasses(o)).append("\n")
-				.append("- Interfaces: ").append(printInterfaces(o)).append("\n")
-				.append("- Felder: ").append(printFieldNames(o)).append("\n")
-				.append("- Konstruktoren: ").append(printConstructors(o)).append("\n")
-				.append("- Methoden: ").append(printMethods(o)).append("\n");
+		
+		if (o instanceof Field) {
+			sb.append("Feld:\n");
+			sb.append(printFieldNames((Field) o));
+		} else if (o instanceof Method) {
+			sb.append("Methode:\n");
+		} else if (!o.equals("Fields") && !o.equals("Methods")) {
+			// Klasse
+			sb.append("Klasse:\n");
+			Class<?> c = o.getClass();
+			sb.append("- Name: ").append(c.getSimpleName())
+			.append("\n").append("- Class Modifier: ").append(printClassModifiers(c)).append("\n")
+			.append("- Superklasse: ").append(printSuperclasses(o)).append("\n")
+			.append("- Interfaces: ").append(printInterfaces(o)).append("\n")
+			.append("- Konstruktoren: ").append(printConstructors(o)).append("\n");
+		}
 
 		fileInfoTextArea.setText(sb.toString());
 	}
 
-	private String printModifiers(Class<?> c) {
-		int m = c.getModifiers();
-		return Modifier.isPublic(m) ? "public"	: (Modifier.isAbstract(m) ? "abstract" : "final");
+	private String printClassModifiers(Class<?> c) {
+		return Modifier.toString(c.getModifiers());
 	}
 
 	private String printSuperclasses(Object o) {
@@ -211,26 +258,10 @@ public class ExplorerTree {
 	private String printInterfaces(Object o){
 		StringBuilder sb = new StringBuilder();
 		Class<?> c = o.getClass();
-		Class[] theInterfaces = c.getInterfaces();
+		Class<?>[] theInterfaces = c.getInterfaces();
+		sb.append("\n");
 		for (int i = 0; i < theInterfaces.length; i++) {
-			String interfaceName = theInterfaces[i].getName();
-			sb.append(interfaceName);
-			sb.append(",\n");
-		}
-		return null;
-	}
-	
-	private String printFieldNames(Object o){
-		StringBuilder sb = new StringBuilder();
-		Class<?> c = o.getClass();
-		Field[] publicFields = c.getFields();
-		for (int i = 0; i < publicFields.length; i++) {
-			String fieldName = publicFields[i].getName();
-			Class<?> typeClass = publicFields[i].getType();
-			String fieldType = typeClass.getName();
-			String fieldModifier = printModifiers(typeClass);
-			sb.append("Name: " + fieldName + ", Type: " + fieldType + ", Modifier: " + fieldModifier);
-			sb.append("\n");
+			sb.append("  - ").append(theInterfaces[i].getCanonicalName()).append("\n");
 		}
 		return sb.toString();
 	}
@@ -238,15 +269,28 @@ public class ExplorerTree {
 	private String printConstructors(Object o) {
 		StringBuilder sb = new StringBuilder();
 		Class<?> c = o.getClass();
-		Constructor[] theConstructors = c.getConstructors();
+		Constructor[] theConstructors = c.getDeclaredConstructors();
+		sb.append("\n");
 		for (int i = 0; i < theConstructors.length; i++) {
-			Class[] parameterTypes = theConstructors[i].getParameterTypes();
-			for (int k = 0; k < parameterTypes.length; k++) {
-				String parameterString = parameterTypes[k].getName();
-				sb.append(parameterString);
-				sb.append(", ");
-			}
+			sb.append("  - ").append(theConstructors[i]).append("\n");
+//			Class[] parameterTypes = theConstructors[i].getParameterTypes();
+//			for (int k = 0; k < parameterTypes.length; k++) {
+//				String parameterString = parameterTypes[k].getName();
+//				sb.append(parameterString);
+//				sb.append(", ");
+//			}
 		}
+		return sb.toString();
+	}
+	
+	private String printFieldNames(Field field){
+		StringBuilder sb = new StringBuilder();
+		String fieldName = field.getName();
+		Class<?> typeClass = field.getType();
+		String fieldType = typeClass.getName();
+		String fieldModifier = printClassModifiers(typeClass);
+		sb.append("Name: " + fieldName + ", Type: " + fieldType + ", Modifier: " + fieldModifier);
+		sb.append("\n");
 		return sb.toString();
 	}
 	
