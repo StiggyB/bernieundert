@@ -2,7 +2,9 @@ package a08;
 
 import java.io.Serializable;
 
-class DummyClass implements Serializable, Cloneable {
+import javax.swing.JTree;
+
+class DummyClass extends JTree implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -13,9 +15,9 @@ class DummyClass implements Serializable, Cloneable {
 		this(1, 2);
 	}
 	
-	private DummyClass(int a) {
-		this(1, 2);
-	}
+//	private DummyClass(int a) {
+//		this(1, 2);
+//	}
 
 	public DummyClass(int i, int j) {
 		privateInteger = i;

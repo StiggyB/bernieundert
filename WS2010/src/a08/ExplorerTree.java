@@ -15,6 +15,7 @@ package a08;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -57,36 +58,37 @@ public class ExplorerTree {
 	JFrame frame = new JFrame();
 	private JTextArea fileInfoTextArea;
 	private JTree tree;
+	private JScrollPane scrollPane;
+	
+	
+	//Konstruktor, Auswahl des zu inspizierenden Objekts
+	public ExplorerTree() throws IllegalArgumentException, IOException, IllegalAccessException{
+//		this.scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
+		this.scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
+//		this.scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
+	}
 
 
-	public void buildFrame() throws IOException, IllegalArgumentException, IllegalAccessException {
+	public void buildFrame() {
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("1337 FileLister (c) Bernie & Ert");
 		frame.setLayout(new BorderLayout());
 
 		fileInfoTextArea = new JTextArea("Fileinfo:");
-		// frame.add(fileInfoTextArea);
-		// frame.add(fileInfoTextArea); //jetzt überflüssig wg. Zeile 64
 
 		JSplitPane splitPane = new JSplitPane();
-//		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
-//		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
-		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
+
 
 		splitPane.setLeftComponent(scrollPane);
 		splitPane.setRightComponent(fileInfoTextArea);
 
 		frame.getContentPane().add(buildMenuBar(), BorderLayout.NORTH);
 		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
-		// frame.setSize(splitPane.getWidth(), splitPane.getHeight());
-		// frame.setSize(splitPane.getWidth(), splitPane.getHeight());
-		// //überflüssig wg. Zeile 71
 
 		frame.setVisible(true);
-//		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setMinimumSize(new Dimension(640, 480));
-		// frame.pack(); // macht nur wieder das maximieren kaputt
 	}
 
 	private JTree buildExplorerTree(Object objectToInspect) throws IOException, IllegalArgumentException, IllegalAccessException {
@@ -195,7 +197,6 @@ public class ExplorerTree {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu data = new JMenu("Datei");
 		JMenu help = new JMenu("Hilfe");
-		// final JMenuItem newDir = new JMenuItem("Verzeichnis wählen");
 		final JMenuItem closeApp = new JMenuItem("Programm beenden");
 		final JMenuItem aboutApp = new JMenuItem("Über 1337-ObjectBrowser");
 
@@ -204,17 +205,6 @@ public class ExplorerTree {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 
-				// if (newDir == event.getSource()) {
-				// try {
-				// File rootDir = explorerIO.loadDir();
-				// DefaultMutableTreeNode rootDirNode = new
-				// DefaultMutableTreeNode(rootDir);
-				// addNodes(rootDirNode);
-				// tree.setModel(new DefaultTreeModel(rootDirNode));
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
-				// }
 
 				if (closeApp == event.getSource()) {
 					System.exit(0);
@@ -228,12 +218,10 @@ public class ExplorerTree {
 			}
 		};
 
-		// newDir.addActionListener(menuListener);
 		closeApp.addActionListener(menuListener);
 		aboutApp.addActionListener(menuListener);
 		menuBar.add(data);
 		menuBar.add(help);
-		// data.add(newDir);
 		data.add(closeApp);
 		help.add(aboutApp);
 
@@ -258,11 +246,9 @@ public class ExplorerTree {
 		aboutFrame.setSize(800, 300);
 		aboutFrame.setResizable(false);
 		aboutFrame.setLayout(new BorderLayout());
-		aboutFrame.getContentPane().add(new JLabel(new ImageIcon("1337.gif")),
-				BorderLayout.WEST);
+		aboutFrame.getContentPane().add(new JLabel(new ImageIcon("1337.gif")),	BorderLayout.WEST);
 		aboutFrame.getContentPane().add(aboutTxt, BorderLayout.CENTER);
-		aboutFrame.getContentPane().add(
-				new JLabel(new ImageIcon("bernieert.jpg")), BorderLayout.EAST);
+		aboutFrame.getContentPane().add(new JLabel(new ImageIcon("bernieert.jpg")), BorderLayout.EAST);
 		aboutFrame.getContentPane().add(exitButton, BorderLayout.SOUTH);
 		aboutFrame.setVisible(true);
 	}
@@ -291,8 +277,6 @@ public class ExplorerTree {
 		fileInfoTextArea.setText(sb.toString());
 	}
 
-
-
 	private String printClassModifiers(Class<?> c) {
 		return c.getModifiers() == 0 ? "no class-modifier (Package)" : Modifier.toString(c.getModifiers());
 	}
@@ -305,14 +289,13 @@ public class ExplorerTree {
 		StringBuilder sb = new StringBuilder();
 		Class<?> subclass = o.getClass();
 		Class<?> superclass = subclass.getSuperclass();
-		sb.append("\n");
 		while (superclass != null) {
 			String className = superclass.getName();
-			sb.append("  - ").append(className).append("\n");
-//			sb.append(", ");
+			sb.append("\n").append("  - ").append(className);
 			subclass = superclass;
 			superclass = subclass.getSuperclass();
 		}
+		sb.append(" (Superklasse)\n");
 		return sb.toString();
 	}
 	
@@ -337,28 +320,17 @@ public class ExplorerTree {
 		sb.append("\n");
 		for (int i = 0; i < theConstructors.length; i++) {
 			sb.append("  - ").append(theConstructors[i]).append("\n");
-//			Class[] parameterTypes = theConstructors[i].getParameterTypes();
-//			for (int k = 0; k < parameterTypes.length; k++) {
-//				String parameterString = parameterTypes[k].getName();
-//				sb.append(parameterString);
-//				sb.append(", ");
-//			}
 		}
 		return sb.toString();
 	}
 	
 	private String printFieldInfos(Field field){
 		StringBuilder sb = new StringBuilder();
-		String fieldName = field.getName();
 		Class<?> typeClass = field.getType();
-		String fieldType = typeClass.getName();
-		String fieldModifier = printClassModifiers(typeClass);
-		sb.append("- Name: " + fieldName + "\n- Type: " + fieldType + "\n- Modifier(s): " + fieldModifier);
+		sb.append("- Name: " + field.getName() + "\n- Type: " + typeClass.getName() + "\n- Modifier(s): " + printClassModifiers(typeClass));
 		return sb.toString();
 	}
 	
-	
-	// TODO: Modifier
 	private String printMethod(Method method) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("- Name: " + method.getName());
@@ -367,8 +339,7 @@ public class ExplorerTree {
 		Class<?>[] parameterTypes = method.getParameterTypes();
 		sb.append("\n- Übergabeparamtertyp:");
 		for (int k = 0; k < parameterTypes.length; k++) {
-			String parameterString = parameterTypes[k].getSimpleName();
-			sb.append(" " + parameterString + " ");
+			sb.append(" " + parameterTypes[k].getSimpleName() + " ");
 		}
 		return sb.toString();
 	}
