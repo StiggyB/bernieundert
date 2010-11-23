@@ -19,10 +19,8 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -59,13 +57,15 @@ public class ExplorerTree {
 	private JTextArea fileInfoTextArea;
 	private JTree tree;
 	private JScrollPane scrollPane;
+	private ObjectInspectHelper oih;
 	
 	
 	//Konstruktor, Auswahl des zu inspizierenden Objekts
 	public ExplorerTree() throws IllegalArgumentException, IOException, IllegalAccessException{
+		 this.oih= new ObjectInspectHelper();
 //		this.scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
-		this.scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
-//		this.scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
+//		this.scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
+		this.scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
 	}
 
 
@@ -259,89 +259,24 @@ public class ExplorerTree {
 		if (o instanceof FieldAndValue) {
 			Field field = ((FieldAndValue) o).field;
 			sb.append("Feld:\n");
-			sb.append(printFieldInfos(field));
+			sb.append(oih.printFieldInfos(field));
 		} else if (o instanceof Method) {
 			sb.append("Methode:\n");
-			sb.append(printMethod((Method) o));
+			sb.append(oih.printMethod((Method) o));
 		} else if (!o.equals("Fields") && !o.equals("Methods")) {
 			// Klasse
 			sb.append("Klasse:\n");
 			Class<?> c = o.getClass();
 			sb.append("- Name: ").append(c.getSimpleName())
-			.append("\n\n").append("- Class Modifier: ").append(printClassModifiers(c)).append("\n\n")
-			.append("- Oberklassen: ").append(printSuperclasses(o)).append("\n")
-			.append("- Interfaces: ").append(printInterfaces(o)).append("\n")
-			.append("- Konstruktoren: ").append(printConstructors(o)).append("\n");
+			.append("\n\n").append("- Class Modifier: ").append(oih.printClassModifiers(c)).append("\n\n")
+			.append("- Oberklassen: ").append(oih.printSuperclasses(o)).append("\n")
+			.append("- Interfaces: ").append(oih.printInterfaces(o)).append("\n")
+			.append("- Konstruktoren: ").append(oih.printConstructors(o)).append("\n");
 		}
 
 		fileInfoTextArea.setText(sb.toString());
 	}
 
-	private String printClassModifiers(Class<?> c) {
-		return c.getModifiers() == 0 ? "no class-modifier (Package)" : Modifier.toString(c.getModifiers());
-	}
-	
-	private String printMethodModifiers(Method m) {
-		return Modifier.toString(m.getModifiers());
-	}
 
-	private String printSuperclasses(Object o) {
-		StringBuilder sb = new StringBuilder();
-		Class<?> subclass = o.getClass();
-		Class<?> superclass = subclass.getSuperclass();
-		while (superclass != null) {
-			String className = superclass.getName();
-			sb.append("\n").append("  - ").append(className);
-			subclass = superclass;
-			superclass = subclass.getSuperclass();
-		}
-		sb.append(" (Superklasse)\n");
-		return sb.toString();
-	}
-	
-	private String printInterfaces(Object o){
-		StringBuilder sb = new StringBuilder();
-		Class<?> c = o.getClass();
-		Class<?>[] theInterfaces = c.getInterfaces();
-		if(theInterfaces.length != 0){
-		sb.append("\n");
-		for (int i = 0; i < theInterfaces.length; i++) {
-			sb.append("  - ").append(theInterfaces[i].getCanonicalName()).append("\n");
-		}
-		return sb.toString();
-		}
-		return "No Interfaces implemented\n";
-	}
-	
-	private String printConstructors(Object o) {
-		StringBuilder sb = new StringBuilder();
-		Class<?> c = o.getClass();
-		Constructor<?>[] theConstructors = c.getDeclaredConstructors();
-		sb.append("\n");
-		for (int i = 0; i < theConstructors.length; i++) {
-			sb.append("  - ").append(theConstructors[i]).append("\n");
-		}
-		return sb.toString();
-	}
-	
-	private String printFieldInfos(Field field){
-		StringBuilder sb = new StringBuilder();
-		Class<?> typeClass = field.getType();
-		sb.append("- Name: " + field.getName() + "\n- Type: " + typeClass.getName() + "\n- Modifier(s): " + printClassModifiers(typeClass));
-		return sb.toString();
-	}
-	
-	private String printMethod(Method method) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("- Name: " + method.getName());
-		sb.append("\n- Modifier(s): " + printMethodModifiers(method));
-		sb.append("\n- Rückgabetyp: " + method.getReturnType().getSimpleName());
-		Class<?>[] parameterTypes = method.getParameterTypes();
-		sb.append("\n- Übergabeparamtertyp:");
-		for (int k = 0; k < parameterTypes.length; k++) {
-			sb.append(" " + parameterTypes[k].getSimpleName() + " ");
-		}
-		return sb.toString();
-	}
 
 }
