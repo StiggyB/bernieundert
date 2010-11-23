@@ -1,5 +1,15 @@
 package a08;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         In dieser Klasse befinden sich die Methoden, zum Inspizieren von
+ *         Objekten. Die Methoden sind ausgelagert aus der ExplorerTree Klasse, 
+ *         um diese übersichtlicher zu gestalten.
+ * 
+ */
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
