@@ -1,5 +1,14 @@
 package a08;
 
+/**
+ * 
+ * @author Bernie und Ert
+ * 
+ *         Dies ist eine recht "nutzlose" Klasse, sie dient uns nur
+ *         zu Testzwecken bei der "Objektschnueffelei"
+ * 
+ */
+
 import java.io.Serializable;
 
 import javax.swing.JTree;

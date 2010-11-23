@@ -1,14 +1,13 @@
 package a08;
 
-//TODO: Methoden variablen? blockvariablen? access 
 
 /**
  * 
  * @author Bernie und Ert
  * 
- *         In dieser Klasse befinden sich die Methoden, die ein FileExplorer 
+ *         In dieser Klasse befinden sich die Methoden, die ein ObjectExplorer 
  *         Fenster öffnen. Der Frame setzt sich aus einer gesplitteten Oberfläche
- *         für einen Verzeichnisbaum auf der Linken und Verzeichnis/Dateiinfos
+ *         für einen Objektbaum auf der Linken und Objekt/Methoden/Felderinformationen
  *         auf der Rechten, sowie einem Menü zusammen.
  * 
  */
@@ -21,7 +20,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,7 +40,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ExplorerTree {
 
-	public class FieldAndValue {
+	private class FieldAndValue {
 		private final Field field;
 		private final Object value;
 
@@ -61,25 +59,26 @@ public class ExplorerTree {
 	
 	
 	//Konstruktor, Auswahl des zu inspizierenden Objekts
+	//Geplant war, wie bei a03, ein PopUp beim Start des Programms, worüber man verschiedene Objekte
+	//hätte wählen können... wird vielleicht noch ergänzt :)
+	//TODO: Entweder mehrere Objekte im Baum realisieren oder "ObjectChooser" zur Laufzeit
 	public ExplorerTree() throws IllegalArgumentException, IOException, IllegalAccessException{
 		 this.oih= new ObjectInspectHelper();
 //		this.scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
-//		this.scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
-		this.scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
+		this.scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
+//		this.scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
 	}
 
 
 	public void buildFrame() {
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setTitle("1337 FileLister (c) Bernie & Ert");
+		frame.setTitle("1337 ObjectLister (c) Bernie & Ert");
 		frame.setLayout(new BorderLayout());
 
 		fileInfoTextArea = new JTextArea("Fileinfo:");
 
 		JSplitPane splitPane = new JSplitPane();
-
-
 		splitPane.setLeftComponent(scrollPane);
 		splitPane.setRightComponent(fileInfoTextArea);
 
@@ -204,16 +203,12 @@ public class ExplorerTree {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-
-
 				if (closeApp == event.getSource()) {
 					System.exit(0);
-
 				}
 
 				if (aboutApp == event.getSource()) {
 					buildAboutFrame();
-
 				}
 			}
 		};
@@ -229,9 +224,8 @@ public class ExplorerTree {
 	}
 
 	private void buildAboutFrame() {
-		JTextArea aboutTxt = new JTextArea(
-				"Work done by:\nJan-Tristan Rudat\nMartin Slowikowski\n\n(c)1337-2010 Bernie und Ert");
-		final JFrame aboutFrame = new JFrame("About 1337-FileLister");
+		JTextArea aboutTxt = new JTextArea("Work done by:\nJan-Tristan Rudat\nMartin Slowikowski\n\n(c)1337-2010 Bernie und Ert");
+		final JFrame aboutFrame = new JFrame("About 1337-ObjectLister");
 		JButton exitButton = new JButton("Bump me!!!11eins");
 		ActionListener exitListener = new ActionListener() {
 
