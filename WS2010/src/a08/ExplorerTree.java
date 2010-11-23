@@ -1,5 +1,7 @@
 package a08;
 
+//TODO: Methoden variablen? blockvariablen? access 
+
 /**
  * 
  * @author Bernie und Ert
@@ -20,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,7 +40,6 @@ import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
 public class ExplorerTree {
 
@@ -69,8 +71,8 @@ public class ExplorerTree {
 
 		JSplitPane splitPane = new JSplitPane();
 //		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
-		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
-//		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
+//		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
+		JScrollPane scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
 
 		splitPane.setLeftComponent(scrollPane);
 		splitPane.setRightComponent(fileInfoTextArea);
@@ -92,6 +94,9 @@ public class ExplorerTree {
 		addMethodsAndFields(rootDirNode, objectToInspect);
 
 		tree = new JTree(rootDirNode) {
+	
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public String convertValueToText(Object value, boolean selected,
 					boolean expanded, boolean leaf, int row, boolean hasFocus) {
@@ -268,7 +273,7 @@ public class ExplorerTree {
 		if (o instanceof FieldAndValue) {
 			Field field = ((FieldAndValue) o).field;
 			sb.append("Feld:\n");
-			sb.append(printFieldNames(field));
+			sb.append(printFieldInfos(field));
 		} else if (o instanceof Method) {
 			sb.append("Methode:\n");
 			sb.append(printMethod((Method) o));
@@ -277,8 +282,8 @@ public class ExplorerTree {
 			sb.append("Klasse:\n");
 			Class<?> c = o.getClass();
 			sb.append("- Name: ").append(c.getSimpleName())
-			.append("\n").append("- Class Modifier: ").append(printClassModifiers(c)).append("\n")
-			.append("- Superklasse: ").append(printSuperclasses(o)).append("\n")
+			.append("\n\n").append("- Class Modifier: ").append(printClassModifiers(c)).append("\n\n")
+			.append("- Oberklassen: ").append(printSuperclasses(o)).append("\n")
 			.append("- Interfaces: ").append(printInterfaces(o)).append("\n")
 			.append("- Konstruktoren: ").append(printConstructors(o)).append("\n");
 		}
@@ -289,17 +294,22 @@ public class ExplorerTree {
 
 
 	private String printClassModifiers(Class<?> c) {
-		return Modifier.toString(c.getModifiers());
+		return c.getModifiers() == 0 ? "no class-modifier (Package)" : Modifier.toString(c.getModifiers());
+	}
+	
+	private String printMethodModifiers(Method m) {
+		return Modifier.toString(m.getModifiers());
 	}
 
 	private String printSuperclasses(Object o) {
 		StringBuilder sb = new StringBuilder();
 		Class<?> subclass = o.getClass();
 		Class<?> superclass = subclass.getSuperclass();
+		sb.append("\n");
 		while (superclass != null) {
 			String className = superclass.getName();
-			sb.append(className);
-			sb.append(", ");
+			sb.append("  - ").append(className).append("\n");
+//			sb.append(", ");
 			subclass = superclass;
 			superclass = subclass.getSuperclass();
 		}
@@ -310,17 +320,20 @@ public class ExplorerTree {
 		StringBuilder sb = new StringBuilder();
 		Class<?> c = o.getClass();
 		Class<?>[] theInterfaces = c.getInterfaces();
+		if(theInterfaces.length != 0){
 		sb.append("\n");
 		for (int i = 0; i < theInterfaces.length; i++) {
 			sb.append("  - ").append(theInterfaces[i].getCanonicalName()).append("\n");
 		}
 		return sb.toString();
+		}
+		return "No Interfaces implemented\n";
 	}
 	
 	private String printConstructors(Object o) {
 		StringBuilder sb = new StringBuilder();
 		Class<?> c = o.getClass();
-		Constructor[] theConstructors = c.getDeclaredConstructors();
+		Constructor<?>[] theConstructors = c.getDeclaredConstructors();
 		sb.append("\n");
 		for (int i = 0; i < theConstructors.length; i++) {
 			sb.append("  - ").append(theConstructors[i]).append("\n");
@@ -334,14 +347,13 @@ public class ExplorerTree {
 		return sb.toString();
 	}
 	
-	private String printFieldNames(Field field){
+	private String printFieldInfos(Field field){
 		StringBuilder sb = new StringBuilder();
 		String fieldName = field.getName();
 		Class<?> typeClass = field.getType();
 		String fieldType = typeClass.getName();
 		String fieldModifier = printClassModifiers(typeClass);
-		sb.append("Name: " + fieldName + ", Type: " + fieldType + ", Modifier: " + fieldModifier);
-		sb.append("\n");
+		sb.append("- Name: " + fieldName + "\n- Type: " + fieldType + "\n- Modifier(s): " + fieldModifier);
 		return sb.toString();
 	}
 	
@@ -349,14 +361,13 @@ public class ExplorerTree {
 	// TODO: Modifier
 	private String printMethod(Method method) {
 		StringBuilder sb = new StringBuilder();
-		String methodString = method.getName();
-		sb.append("Name: " + methodString);
-		String returnString = method.getReturnType().getName();
-		sb.append(", Rückgabetyp: " + returnString);
-		Class[] parameterTypes = method.getParameterTypes();
-		sb.append(", Übergabeparamtertyp:");
+		sb.append("- Name: " + method.getName());
+		sb.append("\n- Modifier(s): " + printMethodModifiers(method));
+		sb.append("\n- Rückgabetyp: " + method.getReturnType().getSimpleName());
+		Class<?>[] parameterTypes = method.getParameterTypes();
+		sb.append("\n- Übergabeparamtertyp:");
 		for (int k = 0; k < parameterTypes.length; k++) {
-			String parameterString = parameterTypes[k].getName();
+			String parameterString = parameterTypes[k].getSimpleName();
 			sb.append(" " + parameterString + " ");
 		}
 		return sb.toString();
