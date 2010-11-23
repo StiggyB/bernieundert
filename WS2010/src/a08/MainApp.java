@@ -25,6 +25,7 @@ public class MainApp {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 		ExplorerTree ept = new ExplorerTree();
+		
 		ept.buildFrame();
 		
 	}
