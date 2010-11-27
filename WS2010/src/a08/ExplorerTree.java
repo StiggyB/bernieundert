@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,7 +41,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ExplorerTree {
 
-	private class FieldAndValue {
+	/**
+	 * 
+	 * @author Martin
+	 *
+	 */
+	 private class FieldAndValue {
 		private final Field field;
 		private final Object value;
 
@@ -62,6 +68,11 @@ public class ExplorerTree {
 	//Geplant war, wie bei a03, ein PopUp beim Start des Programms, worüber man verschiedene Objekte
 	//hätte wählen können... wird vielleicht noch ergänzt :)
 	//TODO: Entweder mehrere Objekte im Baum realisieren oder "ObjectChooser" zur Laufzeit
+	/**
+	 * Konstruktor mit einigen Beispielobjekten, die inspiziert werden können.
+	 * Es darf immer nur eine Zeile zur Zeit einkommentiert sein.
+	 * Ggf. muss ArrayList noch importiert werden, ansonsten würde eine Warning erscheinen.
+	 */
 	public ExplorerTree() throws IllegalArgumentException, IOException, IllegalAccessException{
 		 this.oih= new ObjectInspectHelper();
 //		this.scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
@@ -69,7 +80,9 @@ public class ExplorerTree {
 //		this.scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
 	}
 
-
+	/**
+	 *  
+	 */
 	public void buildFrame() {
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -90,6 +103,14 @@ public class ExplorerTree {
 		frame.setMinimumSize(new Dimension(640, 480));
 	}
 
+	/**
+	 * 
+	 * @param objectToInspect
+	 * @return
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	private JTree buildExplorerTree(Object objectToInspect) throws IOException, IllegalArgumentException, IllegalAccessException {
 		DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(objectToInspect);
 		addMethodsAndFields(rootDirNode, objectToInspect);
@@ -123,7 +144,15 @@ public class ExplorerTree {
 				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
 				Object userObject = selectedNode.getUserObject();
 				
-				fillTextAreaWithFileInfos(userObject);
+				try {
+					fillTextAreaWithFileInfos(userObject);
+				} catch (IllegalArgumentException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		tree.addTreeExpansionListener(new TreeExpansionListener() {
@@ -164,6 +193,13 @@ public class ExplorerTree {
 		return tree;
 	}
 
+	/**
+	 * 
+	 * @param parentNode
+	 * @param objectToInspect
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	private void addMethodsAndFields(DefaultMutableTreeNode parentNode, Object objectToInspect) throws IllegalArgumentException, IllegalAccessException {
 		DefaultMutableTreeNode fieldsChildNode = new DefaultMutableTreeNode("Fields");
 		parentNode.add(fieldsChildNode);
@@ -192,6 +228,10 @@ public class ExplorerTree {
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JMenuBar buildMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu data = new JMenu("Datei");
@@ -223,6 +263,9 @@ public class ExplorerTree {
 		return menuBar;
 	}
 
+	/**
+	 * 
+	 */
 	private void buildAboutFrame() {
 		JTextArea aboutTxt = new JTextArea("Work done by:\nJan-Tristan Rudat\nMartin Slowikowski\n\n(c)1337-2010 Bernie und Ert");
 		final JFrame aboutFrame = new JFrame("About 1337-ObjectLister");
@@ -247,13 +290,19 @@ public class ExplorerTree {
 		aboutFrame.setVisible(true);
 	}
 
-	private void fillTextAreaWithFileInfos(Object o) {
+	/**
+	 * 
+	 * @param o
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	private void fillTextAreaWithFileInfos(Object o) throws IllegalArgumentException, IllegalAccessException {
 		StringBuilder sb = new StringBuilder();
 		
 		if (o instanceof FieldAndValue) {
 			Field field = ((FieldAndValue) o).field;
 			sb.append("Feld:\n");
-			sb.append(oih.printFieldInfos(field));
+			sb.append(oih.printFieldInfos(field, o));
 		} else if (o instanceof Method) {
 			sb.append("Methode:\n");
 			sb.append(oih.printMethod((Method) o));
@@ -264,8 +313,9 @@ public class ExplorerTree {
 			sb.append("- Name: ").append(c.getSimpleName())
 			.append("\n\n").append("- Class Modifier: ").append(oih.printClassModifiers(c)).append("\n\n")
 			.append("- Oberklassen: ").append(oih.printSuperclasses(o)).append("\n")
-			.append("- Interfaces: ").append(oih.printInterfaces(o)).append("\n")
-			.append("- Konstruktoren: ").append(oih.printConstructors(o)).append("\n");
+			.append("- Interfaces (ggf. darunter Annotationen): ").append(oih.printInterfaces(o)).append("\n")
+			.append("- Konstruktoren: ").append(oih.printConstructors(o)).append("\n")
+			.append("- Annotationen: ").append(oih.printClassAnnotations(o)).append("\n");
 		}
 
 		fileInfoTextArea.setText(sb.toString());

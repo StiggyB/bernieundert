@@ -6,14 +6,20 @@ package a08;
  * 
  *         Dies ist eine recht "nutzlose" Klasse, sie dient uns nur
  *         zu Testzwecken bei der "Objektschnueffelei"
+ *         
+ * @version 0.1beta
+ *  
  * 
  */
 
 import java.io.Serializable;
 
+import javax.management.DescriptorKey;
 import javax.swing.JTree;
 
-class DummyClass extends JTree implements Serializable, Cloneable {
+@MyAnnotation(name="DummyAnnotation",  value = "Tach, Post!")
+class DummyClass extends JTree implements Serializable, Cloneable, IDummyClass {
+
 
 	private static final long serialVersionUID = 1L;
 	
@@ -33,18 +39,37 @@ class DummyClass extends JTree implements Serializable, Cloneable {
 		publicInteger = j;
 	}
 	
+	/* (non-Javadoc)
+	 * @see a08.IDummyClass#getPrivateInteger()
+	 */
+	@Override
 	public Integer getPrivateInteger() {
 		return privateInteger;
 	}
 	
+	/* (non-Javadoc)
+	 * @see a08.IDummyClass#setPrivateInteger(java.lang.Integer)
+	 */
+	@Override
 	public void setPrivateInteger(Integer privateInteger) {
 		this.privateInteger = privateInteger;
 	}
 	
+	/* (non-Javadoc)
+	 * @see a08.IDummyClass#getPublicInteger()
+	 */
+	@Override
+	@Deprecated
+	@DescriptorKey(value = "1337")
 	public Integer getPublicInteger() {
 		return publicInteger;
 	}
 	
+	/* (non-Javadoc)
+	 * @see a08.IDummyClass#setPublicInteger(java.lang.Integer)
+	 */
+	@Override
+	@Deprecated	
 	public void setPublicInteger(Integer publicInteger) {
 		this.publicInteger = publicInteger;
 	}
