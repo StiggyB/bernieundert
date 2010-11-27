@@ -1,27 +1,24 @@
 package a08;
 
-/**
- * 
- * @author Bernie und Ert
- * 
- *         Klasse, welche unseren ObjectExplorer startet und das Look&Feel des Systems setzt
- *         für das GUI. 
- *         
- * @version 1.0        
- * 
- */
-
 import java.io.IOException;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+/**
+ * Klasse, welche unseren ObjectExplorer startet und das Look&Feel des Systems
+ * setzt für das GUI.
+ * 
+ * @author Bernie und Ert
+ * @version 1.0
+ */
 public class MainApp {
 
 	/**
 	 * main-Methode zum Starten des Objektbrowsers
 	 * 
-	 * @param args Übergabeparameter an das Programm
+	 * @param args
+	 *            Übergabeparameter an das Programm
 	 * @throws ClassNotFoundException
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
@@ -35,9 +32,9 @@ public class MainApp {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 		ExplorerTree ept = new ExplorerTree();
-		
+
 		ept.buildFrame();
-		
+
 	}
 
 }
