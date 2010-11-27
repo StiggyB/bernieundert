@@ -1,24 +1,22 @@
 package a08;
 
-/**
- * 
- * @author Bernie und Ert
- * 
- *         In dieser Klasse befinden sich die Methoden, zum Inspizieren von
- *         Objekten. Die Methoden sind ausgelagert aus der ExplorerTree Klasse, 
- *         um diese übersichtlicher zu gestalten.
- * 
- */
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import a08.ExplorerTree.FieldAndValue;
 
+/**
+ * In dieser Klasse befinden sich die Methoden, zum Inspizieren von
+ * Objekten. Die Methoden sind ausgelagert aus der ExplorerTree Klasse, 
+ * um diese übersichtlicher zu gestalten.
+ * 
+ * @author Bernie und Ert
+ */
 public class ObjectInspectHelper {
 	
 	/**
+	 * Diese Methode liefert die Modifier einer übergebenen Klasse zurück.
 	 * 
 	 * @param c Übergabeklassenobjekt
 	 * @return String Liefert die Modifier des übergebenen Klassenobjekts zurück
@@ -28,6 +26,7 @@ public class ObjectInspectHelper {
 	}
 	
 	/**
+	 * Diese Methode liefert alle Annotationen der Klasse eines übergebenen Objekts zurück.
 	 * 
 	 * @param o Übergabeobjekt
 	 * @return String Liefert alle Annotationen einer Klasse zurück
@@ -44,6 +43,7 @@ public class ObjectInspectHelper {
 	}
 	
 	/**
+	 * Diese Methode liefert alle Modifier einer übergebenen Methode zurück.
 	 * 
 	 * @param m Übergabemethode
 	 * @return String Liefert die Modifier des übergebenen Methodenobjekts zurück
@@ -53,6 +53,7 @@ public class ObjectInspectHelper {
 	}
 
 	/**
+	 * Diese Methode iteriert bis zur Superklasse eines übergebenen Objekts und gibt diese zurück.
 	 * 
 	 * @param o Übergabeobejct
 	 * @return String Liefert alle Oberklassen und die Superklasse des Übergabeobjekts
@@ -72,7 +73,7 @@ public class ObjectInspectHelper {
 	}
 	
 	/**
-	 * 
+	 * Diese Methode liefert alle implementierten Interfaces einer Klasse zurück, samt zugehörigen Annotationen.
 	 * @param o Übergabeobjekt
 	 * @return String Liefert alle implementierten Interfaces des Übergabeobejekts mit zugehörigen Annotationen 
 	 */
@@ -97,6 +98,7 @@ public class ObjectInspectHelper {
 	}
 	
 	/**
+	 * Diese Methode liefert alle Konstruktoren samt Übergabeparametern zurück.
 	 * 
 	 * @param o Übergabeobjekt
 	 * @return String Liefert alle Konstruktoren des Übergabeobjekts zurück
@@ -113,24 +115,25 @@ public class ObjectInspectHelper {
 	}
 	
 	/**
+	 * Diese Methode liefert folgende Informationen über ein übergebenes Feld zurück: Name, Typ, Modifiers, Wert.
 	 * 
-	 * @param field Übergebenes Feld
-	 * @param o zugehöriges Übergabeobjekt
+	 * @param fav Übergebenes Feld
 	 * @return String Liefert Name, Typ, Modifier(s) und Wert des übergebenen Feldes
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public String printFieldInfos(Field field, Object o) throws IllegalArgumentException, IllegalAccessException{
+	public String printFieldInfos(FieldAndValue fav) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sb = new StringBuilder();
-		Class<?> typeClass = field.getType();
-		sb.append("- Name: " + field.getName() + "\n");
+		Class<?> typeClass = fav.field.getType();
+		sb.append("- Name: " + fav.field.getName() + "\n");
 		sb.append("\n- Typ: " + typeClass.getName() + "\n");
 		sb.append("\n- Modifier(s): " + printClassModifiers(typeClass) + "\n");
-		sb.append("\n- Wert: " + field.get(o) + "\n");
+		sb.append("\n- Wert: " + fav.field.get(fav.value) + "\n");
 		return sb.toString();
 	}
 	
 	/**
+	 * Diese Methode folgende Informationen zu einer übergebenen Methode zurück: Name, Annotationen, Modifiers, Rückgabetyp, Übergabeparameter.
 	 * 
 	 * @param method Übergabemethodenobjekt
 	 * @return String Liefert Name, Annotationen, Modifiers, Rückgabetyp und Übergabeparameter der übergebenen Methode

@@ -1,61 +1,60 @@
 package a08;
 
-/**
- * 
- * @author Bernie und Ert
- * 
- *         Dies ist eine recht "nutzlose" Klasse, sie dient uns nur
- *         zu Testzwecken bei der "Objektschnueffelei"
- *         
- * @version 0.1beta
- *  
- * 
- */
-
 import java.io.Serializable;
-
 import javax.management.DescriptorKey;
 import javax.swing.JTree;
 
-@MyAnnotation(name="DummyAnnotation",  value = "Tach, Post!")
+/**
+ * Dies ist eine recht "nutzlose" Klasse, sie dient uns nur zu Testzwecken bei
+ * der "Objektschnueffelei"
+ * 
+ * @author Bernie und Ert
+ * @version 0.1beta
+ */
+@MyAnnotation(name = "DummyAnnotation", value = "Tach, Post!")
 class DummyClass extends JTree implements Serializable, Cloneable, IDummyClass {
 
-
 	private static final long serialVersionUID = 1L;
-	
+
 	private Integer privateInteger;
 	public Integer publicInteger;
-	
+
 	public DummyClass() {
 		this(1, 2);
 	}
-	
-//	private DummyClass(int a) {
-//		this(1, 2);
-//	}
+
+	// private DummyClass(int a) {
+	// this(1, 2);
+	// }
 
 	public DummyClass(int i, int j) {
 		privateInteger = i;
 		publicInteger = j;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see a08.IDummyClass#getPrivateInteger()
 	 */
 	@Override
 	public Integer getPrivateInteger() {
 		return privateInteger;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see a08.IDummyClass#setPrivateInteger(java.lang.Integer)
 	 */
 	@Override
 	public void setPrivateInteger(Integer privateInteger) {
 		this.privateInteger = privateInteger;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see a08.IDummyClass#getPublicInteger()
 	 */
 	@Override
@@ -64,16 +63,16 @@ class DummyClass extends JTree implements Serializable, Cloneable, IDummyClass {
 	public Integer getPublicInteger() {
 		return publicInteger;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see a08.IDummyClass#setPublicInteger(java.lang.Integer)
 	 */
 	@Override
-	@Deprecated	
+	@Deprecated
 	public void setPublicInteger(Integer publicInteger) {
 		this.publicInteger = publicInteger;
 	}
-	
-	
-	
+
 }

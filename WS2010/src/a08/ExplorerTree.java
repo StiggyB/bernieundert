@@ -1,17 +1,5 @@
 package a08;
 
-
-/**
- * 
- * @author Bernie und Ert
- * 
- *         In dieser Klasse befinden sich die Methoden, die ein ObjectExplorer 
- *         Fenster öffnen. Der Frame setzt sich aus einer gesplitteten Oberfläche
- *         für einen Objektbaum auf der Linken und Objekt/Methoden/Felderinformationen
- *         auf der Rechten, sowie einem Menü zusammen.
- * 
- */
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -20,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -39,6 +26,15 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+/**
+ * In dieser Klasse befinden sich die Methoden, die ein ObjectExplorer 
+ * Fenster öffnen. Der Frame setzt sich aus einer gesplitteten Oberfläche
+ * für einen Objektbaum auf der Linken und Objekt/Methoden/Felderinformationen
+ * auf der Rechten, sowie einem Menü zusammen.
+ * 
+ * @author Bernie und Ert         
+ * @version 1.05 refactored from a03
+ */
 public class ExplorerTree {
 
 	/**
@@ -46,9 +42,9 @@ public class ExplorerTree {
 	 * @author Martin
 	 *
 	 */
-	 private class FieldAndValue {
-		private final Field field;
-		private final Object value;
+	 class FieldAndValue {
+		final Field field;
+		final Object value;
 
 		public FieldAndValue(Field field, Object value) {
 			this.field = field;
@@ -74,14 +70,17 @@ public class ExplorerTree {
 	 * Ggf. muss ArrayList noch importiert werden, ansonsten würde eine Warning erscheinen.
 	 */
 	public ExplorerTree() throws IllegalArgumentException, IOException, IllegalAccessException{
-		 this.oih= new ObjectInspectHelper();
+		this.oih= new ObjectInspectHelper();
 //		this.scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
-		this.scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(5, 10)));
+//		Object objectToInspect = new DummyClass(5, 10);
+//		this.scrollPane = new JScrollPane(buildExplorerTree(objectToInspect));
 //		this.scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
+		this.scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(10, 5)));
+		
 	}
 
 	/**
-	 *  
+	 * Diese Methode erstellt den Hauptframe des Objektbrowsers und setzt wichtige Grundeinstellung. 
 	 */
 	public void buildFrame() {
 
@@ -104,9 +103,10 @@ public class ExplorerTree {
 	}
 
 	/**
+	 * Diese Methode erstellt die Baumstruktur für unseren Objektbrowser.
 	 * 
-	 * @param objectToInspect
-	 * @return
+	 * @param objectToInspect zu inspizierendes Objekt
+	 * @return JTree Baum mit Fields und Methods des Übergabeobjekts
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
@@ -194,9 +194,12 @@ public class ExplorerTree {
 	}
 
 	/**
+	 * Diese Methode wird für das zu inspizierende Objekt aufgerufen und listet Felder und Methoden dazu auf.
+	 * Weiterhin wird diese Methode gerufen, um für Objekttypen unterhalb unseres zu inspizierenden Objekts 
+	 * Felder und Methoden zu listen.
 	 * 
-	 * @param parentNode
-	 * @param objectToInspect
+	 * @param parentNode übergeordneter Node des Objekts
+	 * @param objectToInspect ursprüngliches zu inspizierndes Objekt
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
@@ -229,8 +232,9 @@ public class ExplorerTree {
 	}
 
 	/**
+	 * Mit dieser Methode wird die Menüleiste des Objektbrowers erstellt.
 	 * 
-	 * @return
+	 * @return JMenuBar Liefert die Menüleiste für den Objektbrowser 
 	 */
 	private JMenuBar buildMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
@@ -264,7 +268,7 @@ public class ExplorerTree {
 	}
 
 	/**
-	 * 
+	 * Methode zur Erstellung des About-Frames des Hilfedialogs der Menüleiste
 	 */
 	private void buildAboutFrame() {
 		JTextArea aboutTxt = new JTextArea("Work done by:\nJan-Tristan Rudat\nMartin Slowikowski\n\n(c)1337-2010 Bernie und Ert");
@@ -291,8 +295,10 @@ public class ExplorerTree {
 	}
 
 	/**
+	 * In dieser Methode wird das Textfeld auf der rechten Seite der SplitPane mit entsprechenden Infos
+	 * zu Methoden, Felder oder der Klasse gefüllt.
 	 * 
-	 * @param o
+	 * @param o Übergabeobjekt
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
@@ -300,9 +306,9 @@ public class ExplorerTree {
 		StringBuilder sb = new StringBuilder();
 		
 		if (o instanceof FieldAndValue) {
-			Field field = ((FieldAndValue) o).field;
+			FieldAndValue fav = (FieldAndValue) o;
 			sb.append("Feld:\n");
-			sb.append(oih.printFieldInfos(field, o));
+			sb.append(oih.printFieldInfos(fav));
 		} else if (o instanceof Method) {
 			sb.append("Methode:\n");
 			sb.append(oih.printMethod((Method) o));
