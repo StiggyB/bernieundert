@@ -6,6 +6,8 @@ package a08;
  * 
  *         Klasse, welche unseren ObjectExplorer startet und das Look&Feel des Systems setzt
  *         für das GUI. 
+ *         
+ * @version 1.0        
  * 
  */
 
@@ -16,6 +18,16 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class MainApp {
 
+	/**
+	 * main-Methode zum Starten des Objektbrowsers
+	 * 
+	 * @param args Übergabeparameter an das Programm
+	 * @throws ClassNotFoundException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws UnsupportedLookAndFeelException
+	 * @throws IOException
+	 */
 	public static void main(String args[]) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException, IOException {
