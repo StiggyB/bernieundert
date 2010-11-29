@@ -25,6 +25,7 @@ import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  * In dieser Klasse befinden sich die Methoden, die ein ObjectExplorer 
@@ -72,10 +73,24 @@ public class ExplorerTree {
 	public ExplorerTree() throws IllegalArgumentException, IOException, IllegalAccessException{
 		this.oih= new ObjectInspectHelper();
 //		this.scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
-//		Object objectToInspect = new DummyClass(5, 10);
 //		this.scrollPane = new JScrollPane(buildExplorerTree(objectToInspect));
 //		this.scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
-		this.scrollPane = new JScrollPane(buildExplorerTree(new DummyClass(10, 5)));
+		
+		Object objectToInspect = new DummyClass(5, 10);
+		final ObjectHolder objectHolder = new ObjectHolder(objectToInspect);
+		objectHolder.setObjectChangedListener(new ObjectChangedListener() {
+			@Override
+			public void objectChanged() throws Exception {
+				DefaultMutableTreeNode rootNode = createRootNode(objectHolder.getObject());
+				DefaultTreeModel model = new DefaultTreeModel(rootNode);
+				tree.setModel(model);
+			}
+		});
+		
+		Thread objectHolderThread = new Thread(objectHolder, "objectHolderThread");
+		objectHolderThread.start();
+		
+		this.scrollPane = new JScrollPane(buildExplorerTree(objectHolder));
 		
 	}
 
@@ -111,11 +126,10 @@ public class ExplorerTree {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	private JTree buildExplorerTree(Object objectToInspect) throws IOException, IllegalArgumentException, IllegalAccessException {
-		DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(objectToInspect);
-		addMethodsAndFields(rootDirNode, objectToInspect);
+	private JTree buildExplorerTree(ObjectHolder objectHolder) throws IOException, IllegalArgumentException, IllegalAccessException {
+		DefaultMutableTreeNode rootNode = createRootNode(objectHolder.getObject());
 
-		tree = new JTree(rootDirNode) {
+		tree = new JTree(rootNode) {
 	
 			private static final long serialVersionUID = 1L;
 
@@ -147,10 +161,8 @@ public class ExplorerTree {
 				try {
 					fillTextAreaWithFileInfos(userObject);
 				} catch (IllegalArgumentException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -193,6 +205,12 @@ public class ExplorerTree {
 		return tree;
 	}
 
+	private DefaultMutableTreeNode createRootNode(Object object) throws IllegalAccessException {
+		DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(object);
+		addMethodsAndFields(rootDirNode, object);
+		return rootDirNode;
+	}
+
 	/**
 	 * Diese Methode wird für das zu inspizierende Objekt aufgerufen und listet Felder und Methoden dazu auf.
 	 * Weiterhin wird diese Methode gerufen, um für Objekttypen unterhalb unseres zu inspizierenden Objekts 
@@ -205,7 +223,6 @@ public class ExplorerTree {
 	 */
 	private void addMethodsAndFields(DefaultMutableTreeNode parentNode, Object objectToInspect) throws IllegalArgumentException, IllegalAccessException {
 		DefaultMutableTreeNode fieldsChildNode = new DefaultMutableTreeNode("Fields");
-		parentNode.add(fieldsChildNode);
 
 		if (objectToInspect != null) {
 			Field[] declaredFields = objectToInspect.getClass().getDeclaredFields();
@@ -219,14 +236,20 @@ public class ExplorerTree {
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(fav);
 				fieldsChildNode.add(node);
 			}
+			
+			if (fieldsChildNode.getChildCount() > 0) {
+				parentNode.add(fieldsChildNode);
+			}
 	
 			DefaultMutableTreeNode methodsChildNode = new DefaultMutableTreeNode("Methods");
-			parentNode.add(methodsChildNode);
 			
 			Method[] declaredMethods = objectToInspect.getClass().getDeclaredMethods();
 			for (int i = 0; i < declaredMethods.length; i++) {
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(declaredMethods[i]);
 				methodsChildNode.add(node);
+			}
+			if (methodsChildNode.getChildCount() > 0) {
+				parentNode.add(methodsChildNode);
 			}
 		}
 	}

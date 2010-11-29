@@ -1,26 +1,49 @@
 package a08;
 
-import java.lang.reflect.Field;
 
-public class ObjectHolder {
+public class ObjectHolder implements Runnable {
 
-	final Object object;
+	private final Object object;
+	private ObjectChangedListener objectChangedListener;
 	
 	public ObjectHolder(Object object) {
 		this.object = object;
 	}
 
-	public void set(Field field, Object value) throws IllegalArgumentException, IllegalAccessException {
-		field.set(object, value);
-		System.out.println("set with " + value);
+//	public void set(Field field, Object value) throws Exception {
+//		field.set(object, value);
+//		objectChangedListener.objectChanged();
+//	}
+
+	public Object getObject() {
+		return object;
 	}
 	
-	public static void main(String[] args) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		DummyClass dummy = new DummyClass();
-		dummy.publicInteger = 2;
-		ObjectHolder oh = new ObjectHolder(dummy);
-		Field field = dummy.getClass().getField("publicInteger");
-		oh.set(field , 2);
+	@SuppressWarnings("deprecation")
+	@Override
+	public void run() {
+		try {
+			while (true) {
+				if (object instanceof DummyClass) {
+					DummyClass dummyClass = (DummyClass) object;
+					dummyClass.setPublicInteger(dummyClass.getPublicInteger() + 1);
+					Thread.sleep(5000);
+					objectChangedListener.objectChanged();
+				} else {
+					synchronized (this) {
+						wait();
+					}
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setObjectChangedListener(ObjectChangedListener objectChangedListener) {
+		this.objectChangedListener = objectChangedListener;
 	}
 
 }
