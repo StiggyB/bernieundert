@@ -128,7 +128,7 @@ public class ObjectInspectHelper {
 		sb.append("- Name: " + fav.field.getName() + "\n");
 		sb.append("\n- Typ: " + typeClass.getName() + "\n");
 		sb.append("\n- Modifier(s): " + printClassModifiers(typeClass) + "\n");
-		sb.append("\n- Wert: " + fav.field.get(fav.value) + "\n");
+		sb.append("\n- Wert: " + fav.value + "\n");
 		return sb.toString();
 	}
 	
