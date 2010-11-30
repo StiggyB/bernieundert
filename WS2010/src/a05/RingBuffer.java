@@ -64,8 +64,8 @@ public class RingBuffer<T> implements IRingBuffer<T> {
 		if (isEmpty()) {
 			throw new RuntimeException("RingBuffer empty: underflow");
 		}
-		T item = elements[head];
-		return item;
+//		T item = elements[head];
+		return elements[head];
 
 	}
 
