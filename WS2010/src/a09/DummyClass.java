@@ -19,6 +19,9 @@ class DummyClass extends JTree implements Serializable, Cloneable, IDummyClass {
 	private Integer privateInteger;
 	public Integer publicInteger;
 
+	/**
+	 * Defaultkonstruktor für die DummyClass
+	 */
 	public DummyClass() {
 		this(1, 2);
 	}
@@ -27,52 +30,53 @@ class DummyClass extends JTree implements Serializable, Cloneable, IDummyClass {
 	// this(1, 2);
 	// }
 
+	/**
+	 * Parametrisierter Konstruktor 
+	 * @param i Wert für privateInteger
+	 * @param j Wert für publicInteger
+	 */
 	public DummyClass(int i, int j) {
 		privateInteger = i;
 		publicInteger = j;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see a08.IDummyClass#getPrivateInteger()
+	/**
+	 * Liefert Wert von privateInteger
+	 * @return int
 	 */
 	@Override
 	public Integer getPrivateInteger() {
 		return privateInteger;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see a08.IDummyClass#setPrivateInteger(java.lang.Integer)
+	/**
+	 * Setzt privateInteger auf den übergebenen Wert
+	 * @param privateInteger
 	 */
 	@Override
 	public void setPrivateInteger(Integer privateInteger) {
-		this.privateInteger = privateInteger;
+		this.privateInteger = privateInteger;		
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see a08.IDummyClass#getPublicInteger()
+	/**
+	 * Liefert Wert von publicInteger
+	 * @return publicInteger
 	 */
 	@Override
-	@Deprecated
 	@DescriptorKey(value = "1337")
+	@Deprecated
 	public Integer getPublicInteger() {
 		return publicInteger;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see a08.IDummyClass#setPublicInteger(java.lang.Integer)
+	/**
+	 * Setzt den Wert von publicInteger
+	 * @param publicInteger
 	 */
 	@Override
 	@Deprecated
 	public void setPublicInteger(Integer publicInteger) {
-		this.publicInteger = publicInteger;
+		this.publicInteger = publicInteger;		
 	}
 
 }
