@@ -39,9 +39,10 @@ import javax.swing.tree.DefaultTreeModel;
 public class ExplorerTree {
 
 	/**
-	 * 
-	 * @author Martin
-	 *
+	 * Innere Klasse (packagesichtbar), um sich Feld und Wert
+	 * eines Objekts zu merken.
+	 *  
+	 * @author Bernie und Ert   
 	 */
 	 class FieldAndValue {
 		final Field field;
@@ -72,10 +73,7 @@ public class ExplorerTree {
 	 */
 	public ExplorerTree() throws IllegalArgumentException, IOException, IllegalAccessException{
 		this.oih= new ObjectInspectHelper();
-//		this.scrollPane = new JScrollPane(buildExplorerTree(Integer.valueOf(10)));
-//		this.scrollPane = new JScrollPane(buildExplorerTree(objectToInspect));
-//		this.scrollPane = new JScrollPane(buildExplorerTree(new ArrayList<String>()));
-		
+//		Object objectToInspect = new JTree();
 		Object objectToInspect = new DummyClass(5, 10);
 		final ObjectHolder objectHolder = new ObjectHolder(objectToInspect);
 		objectHolder.setObjectChangedListener(new ObjectChangedListener() {
@@ -120,7 +118,7 @@ public class ExplorerTree {
 	/**
 	 * Diese Methode erstellt die Baumstruktur für unseren Objektbrowser.
 	 * 
-	 * @param objectToInspect zu inspizierendes Objekt
+	 * @param objectHolder mit dem zu Inspizierenden Ojekt
 	 * @return JTree Baum mit Fields und Methods des Übergabeobjekts
 	 * @throws IOException
 	 * @throws IllegalArgumentException
@@ -205,6 +203,12 @@ public class ExplorerTree {
 		return tree;
 	}
 
+	/**
+	 * Hilfsmethode: Erstellt für die zu insp. Objekte nodes
+	 * @param object Übergabeobjekt
+	 * @return DefaultMutableTreeNode
+	 * @throws IllegalAccessException
+	 */
 	private DefaultMutableTreeNode createRootNode(Object object) throws IllegalAccessException {
 		DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(object);
 		addMethodsAndFields(rootDirNode, object);
