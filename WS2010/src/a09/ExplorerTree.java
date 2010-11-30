@@ -73,7 +73,10 @@ public class ExplorerTree {
 	 */
 	public ExplorerTree() throws IllegalArgumentException, IOException, IllegalAccessException{
 		this.oih= new ObjectInspectHelper();
+//		Testobjekt1
 //		Object objectToInspect = new JTree();
+		
+//		Testobjekt2
 		Object objectToInspect = new DummyClass(5, 10);
 		final ObjectHolder objectHolder = new ObjectHolder(objectToInspect);
 		objectHolder.setObjectChangedListener(new ObjectChangedListener() {
