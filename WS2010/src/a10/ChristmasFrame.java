@@ -16,30 +16,44 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/**
+ * Diese Klasse baut den Frame auf, in dem das ChristmasTree Pattern angezeigt wird.
+ * Ein Großteil stammt aus Aufgabe a03.
+ *  
+ * @author Bernie und Ert
+ * @version 1.0beta
+ */
 public class ChristmasFrame {
 
 	private JFrame frame;
 	private JEditorPane editorPane;
 	private ChristmasTreePattern ctp;
-	private int ITERATIONS = 8;
-	private int i;
+	private int n;
 
-	public ChristmasFrame(ChristmasTreePattern ctp) {
+	/**
+	 * Konstruktor für die ChristmasFrame Klasse.
+	 * @param ctp Objekt der Klasse ChristmasTreePattern
+	 * @param iterations Bis zu welchem Grad iteriert werden soll.
+	 */
+	public ChristmasFrame(ChristmasTreePattern ctp, int iterations) {
 		this.ctp = ctp;
-		this.i = 1;
+		this.n = iterations;
 	}
 
+	/**
+	 * Diese Methode baut den sichtbaren Frame auf und füllt diesen mit Menue und
+	 * dem Muster
+	 */
 	public void buildFrame() {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("1337 ChristmasTreePattern (c) Bernie & Ert");
 		frame.setLayout(new BorderLayout());
 
-		// List<List<String>> lines = ctp.preparePattern();
 		editorPane = new JEditorPane();
 		editorPane.setContentType("text/html");
 		editorPane.setEditable(false);
-		editorPane.setText(ctp.getChristmasTreePattern(i, ITERATIONS));
+		editorPane.setText(ctp.getChristmasTreePattern(n));
 
 		JScrollPane scrollPane = new JScrollPane(editorPane);
 
@@ -51,6 +65,10 @@ public class ChristmasFrame {
 		frame.setMinimumSize(new Dimension(640, 480));
 	}
 
+	/**
+	 * Diese Methode erstellt eine Menue-Bar
+	 * @return fertige JMenuBar
+	 */
 	private JMenuBar buildMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu data = new JMenu("Datei");
@@ -82,6 +100,9 @@ public class ChristmasFrame {
 		return menuBar;
 	}
 
+	/**
+	 * Diese Methode erstellt bei Aufruf den About-Frame aus dem Hile-Kontext-Menue
+	 */
 	private void buildAboutFrame() {
 		JTextArea aboutTxt = new JTextArea(
 				"Work done by:\nJan-Tristan Rudat\nMartin Slowikowski\n\n(c)1337-2010 Bernie und Ert");
