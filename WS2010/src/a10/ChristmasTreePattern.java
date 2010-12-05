@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Diese Klasse baut das ChristmasTreePattern für den Grad eines gewünschten n
  * 
- * @author aay973
- * 
+ * @author Bernie und Ert
+ * @version 1.0
  */
 public class ChristmasTreePattern {
 
-	public String getChristmasTreePattern(int i, int n) {
+	/**
+	 * 
+	 * @param n Für diesen Grad wird das Pattern generiert.
+	 * @return Fertiger String mit HTML-Formatierung direkt für die Ausgabe
+	 */
+	public String getChristmasTreePattern(int n) {
 		List<List<String>> lines = new ArrayList<List<String>>();
 		// n = 1
 		List<String> firstLine = new ArrayList<String>();
@@ -18,6 +24,7 @@ public class ChristmasTreePattern {
 		firstLine.add("1");
 		lines.add(firstLine);
 
+		int i = 0;
 		iterate(lines, i, n);
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html><body><p align=\"center\">");
@@ -32,6 +39,14 @@ public class ChristmasTreePattern {
 
 	}
 
+	/**
+	 * Diese Methode wird rekursiv aufgerufen, bis der gewünschte Grad erreicht.
+	 * ist.
+	 * 
+	 * @param lines Liste in die einzelnen neuen Listen(Zeilen) eingefügt werden.
+	 * @param i Laufindex
+	 * @param n gewünschter Grad
+	 */
 	private void iterate(List<List<String>> lines, int i, int n) {
 		if (i < n) {
 			List<List<String>> newLines = new ArrayList<List<String>>();
