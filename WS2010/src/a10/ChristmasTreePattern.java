@@ -68,7 +68,8 @@ public class ChristmasTreePattern {
 
 				}
 			}
-			//ohne lines.clear(); erhalten wir als Ausgabe nicht das Muster von n=x sondern alle Durchläufe von n.
+			// ohne lines.clear(); erhalten wir als Ausgabe nicht das Muster von
+			// n=x sondern alle Durchläufe von n.
 			lines.clear();
 			lines.addAll(newLines);
 			iterate(lines, ++i, n);
