@@ -1,25 +1,34 @@
 package a11;
 
-import java.awt.AlphaComposite;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 import a11.TCPServer.MODE;
 import a11.TCPServer.STATE;
 
-class Connection implements Runnable {
-	private final static Random RND = new Random();
+/**
+ * Zugehörige Klasse zum TCPServer. Reagiert auf die Serverzustände/Modi.
+ *  
+ * @author Bernie und Ert
+ * @version 1.0beta
+ */
+public class Connection implements Runnable {
 	
+	private final static Random RND = new Random();
 	private DataInputStream in;
 	private DataOutputStream out;
 	private Socket clientSocket;
 	private TCPServer tcpServer;
 
+	/**
+	 * Konstruktor
+	 * @param clientSocket im TCPServer erzeugter Socket
+	 * @param tcpServer Zugehöriges TCPServer Objekt
+	 */
 	public Connection(Socket clientSocket, TCPServer tcpServer) {
 		try {
 			this.clientSocket = clientSocket;
@@ -31,6 +40,9 @@ class Connection implements Runnable {
 		}
 	}
 
+	/**
+	 * Run-Methode für das Runnable, definiert, was bei welchem State/Modus passiert.
+	 */
 	public void run() {
 		try {
 			String data = in.readUTF();
@@ -63,6 +75,13 @@ class Connection implements Runnable {
 		}
 	}
 
+	/**
+	 * Ausgelagerte Methode, was passiert in welchem Mode
+	 * @param data Übergabestring
+	 * @param currentMode derzeitiger Servermodus
+	 * @param currentState derzeitiger Serverstatus
+	 * @return
+	 */
 	private String doForMode(String data, MODE currentMode, STATE currentState) {
 		String reply = null;
 		switch (currentMode) {
@@ -75,18 +94,18 @@ class Connection implements Runnable {
 				tcpServer.setCurrentMode(MODE.LOL);
 				break;
 			case LOL:
-				StringBuilder builder = new StringBuilder();
+				StringBuilder sb = new StringBuilder();
 				char[] chars = data.toCharArray();
 				for (int i = 0; i < chars.length; i++) {
 					char c = chars[i];
 					if (c != 'a' && c != 'e' && c != 'i' && c != 'o' && c != 'u' && (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' )) {
 						// ist konsonant
-						builder.append(c).append("o").append(c);
+						sb.append(c).append("o").append(c);
 					} else {
-						builder.append(c);
+						sb.append(c);
 					}
 				}
-				reply = builder.toString();
+				reply = sb.toString();
 				
 				// Mode abhängig vom State ändern
 				switch (currentState) {
