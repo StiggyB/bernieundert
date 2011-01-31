@@ -1,6 +1,5 @@
 package futtersuche;
 
-import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,9 +15,10 @@ public class VehicleController implements Runnable, FoodListener {
 
 	@Override
 	public void run() {
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 5; i++) {
 			executor.submit(new Vehicle(i, this));
 		}
+		executor.shutdown();
 	}
 
 	@Override
