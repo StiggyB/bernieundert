@@ -1,5 +1,15 @@
 package a01;
 
+/**
+ * 
+ * @author <Not Known>
+ * 
+ *         Interface einer Liste mit den wesentlichen Optionen, 
+ *         wie im AD-Skript auf Seite 10 angegeben.
+ *         Ergänzt um die Methodendeklarationen isEmpty() und
+ *         insert(T element) zum Einfügen am Ende der Liste. 
+ * 
+ */
 
 public interface List<T> {
 	
