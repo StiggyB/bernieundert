@@ -1,23 +1,9 @@
 package a01;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-public class LinkedList<T> implements a01.List<T> {
-
-	class Node {
-		private T data;
-		private Node next;
-
-		public Node(T data) {
-			this.data = data;
-		}
-	}
-
-	private Node head = new Node(null);
-	private Node tail = new Node(null);
+public class LinkedList<T> implements List<T> {
+	
+	Node<T> head = new Node<T>();
+	Node<T> tail = new Node<T>();
 
 	private int size = 0;
 
@@ -27,53 +13,86 @@ public class LinkedList<T> implements a01.List<T> {
 	}
 
 	@Override
-	public void insert(Node pos, T element) throws IndexOutOfBoundsException {
-		Node newNode = new Node();
+	public Node<T> find(T element) {
+		tail.data = element;
+		Node<T> pos = head;
+		while (pos.next.data != element)  {//2
+			pos = pos.next;//1
+		}
+		return pos;
+	}
+	
+	@Override
+	public void insert(Node<T> pos, T element) {
+		Node<T> newNode = new Node<T>();
+		newNode.data = element;
+		newNode.next = pos.next;
+		pos.next = newNode;
+		if (newNode.next == tail) {
+			tail.next = newNode;
+		}
+		size++;
 	}
 
 	@Override
 	public void insert(T element) {
-		// TODO Auto-generated method stub
+		insert(tail.next, element);
+	}
 
+
+	@Override
+	public void delete(Node<T> pos) throws IndexOutOfBoundsException {
+		Node<T> nextNode = pos.next;
+		pos.next = nextNode.next;
+		nextNode.next = null;
+		size--;
 	}
 
 	@Override
-	public Node find(T element) throws IndexOutOfBoundsException {
-		tail.data = element;
-		Node pos = head;
-		do {
-			pos = pos.next;
-		} while (pos.data != element);
-		return pos;
+	public T retrieve(Node<T> pos) throws Exception {
+		return pos.next.data;
 	}
 
 	@Override
-	public void delete(Node pos) throws IndexOutOfBoundsException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public T retrieve(Node pos) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void concat(a01.List<T> list) throws Exception {
-		// TODO Auto-generated method stub
-
+	public void concat(List<T> list) throws Exception {
+		if (list instanceof LinkedList<?>) {
+			LinkedList<T> ll = (LinkedList<T>) list;
+			tail.next.next = ll.head.next;
+			ll.tail.next.next = tail; //3
+			tail.next = ll.tail.next; //2
+			ll.head.next = null; // 2
+			ll.tail.next = null; //2
+			size += ll.size; //1
+			Benchmark.ops += 7;
+			
+		} else {
+			throw new IllegalStateException();
+		}
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return size == 0;
 	}
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		Node<T> cur = head.next;
+		while (cur != tail) {
+			sb.append(cur.data).append(", ");
+			cur = cur.next;
+		}
+		if (sb.length() != 1) {
+			sb.setLength(sb.length() - 2);
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 }
