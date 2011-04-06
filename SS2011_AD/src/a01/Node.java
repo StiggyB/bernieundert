@@ -2,10 +2,10 @@ package a01;
 
 /**
  * 
- * @author <Not Known>
+ * @author Team TugendUndLaster
  * 
- *         Diese Klasse repräsentiert einen einfachen
- *         Knotenpunkt für eine Listenimplementation.
+ *         Diese Klasse repräsentiert einen einfachen Knotenpunkt für eine
+ *         Listenimplementation.
  * 
  */
 
