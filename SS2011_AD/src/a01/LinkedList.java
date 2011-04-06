@@ -2,16 +2,17 @@ package a01;
 
 /**
  * 
- * @author <Not Known>
+ * @author Team TugendUndLaster
  * 
- *         Implementierung einer einfach verketteten Liste mittels
- *         antizipativer Indizierung. Implementierung des Interface List
- *         aus selbigem package.
+ *         Implementierung einer einfach verketteten Liste mittels antizipativer
+ *         Indizierung. Implementierung des Interface List aus selbigem package.
+ * 
+ *         TODO: pos.next = tmp; // sind das 2 oder ein op
  * 
  */
 
 public class LinkedList<T> implements List<T> {
-	
+
 	Node<T> head = new Node<T>();
 	Node<T> tail = new Node<T>();
 
@@ -24,26 +25,23 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public Node<T> find(T element) {
-		tail.data = element; //1
-		Node<T> pos = head; //1
-		Benchmark.ops += 4;
-		//TODO: 4 = die ersten 2ops + die 2 aus while header 
-		while (pos.next.data != element)  {//2
-			pos = pos.next;//1
-			//TODO: 3 = die 2 aus while header + 1 
-			Benchmark.ops +=3;
-			
+		tail.data = element; // 1
+		Node<T> pos = head; // 1
+		Benchmark.ops += 5;
+		while (!(pos.next.data.equals(element))) {// 2
+			pos = pos.next;// 1
+			Benchmark.ops += 3;
 		}
 		return pos;
 	}
-	
+
 	@Override
 	public void insert(Node<T> pos, T element) {
-		Node<T> newNode = new Node<T>();//1
-		newNode.data = element;//1
-		newNode.next = pos.next;//2
-		pos.next = newNode;//1
-		Benchmark.ops +=6;
+		Node<T> newNode = new Node<T>();// 1
+		newNode.data = element;// 1
+		newNode.next = pos.next.next;// 2
+		pos.next.next = newNode;// 2
+		Benchmark.ops += 8;
 		if (newNode.next == tail) {
 			tail.next = newNode;
 			Benchmark.ops++;
@@ -53,56 +51,56 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public void insert(T element) {
-		insert(tail.next, element);//1
+		insert(tail, element);// 1
 		Benchmark.ops++;
 	}
 
-
 	@Override
 	public void delete(Node<T> pos) throws IndexOutOfBoundsException {
-		Node<T> nextNode = pos.next;//1
-		pos.next = nextNode.next;//2
-		nextNode.next = null;//1
-		Benchmark.ops +=4;
+		pos.next = pos.next.next; // 2
+		Benchmark.ops += 4;
+		if (pos.next == tail) {
+			tail.next = pos;
+			Benchmark.ops++;
+		}
 		size--;
 	}
 
 	@Override
 	public T retrieve(Node<T> pos) throws Exception {
 		Benchmark.ops++;
-		return pos.next.data;//1
+		return pos.next.data;// 1
 	}
 
 	@Override
 	public void concat(List<T> list) throws Exception {
-		if (list instanceof LinkedList<?>) {//2
-			LinkedList<T> ll = (LinkedList<T>) list;//1
-			tail.next.next = ll.head.next;//2
-			ll.tail.next.next = tail; //3
-			tail.next = ll.tail.next; //2
-			ll.head.next = null; // 2
-			ll.tail.next = null; //2
-			size += ll.size; //1
-			Benchmark.ops += 15;
-			
+		if (list instanceof LinkedList<?>) {// 2
+			LinkedList<T> ll = (LinkedList<T>) list;// 2
+			tail.next.next = ll.head.next;// 2
+			ll.tail.next.next = tail; // 2
+			tail.next = ll.tail.next; // 1
+			ll.head.next = null; // 1
+			ll.tail.next = null; // 1
+			size += ll.size; // 1
+			Benchmark.ops += 12;
+
 		} else {
 			throw new IllegalStateException();
-			//TODO: hier noch n bench gelöt?!
 		}
 	}
 
 	@Override
 	public boolean isEmpty() {
-		Benchmark.ops++;
+		// Benchmark.ops++;
 		return size == 0;
 	}
 
 	@Override
 	public int size() {
-		Benchmark.ops++;
+		// Benchmark.ops++;
 		return size;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

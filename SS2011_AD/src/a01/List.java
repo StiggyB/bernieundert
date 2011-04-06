@@ -2,7 +2,7 @@ package a01;
 
 /**
  * 
- * @author <Not Known>
+ * @author Team TugendUndLaster
  * 
  *         Interface einer Liste mit den wesentlichen Optionen, 
  *         wie im AD-Skript auf Seite 10 angegeben.
