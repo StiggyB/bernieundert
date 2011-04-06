@@ -1,5 +1,16 @@
 package a01;
 
+/**
+ * 
+ * @author Team TugendUndLaster
+ * 
+ *         In dieser Klasse testen wir für eigene Zwecke mit der Listen-
+ *         implementierung. Unteraderem erfassen wir hier die Daten, 
+ *         die zum Erstellen der Diagramme nötig sind.
+ *         
+ * 
+ */
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -55,7 +66,7 @@ public class Test {
 		java.util.List<Node<String>> references1 = new ArrayList<Node<String>>();
 		
 
-		// Insert
+		// Insert Operationen zählen
 		System.out.println("Insert\n");
 		for (int i = 0; i < 200; i++) {
 			benchlist.insert("a" + i);
@@ -64,7 +75,7 @@ public class Test {
 		}
 		System.out.println("Anzahl Ops: " + Benchmark.ops);
 
-		// Find
+		// Find Operationen zählen
 		System.out.println("Find\n");
 		System.out.println("Ops auf 0 setzen");
 		Benchmark.ops = 0;
@@ -77,7 +88,7 @@ public class Test {
 			Benchmark.ops=0;
 		}
 
-		// Retrieve
+		// Retrieve Operationen zählen
 		System.out.println("Retrieve\n");
 		System.out.println("Ops auf 0 setzen");
 		
@@ -88,7 +99,7 @@ public class Test {
 			Benchmark.ops=0;
 		}
 
-		// Delete
+		// Delete Operationen zählen
 		System.out.println("Delete\n");
 		System.out.println("Ops auf 0 setzen");
 		for (int i = 99; i >= 0; i--) {
@@ -99,7 +110,7 @@ public class Test {
 		
 		
 		
-		// Concat
+		// Concat Operationen zählen
 		System.out.println("Concat\n");
 		System.out.println("Ops auf 0 setzen");
 		Benchmark.ops = 0;
