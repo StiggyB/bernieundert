@@ -26,7 +26,7 @@ public class ListTest {
 
 	@Test
 	public void addElementFindAndGetElement() throws Exception {
-		list.insert("a");
+		list.append("a");
 		assertFalse(list.isEmpty());
 
 		Node<String> node = list.find("a");
@@ -37,8 +37,8 @@ public class ListTest {
 
 	@Test
 	public void testSearchWithStopElement() throws Exception {
-		list.insert("a");
-		list.insert("b");
+		list.append("a");
+		list.append("b");
 		assertFalse(list.isEmpty());
 
 		Node<String> node = list.find("x");
@@ -47,9 +47,9 @@ public class ListTest {
 
 	@Test
 	public void addOnSpecificPosition() throws Exception {
-		list.insert("a");
-		list.insert("b");
-		list.insert("d");
+		list.append("a");
+		list.append("b");
+		list.append("d");
 		assertFalse(list.isEmpty());
 
 		Node<String> node = list.find("b");
@@ -59,11 +59,11 @@ public class ListTest {
 
 	@Test
 	public void addManyElementsAndGetElement() throws Exception {
-		list.insert("bla1");
-		list.insert("bla2");
-		list.insert("bla3");
-		list.insert("bla4");
-		list.insert("bla5");
+		list.append("bla1");
+		list.append("bla2");
+		list.append("bla3");
+		list.append("bla4");
+		list.append("bla5");
 
 		Node<String> node1 = list.find("bla1");
 		Node<String> node2 = list.find("bla2");
@@ -81,13 +81,13 @@ public class ListTest {
 
 	@Test
 	public void addElementOnPosition() throws Exception {
-		list.insert("bla");
+		list.append("bla");
 		assertFalse(list.isEmpty());
 		Node<String> node = list.find("bla");
 		assertEquals("bla", list.retrieve(node));
 
 		for (int i = 0; i < 10; i++) {
-			list.insert("bla" + i);
+			list.append("bla" + i);
 		}
 		Node<String> insertHere1 = list.find("bla8");
 		list.insert(insertHere1, "bla8New");
@@ -108,7 +108,7 @@ public class ListTest {
 
 	@Test(expected = Exception.class)
 	public void addElementOnImpossiblePosition() throws Exception {
-		list.insert("a");
+		list.append("a");
 
 		Node<String> node = list.find("a");
 		assertEquals("a", list.retrieve(node));
@@ -140,12 +140,12 @@ public class ListTest {
 
 	@Test
 	public void deleteElement() {
-		list.insert("a");
-		list.insert("b");
-		list.insert("c");
-		list.insert("d");
-		list.insert("e");
-		list.insert("f");
+		list.append("a");
+		list.append("b");
+		list.append("c");
+		list.append("d");
+		list.append("e");
+		list.append("f");
 
 		Node<String> node1 = list.find("b");
 		Node<String> node2 = list.find("f");

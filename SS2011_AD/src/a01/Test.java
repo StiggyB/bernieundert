@@ -19,10 +19,10 @@ public class Test {
 
 		LinkedList<String> list = new LinkedList<String>();
 		System.out.println("Anzahl Ops: " + Benchmark.ops);
-		list.insert("a");
-		list.insert("b");
-		list.insert("d");
-		list.insert("e");
+		list.append("a");
+		list.append("b");
+		list.append("d");
+		list.append("e");
 		System.out.println("Anzahl Ops: " + Benchmark.ops);
 		System.out.println(list);
 		System.out.println(list.size());
@@ -42,14 +42,14 @@ public class Test {
 		Benchmark.ops = 0;
 		System.out.println("Anzahl Ops: " + Benchmark.ops);
 		LinkedList<String> list1 = new LinkedList<String>();
-		list1.insert("a");
-		list1.insert("b");
-		list1.insert("c");
+		list1.append("a");
+		list1.append("b");
+		list1.append("c");
 		System.out.println(list1);
 		LinkedList<String> list2 = new LinkedList<String>();
-		list2.insert("d");
-		list2.insert("e");
-		list2.insert("f");
+		list2.append("d");
+		list2.append("e");
+		list2.append("f");
 		System.out.println(list2);
 
 		list1.concat(list2);
@@ -74,7 +74,7 @@ public class Test {
 		Random rnd = new Random();
 		int[] rndnumbers = new int[200];
 		for (int i = 0; i < 100; i++) {
-			benchlist.insert("a" + i);
+			benchlist.append("a" + i);
 			Benchmark.ops -= 10;
 			rndnumbers[i] = rnd.nextInt(100);
 			references1.add(benchlist.find("a" + rndnumbers[i]));
@@ -96,7 +96,7 @@ public class Test {
 		// Insert Operationen z�hlen
 		System.out.println("Insert\n");
 		for (int i = 0; i < 100; i++) {
-			benchlist.insert("a" + i);
+			benchlist.append("a" + i);
 			System.out.println("Groesse der Liste: " + benchlist.size()	+ " Anzahl Ops: " + Benchmark.ops);
 			Benchmark.ops = 0;
 		}
@@ -126,7 +126,7 @@ public class Test {
 			List<String> newList = new LinkedList<String>();
 			listList.add(newList);
 			for (int j = 0; j < 10; j++) {
-				newList.insert("a" + j);
+				newList.append("a" + j);
 				Benchmark.ops -= 10;
 			}
 		}

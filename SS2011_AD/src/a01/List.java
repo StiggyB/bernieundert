@@ -6,24 +6,24 @@ package a01;
  * 
  *         Interface einer Liste mit den wesentlichen Optionen, 
  *         wie im AD-Skript auf Seite 10 angegeben.
- *         Ergänzt um die Methodendeklarationen isEmpty() und
- *         insert(T element) zum Einfügen am Ende der Liste. 
+ *         Ergï¿½nzt um die Methodendeklarationen isEmpty() und
+ *         insert(T element) zum Einfï¿½gen am Ende der Liste. 
  * 
  */
 
 public interface List<T> {
 	
 	/**
-	 * Fügt ein Element an der Stelle pos in die Liste ein.
-	 * @param pos Die Position, an der eingefügt werden soll.
-	 * @param element Das Element, das eingefügt werden soll.
+	 * Fï¿½gt ein Element an der Stelle pos in die Liste ein.
+	 * @param pos Die Position, an der eingefï¿½gt werden soll.
+	 * @param element Das Element, das eingefï¿½gt werden soll.
 	 */
 	void insert(Node<T> pos, T element) throws IndexOutOfBoundsException;
 	/**
-	 * Fügt ein Element am Ende der Liste ein.
-	 * @param element Das Element, das eingefügt werden soll.
+	 * Fï¿½gt ein Element am Ende der Liste ein.
+	 * @param element Das Element, das eingefï¿½gt werden soll.
 	 */
-	void insert(T element);
+	void append(T element);
 	/**
 	 * Liefert die Position des gesuchten Elements.
 	 * @param element Das gesuchte Element.
@@ -36,13 +36,13 @@ public interface List<T> {
 	 */
 	void delete(Node<T> pos) throws IndexOutOfBoundsException;
 	/**
-	 * Liefert das Element zurück an der Position pos
-	 * @param pos Position des gewünschten Elements
+	 * Liefert das Element zurï¿½ck an der Position pos
+	 * @param pos Position des gewï¿½nschten Elements
 	 */
 	T retrieve(Node<T> pos) throws Exception;
 	/**
 	 * Konkateniert zwei Listen miteinander
-	 * @param list Die Liste, die angefügt wird.
+	 * @param list Die Liste, die angefï¿½gt wird.
 	 */
 	void concat(List<T> list) throws Exception;
 	/**

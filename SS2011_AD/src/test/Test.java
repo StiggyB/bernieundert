@@ -7,9 +7,9 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		
 		LinkedList<String> list = new LinkedList<String>();
-		list.insert("a");
-		list.insert("b");
-		list.insert("c");
+		list.append("a");
+		list.append("b");
+		list.append("c");
 		System.out.println(list);
 		
 		Node<String> node = list.find("a");
@@ -22,9 +22,9 @@ public class Test {
 		System.out.println(list);
 		
 		LinkedList<String> list2 = new LinkedList<String>();
-		list2.insert("d");
-		list2.insert("e");
-		list2.insert("f");
+		list2.append("d");
+		list2.append("e");
+		list2.append("f");
 		System.out.println(list2);
 		
 		list.concat(list2);

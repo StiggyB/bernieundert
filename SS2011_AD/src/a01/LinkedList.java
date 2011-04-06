@@ -50,7 +50,7 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	@Override
-	public void insert(T element) {
+	public void append(T element) {
 		insert(tail, element);// 1
 		Benchmark.ops++;
 	}
