@@ -14,7 +14,7 @@ package a01;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Test {
+public class TestFrame {
 	public static void main(String[] args) throws Exception {
 
 		LinkedList<String> list = new LinkedList<String>();
