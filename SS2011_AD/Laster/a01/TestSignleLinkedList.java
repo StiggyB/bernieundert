@@ -13,7 +13,6 @@ public class TestSignleLinkedList {
 	@Test
 	public void testImplementation() {
 		SignleLinkedList<String> slList = new SignleLinkedList<String>();
-		//assertEquals("initialisation failed", "initialized", slList.toString());
 		assertEquals(slList.getHead().next, slList.getTail());
 		assertEquals(slList.getTail().next, slList.getHead());
 		assertTrue(true);
