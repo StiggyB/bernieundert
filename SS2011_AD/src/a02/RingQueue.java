@@ -1,5 +1,8 @@
 package a02;
 
+import java.util.Arrays;
+
+
 public class RingQueue<T> implements IQueue<T> {
 	
 	private T[] elements;
@@ -56,6 +59,11 @@ public class RingQueue<T> implements IQueue<T> {
 		// T item = elements[head];
 		return elements[head];
 
+	}
+	
+	@Override
+	public String toString() {
+		return Arrays.toString(elements);
 	}
 
 }

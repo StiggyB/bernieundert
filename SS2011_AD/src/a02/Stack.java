@@ -1,4 +1,4 @@
-package a02.stack;
+package a02;
 
 import java.util.LinkedList;
 
