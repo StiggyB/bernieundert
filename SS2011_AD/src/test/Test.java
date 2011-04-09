@@ -2,11 +2,16 @@ package test;
 
 import a01.LinkedList;
 import a01.Node;
+import a02.IStack;
+import a02.Stack;
 
 public class Test {
 	public static void main(String[] args) throws Exception {
 		
 		LinkedList<String> list = new LinkedList<String>();
+		IStack<String> test = new Stack<String>();
+		test.pop();
+		/*
 		list.append("a");
 		list.append("b");
 		list.append("c");
@@ -30,7 +35,7 @@ public class Test {
 		list.concat(list2);
 		System.out.println(list);
 		System.out.println(list.size());
-		
+		*/
 	}
 
 }
