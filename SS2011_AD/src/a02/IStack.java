@@ -1,36 +1,37 @@
 package a02;
 
 /**
+ * Interface für die Implementierung eines Stack nach dem TI3-AD_Script.
  * 
- * @author aay973
- * 
- * @param <T>
+ * @author Tugend und Laster
+ * @param <T> Typ der Elemente des Stack.
  */
 public interface IStack<T> {
 
 	/**
-	 * TODO: Exception needed?!
-	 * Push legt ein Element auf dem Stack ab (wächst nach unten).
+	 * TODO: Exception needed?! Push legt ein Element auf dem Stack ab (waechst
+	 * nach unten).
+	 * 
 	 * @param element
 	 */
 	void push(T element);
 
 	/**
-	 * TODO: IllegalElementException, wenn Stack leer
-	 * Pop löscht das zuletzt eingefügte Element, liefert aber nichts zurück.
+	 * Pop loescht das zuletzt eingefuegte Element.
 	 */
 	void pop();
 
 	/**
-	 * TODO: wenn leer, boom
-	 * Top liefert das oberste Element des Stacks zurück, löscht ihn jedoch nicht.
-	 * @return
+	 * Top liefert das oberste Element des Stacks zurueck (nicht destruktiv)
+	 * 
+	 * @return Oberstes Element vom Stack
 	 */
 	T top();
 
 	/**
 	 * Liefert True, wenn der Stack leer ist, andernfalls False.
-	 * @return
+	 * 
+	 * @return True, wenn der Stack leer ist, andernfalls False.
 	 */
 	boolean isEmpty();
 
