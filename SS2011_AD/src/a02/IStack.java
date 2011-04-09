@@ -9,8 +9,7 @@ package a02;
 public interface IStack<T> {
 
 	/**
-	 * TODO: Exception needed?! Push legt ein Element auf dem Stack ab (waechst
-	 * nach unten).
+	 * Push legt ein Element auf dem Stack ab (waechst nach unten).
 	 * 
 	 * @param element
 	 */
