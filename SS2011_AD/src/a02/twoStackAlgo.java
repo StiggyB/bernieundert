@@ -1,10 +1,11 @@
 package a02;
 
 /**
- * Diese Klasse implementiert den sog. "zwei Stack Algorithmus" für vollstaendig
- * geklammerte Ausdruecke. TIB3-AD_Script. Siehe auch im Script auf Seite 21.
+ * Diese Klasse implementiert den sogenannten "zwei Stack Algorithmus" für
+ * vollstaendig geklammerte Ausdruecke. TIB3-AD_Script. Siehe auch im Script auf
+ * Seite 21.
  * 
- * Klammerausdruecke sind vollstaendig geklammert und mit Leerzeichnen je 
+ * Klammerausdruecke sind vollstaendig geklammert und mit Leerzeichnen je
  * Operand und Operator zu trennen.
  * 
  * @author Tugend und Laster
