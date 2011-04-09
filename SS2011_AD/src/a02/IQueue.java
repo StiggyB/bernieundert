@@ -1,8 +1,7 @@
 package a02;
 
 /**
- * Interface für die Implementierung einer Queue als Ring (RingBuffer)
- * nach dem TI3-AD_Script.
+ * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
  * 
  * @author Tugend und Laster
  * @param <T> Typ der Elemente der Queue.
