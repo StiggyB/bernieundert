@@ -16,6 +16,8 @@ public class Stack<T> implements IStack<T> {
 	
 	/**
 	 * Diese Methode fuegt dem Stack ein neues Element hinzu
+	 * TODO Aufwand O(N) oder von 1, muss die Liste durchlaufen
+	 * werden?
 	 * 
 	 * @param element Element zum Hinzufuegen
 	 */
@@ -26,6 +28,7 @@ public class Stack<T> implements IStack<T> {
 
 	/**
 	 * Diese Methode loescht das zuletzt hinzugefuegte Element
+	 * TODO Aufwand, wieder, muss durchlaufen werden oder nicht?
 	 */
 	@Override
 	public void pop() {
@@ -34,6 +37,7 @@ public class Stack<T> implements IStack<T> {
 
 	/**
 	 * Diese Methode liefert das zuletzt eingefuegte Element zurueck
+	 * TODO Aufwand ... 
 	 * 
 	 * @return Zuletzt hinzugefuegtes Element
 	 */
@@ -44,7 +48,7 @@ public class Stack<T> implements IStack<T> {
 
 	/**
 	 * Liefert <b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
-	 * 
+	 * TODO Aufwand? Durchläuft er wieder bis zum Ende um size zu prüfen?!
 	 * @return  <b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
 	 */
 	@Override
