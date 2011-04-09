@@ -1,35 +1,45 @@
 package a02;
 
+/**
+ * Interface für die Implementierung einer Queue als Ring (RingBuffer)
+ * nach dem TI3-AD_Script.
+ * 
+ * @author Tugend und Laster
+ * @param <T> Typ der Elemente der Queue.
+ */
 public interface IQueue<T> {
 
 	/**
-	 * TODO: wirft EmptyQueueException, wenn die Liste leer ist. 
-	 * Liefert das Element head zurueck ohne es aus der Queue 
-	 * zu loeschen (nicht destruktiv)
+	 * Liefert das Element head zurueck ohne es aus der Queue zu loeschen (nicht
+	 * destruktiv)
 	 * 
-	 * @return
+	 * @return Liefert das erste Element (head) aus der Queue
 	 */
-	T front();
+	T front() throws RuntimeException;
 
 	/**
-	 * TODO: Wirft OverflowException, wenn Queue voll ist. 
-	 * Fuegt neues Element hinten ein (rear)
+	 * Fuegt neues Element am Ende der Queue ein (rear)
 	 * 
-	 * @param element
+	 * @param element Element zum Einfuegen
 	 */
-	void enqueue(T element);
+	void enqueue(T element) throws RuntimeException;
 
 	/**
-	 * TODO: Wirft sowas wie NoSuchElementException, wenn Queue leer ist 
-	 * Loescht das Element head
+	 * Loescht das erste Element (head)
 	 */
-	void dequeue();
+	void dequeue() throws RuntimeException;
 
 	/**
-	 * true falls die Queue leer ist , false sonst.
+	 * Liefert <b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
 	 * 
-	 * @return
+	 * @return<b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
 	 */
 	boolean isEmpty();
+
+	/**
+	 * Liefert die Anzahl der in der Queue befindlichen Elemente
+	 * @return Anzahl der Elemente in der Queue
+	 */
+	int size();
 
 }
