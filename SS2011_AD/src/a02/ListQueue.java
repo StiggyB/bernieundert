@@ -1,7 +1,8 @@
-package a02.queue;
+package a02;
 
 import java.util.LinkedList;
 import java.util.List;
+
 
 
 public class ListQueue<T> implements IQueue<T> {
