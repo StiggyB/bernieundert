@@ -7,6 +7,10 @@ import java.util.Random;
 /**
  * Klasse fuer das geforderte Beispiel einer Testroutine. Simuliert werden
  * Druckerwarteschlangen, die mit Auftraegen gefuellt werden koennen.
+ * Die Konstante RUNS steht fuer die Anzahl an Durchlaeufen, die 
+ * simuliert werden.
+ * Die Konstante EVICT_AFTER_RUNS legt fest, nach wievielen Duechlaeufen
+ * Elemente aus den Queues und ggf. Queues geloescht werden sollen.
  * 
  * @author Tugend und Laster
  */

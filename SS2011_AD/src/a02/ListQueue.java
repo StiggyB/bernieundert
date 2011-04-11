@@ -36,8 +36,9 @@ public class ListQueue<T> implements IQueue<T> {
 	 * Hier muss nicht wie bei der Array Version der Queue geprueft werden,
 	 * ob Platz ist, da das neue Element in die Liste einfach eingehaengt wird.
 	 * Daher muss hier keine gesonderte Exception-Behandlung erfolgen.
-	 * TODO Aufwand? O(1) oder O(N) da abhaengig von der LGroesse
-	 * 
+	 * Anhand der Implementation der LinkedList, die verwendet wurde, kann der
+	 * Aufwand ermittelt werden. An den von der LinkedList genutzten Methoden
+	 * add() und daraufhin addBefore() erkennt man den konstanten Aufwand (O(1)).
 	 * @param item Das einzufuegende Objekt
 	 */
 	@Override
@@ -62,7 +63,7 @@ public class ListQueue<T> implements IQueue<T> {
 	 * Liefert <b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
 	 * Der Aufwand ist konstant, da nur eine Integervariable abgefragt und
 	 * geprueft werden muss. Daher hat die Methode einen Aufwand von O(1).
-	 * TODO Stimmt das mit dem Integervergleich auch hier?
+	 * Siehe auch Implementation der isEmpty() Methode in java.util.LinkedList 
 	 * 
 	 * @return Liefert <b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
 	 */
@@ -74,7 +75,7 @@ public class ListQueue<T> implements IQueue<T> {
 	/**
 	 * Liefert die Anzahl der in der Queue befindlichen Elemente. Da nur eine
 	 * Integervariable zurueckgegeben wird, gilt ein Aufwand von O(1).
-	 * TODO ist der Aufwand korrekt? Oder wird ganze Liste durchlaufen?
+	 * Siehe auch Implementation der size() Methode in java.util.LinkedList
 	 * 
 	 * @return Anzahl der in der Queue befindlichen Elemente
 	 */

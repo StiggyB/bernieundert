@@ -2,6 +2,7 @@ package a02;
 
 /**
  * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
+ * Das Interface wurde um die Methode size() erweitert.
  * 
  * @author Tugend und Laster
  * @param <T> Typ der Elemente der Queue.
