@@ -10,24 +10,24 @@ package a01;
  * 
  */
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class TestSingleLinkedList {
 
-	LinkedList<String> list;
+	IList<String> list;
 
 	@Before
 	public void setUp() throws Exception {
-		list = new LinkedList<String>();
+		list = new SingleLinkedList<String>();
 	}
 
 	@Test
 	public void addElementFindAndGetElement() throws Exception {
 		list.append("a");
-		assertFalse(list.isEmpty());
 
 		Node<String> node = list.find("a");
 		// assertEquals("a", list.retrieve(list.tail));
@@ -39,7 +39,6 @@ public class TestSingleLinkedList {
 	public void testSearchWithStopElement() throws Exception {
 		list.append("a");
 		list.append("b");
-		assertFalse(list.isEmpty());
 
 		Node<String> node = list.find("x");
 		assertEquals("x", list.retrieve(node));
@@ -50,7 +49,6 @@ public class TestSingleLinkedList {
 		list.append("a");
 		list.append("b");
 		list.append("d");
-		assertFalse(list.isEmpty());
 
 		Node<String> node = list.find("b");
 		list.insert(node, "c");
@@ -70,8 +68,9 @@ public class TestSingleLinkedList {
 		Node<String> node3 = list.find("bla3");
 		Node<String> node4 = list.find("bla4");
 		Node<String> node5 = list.find("bla5");
+		
+		System.out.println(list);
 
-		assertEquals(5, list.size());
 		assertEquals("bla1", list.retrieve(node1));
 		assertEquals("bla2", list.retrieve(node2));
 		assertEquals("bla3", list.retrieve(node3));
@@ -82,7 +81,6 @@ public class TestSingleLinkedList {
 	@Test
 	public void addElementOnPosition() throws Exception {
 		list.append("bla");
-		assertFalse(list.isEmpty());
 		Node<String> node = list.find("bla");
 		assertEquals("bla", list.retrieve(node));
 
@@ -97,12 +95,11 @@ public class TestSingleLinkedList {
 		list.insert(insertHere2, "bla2New");
 		Node<String> node3 = list.find("bla2New");
 		assertEquals("bla2New", list.retrieve(node3));
-		assertEquals(13, list.size());
 	}
 
 	@Test(expected = Exception.class)
 	public void getNotContainedElement() throws Exception {
-		Node<String> node = new Node<String>();
+		Node<String> node = new Node<String>(null, null);
 		list.retrieve(node);
 	}
 
@@ -112,7 +109,7 @@ public class TestSingleLinkedList {
 
 		Node<String> node = list.find("a");
 		assertEquals("a", list.retrieve(node));
-		Node<String> newNode = new Node<String>();
+		Node<String> newNode = new Node<String>(null, null);
 		list.insert(newNode, "bla");
 	}
 
@@ -123,19 +120,15 @@ public class TestSingleLinkedList {
 
 	@Test(expected = NullPointerException.class)
 	public void removeAnotherNonExistentElement() throws Exception {
-		Node<String> newNode = new Node<String>();
+		Node<String> newNode = new Node<String>(null, null);
 		list.delete(newNode);
 	}
 
-	@Test
-	public void emptyList() {
-		assertTrue(list.isEmpty());
-	}
 
 	@Test
 	public void emptyListTwo() {
-		assertTrue(list.head.next == list.tail);
-		assertTrue(list.head == list.tail.next);
+		assertTrue(list.getHead().next == list.getTail());
+		assertTrue(list.getHead() == list.getTail().next);
 	}
 
 	@Test
@@ -153,6 +146,6 @@ public class TestSingleLinkedList {
 		System.out.println(list);
 		list.delete(node2);
 		System.out.println(list);
-		assertTrue(list.tail.next.data.equals("e"));
+		assertTrue(list.getTail().next.data.equals("e"));
 	}
 }

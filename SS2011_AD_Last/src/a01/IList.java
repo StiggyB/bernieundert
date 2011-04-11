@@ -16,14 +16,20 @@ public interface IList<E> {
 	 * @param e
 	 * @return
 	 */
-	public abstract void insert(Node<E> targetNode, E e);
+	void insert(Node<E> targetNode, E e);
+	
+	
+	/**
+	 * @param e
+	 */
+	void append(E e);
 	
 	
 	/**
 	 * @param targetNode
 	 * @return
 	 */
-	public abstract void delete(Node<E> targetNode);
+	void delete(Node<E> targetNode);
 	
 	
 	/**
@@ -44,17 +50,23 @@ public interface IList<E> {
 	 * @param list
 	 * @return
 	 */
-	public abstract void concat(IList<E> list);
+	void concat(IList<E> list);
 	
 	
 	/**
 	 * @return
 	 */
-	public abstract Node<E> getHead();
+	Node<E> getHead();
 	
 	
 	/**
 	 * @return
 	 */
-	public abstract Node<E> getTail();
+	Node<E> getTail();
+	
+	
+	/**
+	 * @return
+	 */
+	int size();
 }

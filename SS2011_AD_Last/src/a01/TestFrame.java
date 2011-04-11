@@ -17,7 +17,7 @@ import java.util.Random;
 public class TestFrame {
 	public static void main(String[] args) throws Exception {
 
-		LinkedList<String> list = new LinkedList<String>();
+		IList<String> list = new SingleLinkedList<String>();
 		System.out.println("Anzahl Ops: " + Benchmark.ops);
 		list.append("a");
 		list.append("b");
@@ -25,7 +25,6 @@ public class TestFrame {
 		list.append("e");
 		System.out.println("Anzahl Ops: " + Benchmark.ops);
 		System.out.println(list);
-		System.out.println(list.size());
 
 		Node<String> node = list.find("b");
 		list.insert(node, "c");
@@ -41,12 +40,12 @@ public class TestFrame {
 		System.out.println("Ops auf 0 setzen");
 		Benchmark.ops = 0;
 		System.out.println("Anzahl Ops: " + Benchmark.ops);
-		LinkedList<String> list1 = new LinkedList<String>();
+		IList<String> list1 = new SingleLinkedList<String>();
 		list1.append("a");
 		list1.append("b");
 		list1.append("c");
 		System.out.println(list1);
-		LinkedList<String> list2 = new LinkedList<String>();
+		IList<String> list2 = new SingleLinkedList<String>();
 		list2.append("d");
 		list2.append("e");
 		list2.append("f");
@@ -55,11 +54,10 @@ public class TestFrame {
 		list1.concat(list2);
 		System.out.println("Anzahl Ops: " + Benchmark.ops);
 		System.out.println(list1);
-		System.out.println(list1.size());
 
 		System.out.println("Beginn Auswertung");
 		System.out.println("=================");
-		LinkedList<String> benchlist = new LinkedList<String>();
+		IList<String> benchlist = new SingleLinkedList<String>();
 		System.out.println("Ops auf 0 setzen");
 		Benchmark.ops = 0;
 
@@ -120,10 +118,10 @@ public class TestFrame {
 		System.out.println("Ops auf 0 setzen");
 		Benchmark.ops = 0;
 
-		java.util.List<List<String>> listList = new ArrayList<List<String>>();
+		java.util.List<IList<String>> listList = new ArrayList<IList<String>>();
 
 		for (int i = 0; i < 100; i++) {
-			List<String> newList = new LinkedList<String>();
+			IList<String> newList = new SingleLinkedList<String>();
 			listList.add(newList);
 			for (int j = 0; j < 10; j++) {
 				newList.append("a" + j);
@@ -131,7 +129,7 @@ public class TestFrame {
 			}
 		}
 		for (int i = 0; i < 50; i++) {
-			List<String> tmpList = listList.get(i);
+			IList<String> tmpList = listList.get(i);
 			tmpList.concat(listList.get(++i));
 			System.out.println(tmpList);
 			System.out.println("Groesse der Liste: " + tmpList.size()
