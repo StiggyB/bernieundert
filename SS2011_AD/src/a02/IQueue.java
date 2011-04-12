@@ -32,7 +32,7 @@ public interface IQueue<T> {
 	/**
 	 * Liefert <b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
 	 * 
-	 * @return<b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
+	 * @return <b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
 	 */
 	boolean isEmpty();
 

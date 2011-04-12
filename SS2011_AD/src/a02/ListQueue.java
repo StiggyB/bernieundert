@@ -39,7 +39,7 @@ public class ListQueue<T> implements IQueue<T> {
 	 * Anhand der Implementation der LinkedList, die verwendet wurde, kann der
 	 * Aufwand ermittelt werden. An den von der LinkedList genutzten Methoden
 	 * add() und daraufhin addBefore() erkennt man den konstanten Aufwand (O(1)).
-	 * @param item Das einzufuegende Objekt
+	 * @param element Das einzufuegende Objekt
 	 */
 	@Override
 	public void enqueue(T element) {
