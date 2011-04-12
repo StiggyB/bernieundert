@@ -21,7 +21,8 @@ public class PrinterQueue {
 
 	public static void main(String[] args) {
 
-		List<IQueue<Integer>> list = new ArrayList<IQueue<Integer>>(21);
+		//21, damit elementnamen passen
+		List<IQueue<Integer>> list = new ArrayList<IQueue<Integer>>();
 		for (int i = 0; i < 21; i++) {
 			list.add(null);
 		}
@@ -73,9 +74,9 @@ public class PrinterQueue {
 			}
 
 		}
-		System.out.println("Ende des Durchlaufs:");
+		System.out.println("End of run:");
 		System.out.println("====================");
-		System.out.println("\nInhalt der Queues:");
+		System.out.println("\nQueue Content:");
 		for (IQueue<Integer> l : list) {
 			System.out.println(l);
 			
