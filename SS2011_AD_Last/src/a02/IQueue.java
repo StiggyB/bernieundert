@@ -26,4 +26,9 @@ public interface IQueue<T> {
 	 */
 	boolean isEmpty();
 	
+	
+	/**
+	 * @return
+	 */
+	boolean isFull();
 }

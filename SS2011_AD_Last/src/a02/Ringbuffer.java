@@ -5,37 +5,50 @@ public class Ringbuffer<T> implements IQueue<T> {
 	private int head;
 	private int tail;
 	private int size;
+	private T[] buffer;
 	
 	
-	public Ringbuffer() {
-		this.head = 0;
-		this.tail = 0;
-		this.size = 0;
+	public Ringbuffer(int size) {		
+		this.size = size;
+		this.buffer = (T[])(new Object[size+1]);
+		this.tail = size;
+		this.head = tail;
 	}
 	
 	
 	@Override
 	public T front() {
-		// TODO Auto-generated method stub
-		return null;
+		if(isEmpty()) {
+			throw new RuntimeException ("Ringbuffer empty: underflow"); 
+		}
+		return buffer[head];
 	}
 
 	@Override
 	public void enqueue(T element) {
-		// TODO Auto-generated method stub
-		
+		//Throw Exp
+		if(!(isFull())) {
+			this.buffer[tail] = element;
+			tail--;
+		}
 	}
 
 	@Override
 	public void dequeue() {
-		// TODO Auto-generated method stub
-		
+		if(!(isEmpty())) {
+			this.buffer[head] = null;
+			head--;
+		}	
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.head == this.tail;
+	}
+
+	@Override
+	public boolean isFull() {
+		return buffer.length == size+1;
 	}
 
 }
