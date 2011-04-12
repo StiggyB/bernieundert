@@ -29,32 +29,15 @@ public class SingleLinkedList<E> implements IList<E> {
 	/**
 	 * @see a01.IList#insert(a01.Node, java.lang.Object)
 	 */
-	public void insert2(Node<E> targetNode, E e) {
+	public void insert(Node<E> targetNode, E e) {
 		Node<E> newNode = new Node<E>(targetNode.next.next, e);
 		targetNode.next.next = newNode;
-		if(targetNode.next == this.tail) {
+		if(newNode.next == this.tail) {
 			this.tail.next = newNode;
 		}
 		size++;
 	}
-	
-	/** Why no function with the constructor?
-	 * 
-	 * @see a01.IList#insert(a01.Node, java.lang.Object)
-	 */
-	@Override
-	public void insert(Node<E> pos, E element) {
-		Node<E> newNode = new Node<E>(null, null);// 1
-		newNode.data = element;// 1
-		newNode.next = pos.next.next;// 2
-		pos.next.next = newNode;// 2
-		Benchmark.ops += 8;
-		if (newNode.next == tail) {
-			tail.next = newNode;
-			Benchmark.ops++;
-		}
-		size++;
-	}
+
 	
 	/**
 	 * @see a01.IList#append(java.lang.Object)
@@ -84,7 +67,7 @@ public class SingleLinkedList<E> implements IList<E> {
 	@Override
 	public Node<E> find(E e) {
 		this.tail.data = e;
-		Node<E> tmp = this.head.next;
+		Node<E> tmp = this.head;
 		//Wichtig durch antizipative ind. ref-1
 		for(;!(e.equals(tmp.next.data)); tmp = tmp.next);
 		//if tmp.next == tail -> return tail - otherwise no anti ind.

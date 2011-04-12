@@ -14,4 +14,14 @@ public class Node<E> {
 		this.next = next;
 		this.data = data;
 	}
+
+	public Node<E> getNext() {
+		return next;
+	}
+
+	public void setNext(Node<E> next) {
+		this.next = next;
+	}
+	
+	
 }
