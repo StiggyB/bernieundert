@@ -29,8 +29,14 @@ public class SingleLinkedList<E> implements IList<E> {
 	 * @see a01.IList#insert(a01.Node, java.lang.Object)
 	 */
 	public void insert(Node<E> targetNode, E e) {
-		Node<E> newNode = new Node<E>(targetNode.next.next, e);
-		targetNode.next.next = newNode;
+		Node<E> newNode;
+		if(targetNode == this.head) {
+			newNode = new Node<E>(targetNode.next, e);
+			targetNode.next = newNode;
+		} else {
+			newNode = new Node<E>(targetNode.next.next, e);
+			targetNode.next.next = newNode;
+		}
 		if(newNode.next == this.tail) {
 			this.tail.next = newNode;
 		}
