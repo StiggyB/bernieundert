@@ -9,7 +9,6 @@ public class Ringbuffer<T> implements IQueue<T> {
 
 	private int head;
 	private int tail;
-	private int size;
 	private T[] buffer;
 	
 	/**
@@ -17,7 +16,6 @@ public class Ringbuffer<T> implements IQueue<T> {
 	 */
 	@SuppressWarnings ("unchecked")
 	public Ringbuffer(int size) {		
-		this.size = size;
 		this.buffer = (T[])(new Object[size+1]);
 		this.tail = size;
 		this.head = tail;
