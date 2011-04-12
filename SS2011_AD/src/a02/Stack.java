@@ -54,7 +54,7 @@ public class Stack<T> implements IStack<T> {
 	/**
 	 * Liefert <b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
 	 * Der Aufwand ist gleich dem Aufwand aus der ListQueue Implementation, es 
-	 * gilt O(1). Es wird wieder nur intern ein Intgervergleich durchgeführt.
+	 * gilt O(1). Es wird wieder nur intern ein Intgervergleich durchgefï¿½hrt.
 	 * @return  <b>true</b>, wenn die Queue leer ist, andernfalls <b>false</b>
 	 */
 	@Override

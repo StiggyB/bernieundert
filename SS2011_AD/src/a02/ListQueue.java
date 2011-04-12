@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ListQueue<T> implements IQueue<T> {
 
-	// Für die Implementierung kommt eine LinkedList zum Einsatz. Fuer Hinweise
+	// Fï¿½r die Implementierung kommt eine LinkedList zum Einsatz. Fuer Hinweise
 	// zur Entscheidung bitte die Dokumentation lesen!
 	List<T> list = new LinkedList<T>();
 
