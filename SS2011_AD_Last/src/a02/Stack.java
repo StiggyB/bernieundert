@@ -3,6 +3,11 @@ package a02;
 import a01.IList;
 import a01.SingleLinkedList;
 
+/**
+ * @author Administrator
+ *
+ * @param <T>
+ */
 public class Stack<T> implements IStack<T> {
 
 	IList<T> stack;
@@ -20,7 +25,7 @@ public class Stack<T> implements IStack<T> {
 	 */
 	@Override
 	public void push(T elem) {
-		this.stack.append(elem);
+		this.stack.insert(this.stack.getHead(), elem);
 	}
 
 	/**
@@ -31,7 +36,7 @@ public class Stack<T> implements IStack<T> {
 		if(isEmpty()) {
 			throw new RuntimeException("Stack empty: underflow");
 		}
-		this.stack.delete(this.stack.getTail());
+		this.stack.delete(this.stack.getHead());
 	}
 
 	/**
@@ -42,11 +47,21 @@ public class Stack<T> implements IStack<T> {
 		if(isEmpty()) {
 			throw new RuntimeException("Stack empty: underflow");
 		}
-		return this.stack.retrieve(this.stack.getTail());
+		return this.stack.retrieve(this.stack.getHead());
 	}
 
+	/**
+	 * @see a02.IStack#isEmpty()
+	 */
 	@Override
 	public boolean isEmpty() {
 		return this.stack.isEmpty();
 	}
+
+	@Override
+	public String toString() {
+		return stack.toString();
+	}
+	
+	
 }

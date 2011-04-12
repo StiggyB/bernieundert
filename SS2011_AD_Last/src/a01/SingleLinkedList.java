@@ -80,6 +80,7 @@ public class SingleLinkedList<E> implements IList<E> {
 		E result;
 		if(targetNode == null) {
 			result = null;
+			System.out.println("null");
 		} else {
 			//Durch antizipative ind. ref-1
 			result = targetNode.next.data;
@@ -122,6 +123,14 @@ public class SingleLinkedList<E> implements IList<E> {
 		return this.size;
 	}
 	
+	/**
+	 * @see a01.IList#isEmpty()
+	 */
+	@Override
+	public boolean isEmpty() {
+		return this.head.next.equals(this.tail);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -136,12 +145,6 @@ public class SingleLinkedList<E> implements IList<E> {
 		}
 		sb.append("]");
 		return sb.toString();
-	}
-
-
-	@Override
-	public boolean isEmpty() {
-		return this.head.next == this.tail.next;
 	}
 }
 
