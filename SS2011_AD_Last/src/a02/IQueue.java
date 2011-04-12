@@ -30,5 +30,5 @@ public interface IQueue<T> {
 	/**
 	 * @return
 	 */
-	boolean isFull();
+	int size();
 }
