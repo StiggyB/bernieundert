@@ -2,6 +2,7 @@ package a02;
 
 import a01.IList;
 import a01.SingleLinkedList;
+import a01.Node;
 
 public class Stack<T> implements IStack<T> {
 
@@ -22,7 +23,7 @@ public class Stack<T> implements IStack<T> {
 		if(isEmpty()) {
 			throw new RuntimeException("Stack empty: underflow");
 		}
-		this.stack.delete(this.stack.getHead());
+		this.stack.delete(this.stack.getTail().getNext());
 	}
 
 	@Override
@@ -30,7 +31,7 @@ public class Stack<T> implements IStack<T> {
 		if(isEmpty()) {
 			throw new RuntimeException("Stack empty: underflow");
 		}
-		return this.stack.retrieve(this.stack.getHead());
+		return this.stack.retrieve(this.stack.getTail().getNext());
 	}
 
 	@Override
