@@ -69,4 +69,10 @@ public interface IList<E> {
 	 * @return
 	 */
 	int size();
+	
+	
+	/**
+	 * @return
+	 */
+	boolean isEmpty();
 }

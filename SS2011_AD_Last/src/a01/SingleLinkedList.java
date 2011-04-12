@@ -25,7 +25,6 @@ public class SingleLinkedList<E> implements IList<E> {
 	}
 	
 	
-	
 	/**
 	 * @see a01.IList#insert(a01.Node, java.lang.Object)
 	 */
@@ -38,7 +37,6 @@ public class SingleLinkedList<E> implements IList<E> {
 		size++;
 	}
 
-	
 	/**
 	 * @see a01.IList#append(java.lang.Object)
 	 */
@@ -68,16 +66,11 @@ public class SingleLinkedList<E> implements IList<E> {
 	public Node<E> find(E e) {
 		this.tail.data = e;
 		Node<E> tmp = this.head;
-		//Wichtig durch antizipative ind. ref-1
+		//Durch antizipative ind. ref-1
 		for(;!(e.equals(tmp.next.data)); tmp = tmp.next);
-		//if tmp.next == tail -> return tail - otherwise no anti ind.
-//		if(tmp.next == this.tail) {
-//			tmp = this.tail;
-//		}
 		return tmp;
 	}
 
-	
 	/**
 	 * Referenz oder neues Objekt zurückgeben?
 	 * @see a01.IList#retrieve(a01.Node)
@@ -88,7 +81,7 @@ public class SingleLinkedList<E> implements IList<E> {
 		if(targetNode == null) {
 			result = null;
 		} else {
-			//Wichtig durch antizipative ind. ref-1
+			//Durch antizipative ind. ref-1
 			result = targetNode.next.data;
 		}
 		return result;
@@ -101,10 +94,8 @@ public class SingleLinkedList<E> implements IList<E> {
 	public void concat(IList<E> list) {
 		if(list instanceof SingleLinkedList<?>) {
 			this.tail.next.next = list.getHead().next;
-		}
-		
+		}	
 	}
-
 
 	/**
 	 * @see a01.IList#getHead()
@@ -121,7 +112,6 @@ public class SingleLinkedList<E> implements IList<E> {
 	public Node<E> getTail() {
 		return this.tail;
 	}
-
 
 
 	/**
@@ -146,6 +136,12 @@ public class SingleLinkedList<E> implements IList<E> {
 		}
 		sb.append("]");
 		return sb.toString();
+	}
+
+
+	@Override
+	public boolean isEmpty() {
+		return this.head.next == this.tail.next;
 	}
 }
 
