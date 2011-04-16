@@ -14,11 +14,11 @@ import org.junit.Test;
 public class QueueJUnit {
 
 	//Immer nur eine Implementierung zur Zeit testen, bitte!
-	private Ringbuffer<Integer> queue;
-//	private ListQueue<Integer> queue;
+//	private Ringbuffer<Integer> queue;
+	private ListQueue<Integer> queue;
 
 	// Integer sind bereits Objekttypen, man kann aber primitive Typen
-	// reinwerfen (int, char), autoboxing/unboxing
+//	 reinwerfen (int, char), autoboxing/unboxing
 
 	// Dieses Beispiel sparen wir uns daher :)
 	// private RingQueue<String> objective;
@@ -27,8 +27,8 @@ public class QueueJUnit {
 	public void setUp() throws Exception {
 
 		//Immer nur eine Implementierung zur Zeit testen, bitte!
-		queue = new Ringbuffer<Integer>(5);
-//		queue = new ListQueue<Integer>();
+//		queue = new Ringbuffer<Integer>(5);
+		queue = new ListQueue<Integer>();
 		// objective = new RingQueue<String>(10);
 	}
 
@@ -61,7 +61,7 @@ public class QueueJUnit {
 	//Weiterhin kann es bei der Listenimplementierung keinen
 	//Overflow geben. Daher bitte beim Testen mit der ListQueue 
 	//diese beiden Tests auskommentieren!
-//	/*
+	/*
 	@Test(expected = RuntimeException.class)
 	public void testOverflowException() {
 		for (int i = 0; i < 6; i++) {
@@ -81,6 +81,6 @@ public class QueueJUnit {
 		queue.enqueue(1);
 		assertTrue(queue.isFull());
 	}
-//	*/
+	*/
 
 }
