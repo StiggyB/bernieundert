@@ -17,6 +17,23 @@ public class Primes {
 		return arr;
 	}
 	
+	public static boolean[] findPrimeMiddleFast(int n) {
+		boolean[] arr = new boolean[n];
+		Benchmark.count = 0;
+
+		for (int i = 2; i < n; i++) {
+			arr[i] = true;
+			for (int j = 2; j < i; j++) {
+				Benchmark.count++;
+				if (i % j == 0) {
+					arr[i] = false;
+					break;
+				}
+			}
+		}
+		return arr;
+	}
+	
 	public static boolean[] findPrimeFaster(int n) {
 		Benchmark.count = 0;
 		boolean arr[] = new boolean[n];
