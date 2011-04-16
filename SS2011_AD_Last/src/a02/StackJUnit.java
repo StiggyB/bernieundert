@@ -57,6 +57,7 @@ public class StackJUnit {
 
 	@Test(expected = NoSuchElementException.class)
 	public void testEmptyStackExceptionWithPop() {
+		System.out.println(stack);
 		stack.pop();
 	}
 

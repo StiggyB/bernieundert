@@ -1,5 +1,7 @@
 package a02;
 
+import java.util.NoSuchElementException;
+
 import a01.IList;
 import a01.SingleLinkedList;
 
@@ -34,7 +36,7 @@ public class Stack<T> implements IStack<T> {
 	@Override
 	public void pop() {
 		if(isEmpty()) {
-			throw new RuntimeException("Stack empty: underflow");
+			throw new NoSuchElementException("Stack empty: underflow");
 		}
 		this.stack.delete(this.stack.getHead());
 	}
@@ -45,7 +47,7 @@ public class Stack<T> implements IStack<T> {
 	@Override
 	public T top() {
 		if(isEmpty()) {
-			throw new RuntimeException("Stack empty: underflow");
+			throw new NoSuchElementException("Stack empty: underflow");
 		}
 		return this.stack.retrieve(this.stack.getHead());
 	}

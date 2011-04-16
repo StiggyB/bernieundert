@@ -19,7 +19,7 @@ public class ListQueue<T> implements IQueue<T> {
 	@Override
 	public T front() {
 		if(isEmpty()) {
-			throw new RuntimeException ("ListQueue empty: underflow");
+			throw new RuntimeException("ListQueue empty: underflow");
 		}
 		return this.list.retrieve(this.list.getHead());
 	}
@@ -38,7 +38,7 @@ public class ListQueue<T> implements IQueue<T> {
 	@Override
 	public void dequeue() {
 		if(isEmpty()) {
-			throw new RuntimeException ("ListQueue empty: underflow");
+			throw new RuntimeException("ListQueue empty: underflow");
 		}
 		this.list.delete(list.getHead());
 	}
