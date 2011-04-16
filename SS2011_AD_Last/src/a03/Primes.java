@@ -2,7 +2,7 @@ package a03;
 
 public class Primes {
 	
-	public static boolean[] getPrim(int n) {
+	public static boolean[] findPrimeSlow(int n) {
 		Benchmark.count = 0;
 		boolean arr[] = new boolean[n];
 		for (int i = 2; i < n; i++) {
@@ -17,10 +17,12 @@ public class Primes {
 		return arr;
 	}
 	
-	public static boolean[] getPrimFaster(int n) {
+	public static boolean[] findPrimeFaster(int n) {
 		Benchmark.count = 0;
 		boolean arr[] = new boolean[n];
+		if(n > 2) {
 		arr[2] = true;
+		}
 		for (int i = 3; i < n-1; i += 2) {
 			arr[i] = true;
 			arr[i+1] = false;
@@ -35,12 +37,11 @@ public class Primes {
 		return arr;
 	}
 	
-	public static boolean[] sieveOfEratosthenes(int n) {
+	public static boolean[] findPrimeBySieve(int n) {
 		Benchmark.count = 0;
 		boolean[] arr = new boolean[n];
 		int i;
 		for (i = 2; i < n; i++) {
-			Benchmark.count++;
 			arr[i] = true;
 		}
 		for(i = 2; i < Math.sqrt(n); i++) {
@@ -55,10 +56,13 @@ public class Primes {
 		return arr;
 	}
 	
-	public static boolean isPrim(int n) {
+	public static boolean isPrime(int n) {
 		Benchmark.count = 0;
 		boolean res = true;
-		for (int i = 2; i < n; i++) {
+		if(n < 2) {
+			res = false;
+		}
+		for (int i = 2; i <= Math.sqrt(n); i++) {
 			Benchmark.count++;
 			if (n % i == 0) {
 				res = false;
