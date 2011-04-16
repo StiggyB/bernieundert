@@ -1,14 +1,15 @@
 package a03;
 
 public class SlowPrimzahl {
-	private static final int MAX = 100;
+	public boolean[] findPrimzahlen(int max) {
 
-	public boolean[] findPrimzahlen() {
-		boolean[] a = new boolean[MAX];
-		
-		for (int i = 2; i < MAX; i++) {
+		boolean[] a = new boolean[max];
+		Benchmark.ops = 0;
+
+		for (int i = 2; i < max; i++) {
 			a[i] = true;
 			for (int j = 2; j < i; j++) {
+				Benchmark.ops++;
 				if (i % j == 0) {
 					a[i] = false;
 					break;
@@ -17,5 +18,5 @@ public class SlowPrimzahl {
 		}
 		return a;
 	}
-	
+
 }
