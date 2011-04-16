@@ -35,10 +35,6 @@ public class MainApp {
 		System.out.println("\nSchnelles Primzahlen suchen:");
 		for (int i = 0; i <= N; i++) {
 			Primes.findPrimeFaster(i);
-			System.out.print(i + " ");
-		}
-		for (int i = 0; i <= N; i++) {
-			Primes.findPrimeFaster(i);
 			System.out.print(Benchmark.count + " ");
 //			System.out.println("Problemgroesse: " + i + "\tAufwand: " + Benchmark.count);
 		}
