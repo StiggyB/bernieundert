@@ -14,8 +14,8 @@ public class Primes {
 	/**
 	 * Diese Methode stellt den langsamsten Primzahlalgorithmus dar
 	 * 
-	 * @param n
-	 *            Problemgroesse, bis wo Primzahlen berechnet werden sollen
+	 * @param n		Problemgroesse, die die zu berechnenden Primzahlen vor gibt
+	 *         
 	 * @return Liefert ein bool-Array, anhand des Laufindex ist markiert, welche
 	 *         Zahlen Primzahlen sind
 	 */
@@ -36,11 +36,11 @@ public class Primes {
 
 	/**
 	 * In dieser Methode ist der Primzahlalgorithmus bereits leicht verbessert,
-	 * die innere Schleife rennt nur noch bis zum Laufindex der aeusseren
+	 * die innere Schleife laeuft nur noch bis zum Laufindex der aeusseren
 	 * Schleife
 	 * 
-	 * @param n
-	 *            Problemgroesse, bis wo Primzahlen berechnet werden sollen
+	 * @param n		Problemgroesse, die die zu berechnenden Primzahlen vor gibt
+	 *           
 	 * @return Liefert ein bool-Array, anhand des Laufindex ist markiert, welche
 	 *         Zahlen Primzahlen sind
 	 */
@@ -67,8 +67,8 @@ public class Primes {
 	 * weiterhin werden in der aeusseren Schleife nur ungerade Zahlen
 	 * durchlaufen.
 	 * 
-	 * @param n
-	 *            Problemgroesse, bis wo Primzahlen berechnet werden sollen
+	 * @param n		Problemgroesse, die die zu berechnenden Primzahlen vor gibt
+	 *           
 	 * @return Liefert ein bool-Array, anhand des Laufindex ist markiert, welche
 	 *         Zahlen Primzahlen sind
 	 */
@@ -97,7 +97,7 @@ public class Primes {
 	 * dar. Hier werden alle vielfachen einer gefundenen Primzahl gestrichen
 	 * (false).
 	 * 
-	 * @param n Problemgroesse, bis wo Primzahlen berechnet werden sollen
+	 * @param n 	Problemgroesse, die die zu berechnenden Primzahlen vor gibt
 	 * @return Liefert ein bool-Array, anhand des Laufindex ist markiert, welche
 	 *         Zahlen Primzahlen sind
 	 */
@@ -121,7 +121,7 @@ public class Primes {
 	}
 
 	/**
-	 * Diese Methode prueft für ein uebergebenes n, ob die Zahl eine Primzahl ist.
+	 * Diese Methode prueft fuer ein uebergebenes n, ob die Zahl eine Primzahl ist.
 	 *  
 	 * @param n Zu pruefende Zahl
 	 * @return true, wenn die Zahl eine Primzahl ist, andernfalls false
@@ -144,6 +144,7 @@ public class Primes {
 
 	/**
 	 * Dies ist lediglich eine Hilfsmethode zum Ausgeben eines bool-Array
+	 * 
 	 * @param arr Auszugebenes Array vom Typ bool 
 	 */
 	public static void printArray(boolean... arr) {
