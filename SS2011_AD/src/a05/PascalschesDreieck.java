@@ -14,7 +14,7 @@ public class PascalschesDreieck {
 				else
 					dreieck[i][j] = dreieck[i - 1][j - 1] + dreieck[i - 1][j];
 
-				System.out.printf("%2d ", dreieck[i][j]);
+				System.out.print(" " + dreieck[i][j]);
 			}
 			System.out.println();
 		}
