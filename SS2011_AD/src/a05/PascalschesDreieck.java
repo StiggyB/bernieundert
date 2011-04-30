@@ -81,38 +81,29 @@ public class PascalschesDreieck {
 
 	}
 
-	// public static int pascalRecursive(int n) {
-	// if (n == 0)
-	// return 1;
-	// else
-	// for(int i = 0;i<=n;i++){
-	// return calc(n - 1, i) + calc(n - 1, k - 1);
-	// }
-	// }
-
-	public static int pascalRecursive(int n, int r) {
-		if (n < r || r < 0) {
-			return 0;
-		} else if (n == r || r == 0) {
-			return 1;
-		} else {
-			return pascalRecursive(n - 1, r) + pascalRecursive(n - 1, r - 1);
+	public static void pascalRecursive(int n) {
+		n++;
+		for (int i = n; i > 0; i--) {
+			System.out.print(pascalRecursive(n, i) + " ");
 		}
+	}
+
+	private static int pascalRecursive(int row, int column) {
+		if (column == 1 || column == row) {
+			return 1;
+		}
+		return pascalRecursive(row - 1, column - 1)
+				+ pascalRecursive(row - 1, column);
 	}
 
 	public static void main(String[] args) {
 
 		int N = 200;
+		for (int i = 0; i < 100000; i++) {
 
-		System.out.println("PascaleIterativeOpt:");
-		long time1 = System.currentTimeMillis();
-		for (int i = 0; i < N; i++) {
-			pascalIterativeOpt(20);
-			System.out.println();
 		}
-		long time2 = System.currentTimeMillis();
-		System.out.println();
-		System.out.println("Zeit: " + (time2 - time1));
+		long time1 = 0;
+		long time2 = 0;
 
 		System.out.println("PascaleIterativeSloooow:");
 		time1 = System.currentTimeMillis();
@@ -123,7 +114,59 @@ public class PascalschesDreieck {
 		time2 = System.currentTimeMillis();
 		System.out.println();
 		System.out.println("Zeit: " + (time2 - time1));
-
+		// --------------------------------------------------------------
+		System.out.println("PascaleIterativeSloooow:");
+		time1 = System.currentTimeMillis();
+		for (int i = 0; i < N; i++) {
+			pascalIterativeSlow(20);
+			System.out.println();
+		}
+		time2 = System.currentTimeMillis();
+		System.out.println();
+		System.out.println("Zeit: " + (time2 - time1));
+		// --------------------------------------------------------------
+		System.out.println("PascaleIterativeOpt:");
+		time1 = System.currentTimeMillis();
+		for (int i = 0; i < N; i++) {
+			pascalIterativeOpt(20);
+			System.out.println();
+		}
+		time2 = System.currentTimeMillis();
+		System.out.println();
+		System.out.println("Zeit: " + (time2 - time1));
+		// --------------------------------------------------------------
+		System.out.println("PascaleIterativeOpt:");
+		time1 = System.currentTimeMillis();
+		for (int i = 0; i < N; i++) {
+			pascalIterativeOpt(20);
+			System.out.println();
+		}
+		time2 = System.currentTimeMillis();
+		System.out.println();
+		System.out.println("Zeit: " + (time2 - time1));
+		// --------------------------------------------------------------
+		System.out.println("PascaleRecursive:");
+		time1 = System.currentTimeMillis();
+		for (int i = 0; i < N; i++) {
+			pascalRecursive(20);
+			System.out.println();
+		}
+		time2 = System.currentTimeMillis();
+		System.out.println();
+		System.out.println("Zeit: " + (time2 - time1));
+		System.out.println();
+		// --------------------------------------------------------------
+		System.out.println("PascaleRecursive:");
+		time1 = System.currentTimeMillis();
+		for (int i = 0; i < N; i++) {
+			pascalRecursive(20);
+			System.out.println();
+		}
+		time2 = System.currentTimeMillis();
+		System.out.println();
+		System.out.println("Zeit: " + (time2 - time1));
+		System.out.println();
+		// --------------------------------------------------------------
 		System.out.println("PascaleBinomialGreaterThan20:");
 		time1 = System.currentTimeMillis();
 		for (int i = 0; i < N; i++) {
@@ -134,7 +177,7 @@ public class PascalschesDreieck {
 		System.out.println();
 		System.out.println("Zeit: " + (time2 - time1));
 		System.out.println();
-
+		// --------------------------------------------------------------
 		System.out.println("PascaleBinomialMax20:");
 		time1 = System.currentTimeMillis();
 		for (int i = 0; i < N; i++) {
@@ -145,7 +188,7 @@ public class PascalschesDreieck {
 		System.out.println();
 		System.out.println("Zeit: " + (time2 - time1));
 		System.out.println();
-
+		// --------------------------------------------------------------
 		System.out.println("PascaleSpecialFormula:");
 		time1 = System.currentTimeMillis();
 		for (int i = 0; i < N; i++) {
@@ -153,5 +196,6 @@ public class PascalschesDreieck {
 		}
 		time2 = System.currentTimeMillis();
 		System.out.println("Zeit: " + (time2 - time1));
+
 	}
 }
