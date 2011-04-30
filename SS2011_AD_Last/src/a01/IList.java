@@ -66,6 +66,11 @@ public interface IList<E> {
 	
 	
 	/**
+	 * 
+	 */
+	void setHead(Node<E> node);
+	
+	/**
 	 * @return
 	 */
 	int size();
