@@ -81,8 +81,27 @@ public class PascalschesDreieck {
 
 	}
 
+	// public static int pascalRecursive(int n) {
+	// if (n == 0)
+	// return 1;
+	// else
+	// for(int i = 0;i<=n;i++){
+	// return calc(n - 1, i) + calc(n - 1, k - 1);
+	// }
+	// }
+
+	public static int pascalRecursive(int n, int r) {
+		if (n < r || r < 0) {
+			return 0;
+		} else if (n == r || r == 0) {
+			return 1;
+		} else {
+			return pascalRecursive(n - 1, r) + pascalRecursive(n - 1, r - 1);
+		}
+	}
+
 	public static void main(String[] args) {
-		
+
 		int N = 200;
 
 		System.out.println("PascaleIterativeOpt:");
