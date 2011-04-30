@@ -46,7 +46,11 @@ public class MainApp {
 		System.out.println("\nPrimzahleigenschaft feststellen:");
 		for (int i = 0; i <= N; i++) {
 			Primes.isPrime(i);
-			System.out.print(Benchmark.count + " ");
+			System.out.println(Benchmark.count + " ");
 		}
+		
+		System.out.println(Primes.isPrime(1));
+		
+		
 	}
 }

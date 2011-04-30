@@ -53,7 +53,7 @@ public class TestFrame {
 
 		list1.concat(list2);
 		System.out.println("Anzahl Ops: " + Benchmark.ops);
-		System.out.println(list1);
+//		System.out.println(list1);
 
 		System.out.println("Beginn Auswertung");
 		System.out.println("=================");
@@ -131,7 +131,7 @@ public class TestFrame {
 		for (int i = 0; i < 50; i++) {
 			IList<String> tmpList = listList.get(i);
 			tmpList.concat(listList.get(++i));
-			System.out.println(tmpList);
+//			System.out.println(tmpList);
 			System.out.println("Groesse der Liste: " + tmpList.size()
 					+ " Anzahl Ops: " + Benchmark.ops);
 			Benchmark.ops = 0;

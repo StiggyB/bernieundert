@@ -2,7 +2,7 @@ package a04;
 
 public class TestAlgo {
 
-	private final static int N = 3;
+	private final static int N = 9;
 	
 	
 	/**
@@ -20,15 +20,15 @@ public class TestAlgo {
 	}
 	
 	
-	static int res = 1;
 	/**
 	 * 
 	 * @param n
 	 */
-	static void sumRecu(int n) {
+	static int sumRecu(int n) {
 		if(n > 1) {
-			res += n;
-			sumRecu(n-1);
+			return sumRecu(n-1) + n;
+		} else {
+			return n;
 		}
 	}
 	
@@ -79,6 +79,10 @@ public class TestAlgo {
 		cnt++;
 	}
 	
+	static int gaussRecu2(int n) {
+		return (n * (n + 1)) / 2;
+	}
+	
 	static int cnt2 = 0;
 	static void recu2(int i)  {
 		if(i+1 >= N) {
@@ -89,11 +93,11 @@ public class TestAlgo {
 	
 	public static void main(String[] args) {
 		System.out.println("Iterativ :" + sumIter(N));
-		sumRecu(N);
-		System.out.println("Rekursiv: " + res);
+		System.out.println("Rekursiv: " + sumRecu(N));
 		System.out.println("Iterativ Gauss: " + gaussSum(N));
 		gaussRecu(N);
 		System.out.println("Rekursiv Gauss: " + gaussRes);
+		System.out.println(gaussRecu2(N));
 //		recu(N);
 //		System.out.println(cnt);
 		recu2(N);

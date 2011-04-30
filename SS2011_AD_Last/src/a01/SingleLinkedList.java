@@ -101,6 +101,8 @@ public class SingleLinkedList<E> implements IList<E> {
 	public void concat(IList<E> list) {
 		if(list instanceof SingleLinkedList<?>) {
 			this.tail.next.next = list.getHead().next;
+			this.tail.next = null;
+			list.setHead(null);
 		}	
 	}
 
@@ -110,6 +112,15 @@ public class SingleLinkedList<E> implements IList<E> {
 	@Override
 	public Node<E> getHead() {
 		return this.head;
+	}
+	
+
+	/**
+	 * @see a01.IList#setHead(a01.Node)
+	 */
+	@Override
+	public void setHead(Node<E> node) {
+		this.head = node;
 	}
 	
 	/**
