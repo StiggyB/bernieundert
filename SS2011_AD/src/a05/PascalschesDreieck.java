@@ -4,9 +4,9 @@ public class PascalschesDreieck {
 
 	// volles Dreieck und lahmarschig
 	public static void pascalIterativeSlow(int n) {
-		long triangle[][] = new long[n][];
+		long triangle[][] = new long[n + 1][];
 
-		for (int i = 0; i < triangle.length; i++) {
+		for (int i = 0; i <= n; i++) {
 			triangle[i] = new long[i + 1];
 
 			for (int j = 0; j <= i; j++) {
@@ -16,9 +16,13 @@ public class PascalschesDreieck {
 					triangle[i][j] = triangle[i - 1][j - 1]
 							+ triangle[i - 1][j];
 
-				System.out.print(" " + triangle[i][j]);
+				// System.out.print(" " + triangle[i][j]);
 			}
-			System.out.println();
+			// System.out.println();
+		}
+		for (int i = 0; i < triangle.length; i++) {
+			System.out.print(triangle[n][i] + " ");
+			;
 		}
 	}
 
@@ -65,18 +69,48 @@ public class PascalschesDreieck {
 
 	}
 
+	// n = 60 ca.
+	public static void pascalSpecial(int n) {
+		int j = 0;
+		long x = 1;
+		for (j = 0, x = 1; j <= n; j++) {
+			System.out.print(x + " ");
+			x = x * (n - j) / (j + 1);
+		}
+		System.out.println();
+
+	}
+
 	public static void main(String[] args) {
+		
+		int N = 200;
 
 		System.out.println("PascaleIterativeOpt:");
 		long time1 = System.currentTimeMillis();
-		pascalIterativeOpt(66);
+		for (int i = 0; i < N; i++) {
+			pascalIterativeOpt(20);
+			System.out.println();
+		}
 		long time2 = System.currentTimeMillis();
+		System.out.println();
+		System.out.println("Zeit: " + (time2 - time1));
+
+		System.out.println("PascaleIterativeSloooow:");
+		time1 = System.currentTimeMillis();
+		for (int i = 0; i < N; i++) {
+			pascalIterativeSlow(20);
+			System.out.println();
+		}
+		time2 = System.currentTimeMillis();
 		System.out.println();
 		System.out.println("Zeit: " + (time2 - time1));
 
 		System.out.println("PascaleBinomialGreaterThan20:");
 		time1 = System.currentTimeMillis();
-		pascalBinomialGreaterThan20(66);
+		for (int i = 0; i < N; i++) {
+			pascalBinomialGreaterThan20(20);
+			System.out.println();
+		}
 		time2 = System.currentTimeMillis();
 		System.out.println();
 		System.out.println("Zeit: " + (time2 - time1));
@@ -84,10 +118,21 @@ public class PascalschesDreieck {
 
 		System.out.println("PascaleBinomialMax20:");
 		time1 = System.currentTimeMillis();
-		pascalBinomialMax20(20);
+		for (int i = 0; i < N; i++) {
+			pascalBinomialMax20(20);
+			System.out.println();
+		}
 		time2 = System.currentTimeMillis();
 		System.out.println();
 		System.out.println("Zeit: " + (time2 - time1));
-		System.out.println(Factorial.factorialMax20iterative(20));
+		System.out.println();
+
+		System.out.println("PascaleSpecialFormula:");
+		time1 = System.currentTimeMillis();
+		for (int i = 0; i < N; i++) {
+			pascalSpecial(20);
+		}
+		time2 = System.currentTimeMillis();
+		System.out.println("Zeit: " + (time2 - time1));
 	}
 }
