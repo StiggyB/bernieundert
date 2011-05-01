@@ -76,12 +76,6 @@ public class PascalsTriangle {
 		return values;
 	}
 
-	//TODO
-	/**
-	 * Von der Tugend
-	 * 
-	 * @param n
-	 */
 	/**
 	 * Diese Methode berechnet die n-te Zeile des Pascalschen Dreiecks iterativ.
 	 * Da kein 2D-Array benutzt wurde und immer nur zwei Zeilen benutzt werden,
@@ -90,6 +84,7 @@ public class PascalsTriangle {
 	 * 
 	 * @param n
 	 *            Welche Zeile ausgegeben werden soll
+	 * @return letzte Zeile des Dreiecks als long-Array
 	 */
 	public static long[] pascalIterativeOpt(int n) {
 		long lastLine[] = null;
@@ -109,7 +104,14 @@ public class PascalsTriangle {
 		return currentLine;
 	}
 
-	//TODO
+	/**
+	 * Diese Methode berechnet die n-te Zeile des Pascalschen Dreiecks mittels
+	 * Binomialkoeffizienten.
+	 * 
+	 * @param n
+	 *            Welche Zeile ausgegeben werden soll
+	 * @return letzte Zeile des Dreiecks als long-Array
+	 */
 	static long[] calcBinomial(int n) {
 		long[] values = new long[n + 1];
 		for (int i = 0; i <= n; i++) {
@@ -131,7 +133,7 @@ public class PascalsTriangle {
 	 */
 	static long calcBinomial(int n, int k) {
 		long res = 0;
-		if (n >= 0 || n >= k ) {
+		if (n >= 0 || n >= k) {
 			Benchmark.ops++;
 			res = (Factorial.factorial(n))
 					/ (Factorial.factorial(k) * Factorial.factorial((n - k)));
@@ -139,16 +141,16 @@ public class PascalsTriangle {
 		return res;
 	}
 
-	//TODO
 	/**
 	 * Diese Methode berechnet die n-te Zeile des Pascalschen Dreiecks mit
 	 * Binomialkoeffizienten. Die Berechnung funktioniert bis n=136
 	 * 
 	 * @param n
 	 *            Welche Zeile ausgegeben werden soll
+	 * @return letzte Zeile des Dreiecks als BigInteger-Array
 	 */
 	public static BigInteger[] pascalBinomialGreaterThan20(int n) {
-		BigInteger[] values = new BigInteger[n+1];
+		BigInteger[] values = new BigInteger[n + 1];
 		for (int i = 0; i <= n; i++) {
 			values[i] = Factorial.factorialGreaterThan20recursive(n).divide(
 					Factorial.factorialGreaterThan20recursive(i).multiply(
@@ -216,7 +218,7 @@ public class PascalsTriangle {
 			System.out.print(arr[n][i] + "  ");
 		}
 	}
-	
+
 	/**
 	 * Hilfsmethode zur Ausgabe eines Array
 	 * 
@@ -227,7 +229,7 @@ public class PascalsTriangle {
 			System.out.print(arr[i] + "  ");
 		}
 	}
-	
+
 	/**
 	 * Hilfsmethode zur Ausgabe eines Array
 	 * 

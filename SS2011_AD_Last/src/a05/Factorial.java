@@ -6,8 +6,8 @@ import java.math.BigInteger;
  * 
  * @author Team TugendUndLaster
  * 
- *         Dies ist eine Helferklasse, die verschiedene Algorithmen
- *         zum berechnen der Fakultaet bereitstellt.
+ *         Dies ist eine Helferklasse, die verschiedene Algorithmen zum
+ *         berechnen der Fakultaet bereitstellt.
  * 
  */
 public class Factorial {
@@ -15,10 +15,11 @@ public class Factorial {
 	/**
 	 * Diese Methode ist geeignet zur Berechnung von Fakultaeten >20 Ohne
 	 * Rekursion geht es schneller, da nicht alle Rekursionsstufen gespeichert
-	 * werden muessen.
-	 * Durch die Nutzung der Klasse BigInteger kann sich die Laufzeit vergroessern.
+	 * werden muessen. Durch die Nutzung der Klasse BigInteger kann sich die
+	 * Laufzeit vergroessern.
 	 * 
-	 * @param n Zu welchem n die Fakultaet berechnet werden soll
+	 * @param n
+	 *            Zu welchem n die Fakultaet berechnet werden soll
 	 * @return Wert der Fakultaet der uebergebenen Zahl.
 	 */
 	public static BigInteger factorialGreaterThan20iterative(int n) {
@@ -38,11 +39,12 @@ public class Factorial {
 	}
 
 	/**
-	 * Diese Methode ist geeignet zur Berechnung von Fakultaeten bis max. 20 Ohne
-	 * Rekursion geht es schneller, da nicht alle Rekursionsstufen gespeichert
-	 * werden muessen.
+	 * Diese Methode ist geeignet zur Berechnung von Fakultaeten bis max. 20
+	 * Ohne Rekursion geht es schneller, da nicht alle Rekursionsstufen
+	 * gespeichert werden muessen.
 	 * 
-	 * @param n Zu welchem n die Fakultaet berechnet werden soll
+	 * @param n
+	 *            Zu welchem n die Fakultaet berechnet werden soll
 	 * @return Wert der Fakultaet der uebergebenen Zahl.
 	 */
 	public static long factorialMax20iterative(int n) {
@@ -64,10 +66,11 @@ public class Factorial {
 	}
 
 	/**
-	 * Diese Methode ist geeignet zur Berechnung von Fakultaeten bis max. 20
-	 * Die Berechnung erfolgt Rekursiv, was langsamer als iterativ passiert.
+	 * Diese Methode ist geeignet zur Berechnung von Fakultaeten bis max. 20 Die
+	 * Berechnung erfolgt Rekursiv, was langsamer als iterativ passiert.
 	 * 
-	 * @param n Zu welchem n die Fakultaet berechnet werden soll
+	 * @param n
+	 *            Zu welchem n die Fakultaet berechnet werden soll
 	 * @return Wert der Fakultaet der uebergebenen Zahl.
 	 */
 	public static long factorialMax20recursive(long n) {
@@ -82,10 +85,11 @@ public class Factorial {
 
 	/**
 	 * Diese Methode ist geeignet zur Berechnung von Fakultaeten >20 Allerdings
-	 * langsamer, als die iterative Variante.
-	 * Durch die Nutzung der Klasse BigInteger kann sich die Laufzeit vergroessern.
+	 * langsamer, als die iterative Variante. Durch die Nutzung der Klasse
+	 * BigInteger kann sich die Laufzeit vergroessern.
 	 * 
-	 * @param n Zu welchem n die Fakultaet berechnet werden soll
+	 * @param n
+	 *            Zu welchem n die Fakultaet berechnet werden soll
 	 * @return Wert der Fakultaet der uebergebenen Zahl.
 	 */
 	public static BigInteger factorialGreaterThan20recursive(int n) {
@@ -99,7 +103,8 @@ public class Factorial {
 	/**
 	 * Diese Methode berechnet die Fakultaet bis max. 20!
 	 * 
-	 * @param n Zu welchem n die Fakultaet berechnet werden soll
+	 * @param n
+	 *            Zu welchem n die Fakultaet berechnet werden soll
 	 * @return Wert der Fakultaet der uebergebenen Zahl.
 	 */
 	static long factorial(int n) {
