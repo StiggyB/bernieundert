@@ -1,5 +1,13 @@
 package a05;
 
+/**
+ * 
+ * @author Team TugendUndLaster
+ * 
+ *         Dies ist die Startklasse für die Ausgabe der n-ten Zeile des
+ *         Pascalschen Dreiecks. Alternativ kann man auch Laufzeiten ausgeben.
+ * 
+ */
 public class MainApp {
 
 	final static int N = 20;
@@ -36,20 +44,6 @@ public class MainApp {
 //			PascalsTriangle.printArr(PascalsTriangle.calcTriangleIter(N), N);
 			PascalsTriangle.calcTriangleIter(i);
 			System.out.print(Benchmark.ops + " ");
-		}
-		time2 = System.currentTimeMillis();
-		System.out.println("\nZeit: " + (time2 - time1));
-		
-		// --------------------------------------------------------------
-		System.out.println("\n\nPascals Triangle iterativ faster: ");
-		Benchmark.ops = 0;
-		time1 = System.currentTimeMillis();
-		for (int i = 0; i < M; i++) {
-			Benchmark.ops = 0;
-//			PascalsTriangle.pascalIterativeSlow(N);
-			PascalsTriangle.pascalIterativeFaster(i);
-			System.out.print(Benchmark.ops + " ");
-			
 		}
 		time2 = System.currentTimeMillis();
 		System.out.println("\nZeit: " + (time2 - time1));
