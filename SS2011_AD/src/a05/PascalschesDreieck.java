@@ -4,10 +4,10 @@ public class PascalschesDreieck {
 
 	// volles Dreieck und lahmarschig
 	public static void pascalIterativeSlow(int n) {
-		long triangle[][] = new long[n + 1][];
+		int triangle[][] = new int[n + 1][];
 
 		for (int i = 0; i <= n; i++) {
-			triangle[i] = new long[i + 1];
+			triangle[i] = new int[i + 1];
 
 			for (int j = 0; j <= i; j++) {
 				if ((j == 0) || (j == i))
@@ -22,7 +22,6 @@ public class PascalschesDreieck {
 		}
 		for (int i = 0; i < triangle.length; i++) {
 			System.out.print(triangle[n][i] + " ");
-			;
 		}
 	}
 
@@ -98,7 +97,7 @@ public class PascalschesDreieck {
 
 	public static void main(String[] args) {
 
-		int N = 200;
+		int N = 1;
 		for (int i = 0; i < 100000; i++) {
 
 		}
@@ -108,94 +107,94 @@ public class PascalschesDreieck {
 		System.out.println("PascaleIterativeSloooow:");
 		time1 = System.currentTimeMillis();
 		for (int i = 0; i < N; i++) {
-			pascalIterativeSlow(20);
+			pascalIterativeSlow(34);
 			System.out.println();
 		}
 		time2 = System.currentTimeMillis();
 		System.out.println();
 		System.out.println("Zeit: " + (time2 - time1));
-		// --------------------------------------------------------------
-		System.out.println("PascaleIterativeSloooow:");
-		time1 = System.currentTimeMillis();
-		for (int i = 0; i < N; i++) {
-			pascalIterativeSlow(20);
-			System.out.println();
-		}
-		time2 = System.currentTimeMillis();
-		System.out.println();
-		System.out.println("Zeit: " + (time2 - time1));
-		// --------------------------------------------------------------
-		System.out.println("PascaleIterativeOpt:");
-		time1 = System.currentTimeMillis();
-		for (int i = 0; i < N; i++) {
-			pascalIterativeOpt(20);
-			System.out.println();
-		}
-		time2 = System.currentTimeMillis();
-		System.out.println();
-		System.out.println("Zeit: " + (time2 - time1));
-		// --------------------------------------------------------------
-		System.out.println("PascaleIterativeOpt:");
-		time1 = System.currentTimeMillis();
-		for (int i = 0; i < N; i++) {
-			pascalIterativeOpt(20);
-			System.out.println();
-		}
-		time2 = System.currentTimeMillis();
-		System.out.println();
-		System.out.println("Zeit: " + (time2 - time1));
-		// --------------------------------------------------------------
-		System.out.println("PascaleRecursive:");
-		time1 = System.currentTimeMillis();
-		for (int i = 0; i < N; i++) {
-			pascalRecursive(20);
-			System.out.println();
-		}
-		time2 = System.currentTimeMillis();
-		System.out.println();
-		System.out.println("Zeit: " + (time2 - time1));
-		System.out.println();
-		// --------------------------------------------------------------
-		System.out.println("PascaleRecursive:");
-		time1 = System.currentTimeMillis();
-		for (int i = 0; i < N; i++) {
-			pascalRecursive(20);
-			System.out.println();
-		}
-		time2 = System.currentTimeMillis();
-		System.out.println();
-		System.out.println("Zeit: " + (time2 - time1));
-		System.out.println();
-		// --------------------------------------------------------------
-		System.out.println("PascaleBinomialGreaterThan20:");
-		time1 = System.currentTimeMillis();
-		for (int i = 0; i < N; i++) {
-			pascalBinomialGreaterThan20(20);
-			System.out.println();
-		}
-		time2 = System.currentTimeMillis();
-		System.out.println();
-		System.out.println("Zeit: " + (time2 - time1));
-		System.out.println();
-		// --------------------------------------------------------------
-		System.out.println("PascaleBinomialMax20:");
-		time1 = System.currentTimeMillis();
-		for (int i = 0; i < N; i++) {
-			pascalBinomialMax20(20);
-			System.out.println();
-		}
-		time2 = System.currentTimeMillis();
-		System.out.println();
-		System.out.println("Zeit: " + (time2 - time1));
-		System.out.println();
-		// --------------------------------------------------------------
-		System.out.println("PascaleSpecialFormula:");
-		time1 = System.currentTimeMillis();
-		for (int i = 0; i < N; i++) {
-			pascalSpecial(20);
-		}
-		time2 = System.currentTimeMillis();
-		System.out.println("Zeit: " + (time2 - time1));
+//		// --------------------------------------------------------------
+//		System.out.println("PascaleIterativeSloooow:");
+//		time1 = System.currentTimeMillis();
+//		for (int i = 0; i < N; i++) {
+//			pascalIterativeSlow(20);
+//			System.out.println();
+//		}
+//		time2 = System.currentTimeMillis();
+//		System.out.println();
+//		System.out.println("Zeit: " + (time2 - time1));
+//		// --------------------------------------------------------------
+//		System.out.println("PascaleIterativeOpt:");
+//		time1 = System.currentTimeMillis();
+//		for (int i = 0; i < N; i++) {
+//			pascalIterativeOpt(20);
+//			System.out.println();
+//		}
+//		time2 = System.currentTimeMillis();
+//		System.out.println();
+//		System.out.println("Zeit: " + (time2 - time1));
+//		// --------------------------------------------------------------
+//		System.out.println("PascaleIterativeOpt:");
+//		time1 = System.currentTimeMillis();
+//		for (int i = 0; i < N; i++) {
+//			pascalIterativeOpt(20);
+//			System.out.println();
+//		}
+//		time2 = System.currentTimeMillis();
+//		System.out.println();
+//		System.out.println("Zeit: " + (time2 - time1));
+//		// --------------------------------------------------------------
+//		System.out.println("PascaleRecursive:");
+//		time1 = System.currentTimeMillis();
+//		for (int i = 0; i < N; i++) {
+//			pascalRecursive(20);
+//			System.out.println();
+//		}
+//		time2 = System.currentTimeMillis();
+//		System.out.println();
+//		System.out.println("Zeit: " + (time2 - time1));
+//		System.out.println();
+//		// --------------------------------------------------------------
+//		System.out.println("PascaleRecursive:");
+//		time1 = System.currentTimeMillis();
+//		for (int i = 0; i < N; i++) {
+//			pascalRecursive(20);
+//			System.out.println();
+//		}
+//		time2 = System.currentTimeMillis();
+//		System.out.println();
+//		System.out.println("Zeit: " + (time2 - time1));
+//		System.out.println();
+//		// --------------------------------------------------------------
+//		System.out.println("PascaleBinomialGreaterThan20:");
+//		time1 = System.currentTimeMillis();
+//		for (int i = 0; i < N; i++) {
+//			pascalBinomialGreaterThan20(20);
+//			System.out.println();
+//		}
+//		time2 = System.currentTimeMillis();
+//		System.out.println();
+//		System.out.println("Zeit: " + (time2 - time1));
+//		System.out.println();
+//		// --------------------------------------------------------------
+//		System.out.println("PascaleBinomialMax20:");
+//		time1 = System.currentTimeMillis();
+//		for (int i = 0; i < N; i++) {
+//			pascalBinomialMax20(20);
+//			System.out.println();
+//		}
+//		time2 = System.currentTimeMillis();
+//		System.out.println();
+//		System.out.println("Zeit: " + (time2 - time1));
+//		System.out.println();
+//		// --------------------------------------------------------------
+//		System.out.println("PascaleSpecialFormula:");
+//		time1 = System.currentTimeMillis();
+//		for (int i = 0; i < N; i++) {
+//			pascalSpecial(20);
+//		}
+//		time2 = System.currentTimeMillis();
+//		System.out.println("Zeit: " + (time2 - time1));
 
 	}
 }
