@@ -116,7 +116,6 @@ public class PascalsTriangle {
 		long[] values = new long[n + 1];
 		for (int i = 0; i <= n; i++) {
 			values[i] = calcBinomial(n, i);
-			Benchmark.ops++;
 		}
 		return values;
 	}
