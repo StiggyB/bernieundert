@@ -1,8 +1,15 @@
 package a06;
 
-public class Selectionsort {
 
-	public void selectionSort1(Dataset[] a) {
+public class Selectionsort {
+	
+	private Dataset a[];
+
+	public Selectionsort(Dataset[] a) {
+		this.a = a;
+	}
+
+	public void selectionSort1() {
 		for (int i = 0; i < a.length - 1; i++) {
 			for (int j = i + 1; j < a.length; j++) {
 				if (a[i].key > a[j].key) {
@@ -20,7 +27,7 @@ public class Selectionsort {
 		}
 	}
 
-	public int findMinStartingAt(int i, Dataset[] a) {
+	private int findMinStartingAt(int i, Dataset[] a) {
 		int min = i;
 		for (int j = i + 1; j <= a.length; j++) {
 			if (a[j].key < a[min].key)
@@ -35,5 +42,9 @@ public class Selectionsort {
 		a[i] = a[j];
 		a[j] = tmp;
 
+	}
+	
+	public void setA(Dataset[] a) {
+		this.a = a;
 	}
 }
