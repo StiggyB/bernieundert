@@ -101,7 +101,7 @@ public class Quicksort {
 					&& a[irechts].key > a[ilinks].key) {
 				median = a[ilinks].key;
 			}
-			b<c&&c<a||a<c&&c<b
+
 			if (a[middle].key < a[irechts].key
 					&& a[irechts].key < a[ilinks].key
 					|| a[ilinks].key < a[irechts].key
