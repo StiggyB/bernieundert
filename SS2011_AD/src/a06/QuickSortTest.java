@@ -6,7 +6,7 @@ public class QuickSortTest {
 
 	private static final int MAX_DATA_SETS = 20;
 
-	public static void sortAndPrint(Dataset[] a, int pivotMethod, Quicksort qs) {
+	public static void quickSortAndPrint(Dataset[] a, int pivotMethod, Quicksort qs) {
 		for (int i = 0; i < a.length; i++) {
 			System.out.print(a[i].key + " ");
 		}
@@ -21,6 +21,20 @@ public class QuickSortTest {
 		}
 		System.out.println();
 	}
+	
+	public static void selectionSortAndPrint(Dataset[] a, Selectionsort ss) {
+		for (int i = 0; i < a.length; i++) {
+			System.out.print(a[i].key + " ");
+		}
+		System.out.println();
+
+		ss.selectionSort1();
+
+		for (int i = 0; i < a.length; i++) {
+			System.out.print(a[i].key + " ");
+		}
+		System.out.println();
+	}
 
 	public static void main(String[] args) {
 
@@ -28,6 +42,7 @@ public class QuickSortTest {
 		Dataset[] testarrayCopy1 = new Dataset[MAX_DATA_SETS];
 		Dataset[] testarrayCopy2 = new Dataset[MAX_DATA_SETS];
 		Dataset[] testarrayCopy3 = new Dataset[MAX_DATA_SETS];
+		Dataset[] testarrayCopy4 = new Dataset[MAX_DATA_SETS];
 		Random rnd = new Random();
 
 		for (int i = 0; i < testarray.length; i++) {
@@ -37,10 +52,15 @@ public class QuickSortTest {
 		System.arraycopy(testarray, 0, testarrayCopy1, 0, testarray.length);
 		System.arraycopy(testarray, 0, testarrayCopy2, 0, testarray.length);
 		System.arraycopy(testarray, 0, testarrayCopy3, 0, testarray.length);
+		System.arraycopy(testarray, 0, testarrayCopy4, 0, testarray.length);
 		
 		Quicksort qs = new Quicksort(testarrayCopy1, 1);
-//		sortAndPrint(testarrayCopy1, 1, qs);
-		sortAndPrint(testarrayCopy1, 2, qs);
+		Selectionsort ss = new Selectionsort(testarrayCopy4);
+//		quickSortAndPrint(testarrayCopy1, 1, qs);
+//		quickSortAndPrint(testarrayCopy2, 2, qs);
+		quickSortAndPrint(testarrayCopy3, 3, qs);
+//		selectionSortAndPrint(testarrayCopy4, ss);
+		
 
 	}
 }
