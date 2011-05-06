@@ -65,13 +65,17 @@ public class Quicksort {
 			}
 		}
 
-		if (ilinks < j)
-//			 System.out.println("i und j: " + i + ", " + j);
-//			 System.out.println("linke Hälfte => ilinks: " + ilinks + "(" + a[ilinks].key + ")" + " j: " + j + "(" + a[j].key + ")");
+		if (ilinks < j) {
+			System.out.println("i und j: " + i + ", " + j);
+			// System.out.println("linke Hälfte => ilinks: " + ilinks + "(" +
+			// a[ilinks].key + ")" + " j: " + j + "(" + a[j].key + ")");
 			quicksort2(ilinks, j);
-		if (i < irechts)
-//			 System.out.println("rechte Hälfte =>i: " + i + "(" + a[i].key + ")" + " irechts: " + irechts + "(" + a[irechts].key + ")");
+		}
+		if (i < irechts) {
+			// System.out.println("rechte Hälfte =>i: " + i + "(" + a[i].key +
+			// ")" + " irechts: " + irechts + "(" + a[irechts].key + ")");
 			quicksort2(i, irechts);
+		}
 	}
 
 	private void swap(int i, int j) {
