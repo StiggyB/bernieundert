@@ -40,7 +40,7 @@ public class QuickSortTest {
 		
 		Quicksort qs = new Quicksort(testarrayCopy1, 1);
 		sortAndPrint(testarrayCopy1, 1, qs);
-		sortAndPrint(testarrayCopy2, 3, qs);
+//		sortAndPrint(testarrayCopy2, 3, qs);
 
 	}
 }

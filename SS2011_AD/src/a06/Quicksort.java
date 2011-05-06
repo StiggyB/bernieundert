@@ -45,9 +45,9 @@ public class Quicksort {
 		int i = ilinks, j = irechts;
 		// int pivot = a[low + (high - low) / 2].key;
 		// int pivot = a[irechts].key;
-		System.out.println("ilinks: " + ilinks + " irechts: " + irechts);
+		System.out.println("ilinks: " + ilinks + "(" + a[ilinks].key + ")" + " irechts: " + irechts + "(" + a[irechts].key + ")");
 		int pivot = getPivot(ilinks, irechts);
-		System.out.println("pivot: " + pivot);
+		System.out.println("pivot: " + pivot + "(" + a[pivot].key + ")");
 		while (i <= j) {
 			while (a[i].key < pivot) {
 				i++;
@@ -58,6 +58,7 @@ public class Quicksort {
 			}
 
 			if (i <= j) {
+				System.out.println("swap " + i + " und " + j);
 				swap(i, j);
 				i++;
 				j--;
@@ -65,8 +66,11 @@ public class Quicksort {
 		}
 
 		if (ilinks < j)
+//			System.out.println(i + "," + j);
+//			System.out.println("linke Hälfte => ilinks: " + ilinks + "(" + a[ilinks].key + ")" + " j: " + j + "(" + a[j].key + ")");
 			quicksort2(ilinks, j);
 		if (i < irechts)
+//			System.out.println("rechte Hälfte =>i: " + i + "(" + a[i].key + ")" + " irechts: " + irechts + "(" + a[irechts].key + ")");
 			quicksort2(i, irechts);
 	}
 
