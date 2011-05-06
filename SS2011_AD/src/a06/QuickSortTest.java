@@ -39,8 +39,8 @@ public class QuickSortTest {
 		System.arraycopy(testarray, 0, testarrayCopy3, 0, testarray.length);
 		
 		Quicksort qs = new Quicksort(testarrayCopy1, 1);
-		sortAndPrint(testarrayCopy1, 1, qs);
-		sortAndPrint(testarrayCopy2, 2, qs);
+//		sortAndPrint(testarrayCopy1, 1, qs);
+		sortAndPrint(testarrayCopy1, 2, qs);
 
 	}
 }
