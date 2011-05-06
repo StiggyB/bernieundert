@@ -1,8 +1,8 @@
 package a06;
 
-public class Selectionsort<T> {
+public class Selectionsort {
 
-	public void selectionSort1(Datensatz<T>[] a) {
+	public void selectionSort1(Dataset[] a) {
 		for (int i = 0; i < a.length - 1; i++) {
 			for (int j = i + 1; j < a.length; j++) {
 				if (a[i].key > a[j].key) {
@@ -12,7 +12,7 @@ public class Selectionsort<T> {
 		}
 	}
 
-	public void selectionSort2(Datensatz<T>[] a) {
+	public void selectionSort2(Dataset[] a) {
 		int minimum = 0;
 		for (int i = 1; i <= a.length - 1; i++) {
 			minimum = findMinStartingAt(i, a);
@@ -20,7 +20,7 @@ public class Selectionsort<T> {
 		}
 	}
 
-	public int findMinStartingAt(int i, Datensatz<T>[] a) {
+	public int findMinStartingAt(int i, Dataset[] a) {
 		int min = i;
 		for (int j = i + 1; j <= a.length; j++) {
 			if (a[j].key < a[min].key)
@@ -29,8 +29,8 @@ public class Selectionsort<T> {
 		return min;
 	}
 
-	private void swap(int i, int j, Datensatz<T>[] a) {
-		Datensatz<T> tmp;
+	private void swap(int i, int j, Dataset[] a) {
+		Dataset tmp;
 		tmp = a[i];
 		a[i] = a[j];
 		a[j] = tmp;
