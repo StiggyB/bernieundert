@@ -63,8 +63,8 @@ public class QuickSortTest {
 //		Aufpassen in Zeile 21!!!!!!!
 //		qs.quicksort3(0, a.length - 1); <--- anpassen, welcher algo genutzt werden soll, 1,2 oder 3 ... ;)
 //		quickSortAndPrint(testarrayCopy1, 1, qs);
-		quickSortAndPrint(testarrayCopy2, 2, qs);
-//		quickSortAndPrint(testarrayCopy3, 3, qs);
+//		quickSortAndPrint(testarrayCopy2, 2, qs);
+		quickSortAndPrint(testarrayCopy3, 3, qs);
 //		selectionSortAndPrint(testarrayCopy4, ss);
 		
 
