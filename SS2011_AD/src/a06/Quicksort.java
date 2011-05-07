@@ -89,7 +89,7 @@ public class Quicksort {
 		if(ilinks < irechts){
 			int i = ilinks;
 			int j = irechts-1;
-			int pivot = a[irechts].key;
+			int pivot = getPivot(ilinks, irechts);
 			
 			//ok im script isses ne while mit break, das aber hässlich ...
 			//is do/while ok oder besser erstmal bedingung prüfen also mit while() anfangen?!
