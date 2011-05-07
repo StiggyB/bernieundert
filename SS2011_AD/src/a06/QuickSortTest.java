@@ -1,4 +1,8 @@
 package a06;
+//http://www.vogella.de/articles/JavaAlgorithmsQuicksort/article.html#quicksort
+//http://www.inf.fh-flensburg.de/lang/algorithmen/sortieren/quick/quicken.htm
+//http://www.stefan-baur.de/cs.algo.quicksort.html
+
 
 import java.util.Random;
 
@@ -56,9 +60,9 @@ public class QuickSortTest {
 		
 		Quicksort qs = new Quicksort(testarrayCopy1, 1);
 		Selectionsort ss = new Selectionsort(testarrayCopy4);
-//		quickSortAndPrint(testarrayCopy1, 1, qs);
+		quickSortAndPrint(testarrayCopy1, 1, qs);
 //		quickSortAndPrint(testarrayCopy2, 2, qs);
-		quickSortAndPrint(testarrayCopy3, 3, qs);
+//		quickSortAndPrint(testarrayCopy3, 3, qs);
 //		selectionSortAndPrint(testarrayCopy4, ss);
 		
 
