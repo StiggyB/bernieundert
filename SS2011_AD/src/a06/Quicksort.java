@@ -83,6 +83,40 @@ public class Quicksort {
 			quicksort2(i, irechts);
 		}
 	}
+	
+	//hab den algo nochmal eben nach wikipedia selber geproggt ... der funzt sogar :D
+	public void quicksort3(int ilinks, int irechts){
+		if(ilinks < irechts){
+			int i = ilinks;
+			int j = irechts-1;
+			int pivot = a[irechts].key;
+			
+			//ok im script isses ne while mit break, das aber hässlich ...
+			//is do/while ok oder besser erstmal bedingung prüfen also mit while() anfangen?!
+			//dann brauch ich lediglich n abburchkriterium
+			do{
+				while(a[i].key <= pivot && i < irechts){
+					i++;
+				}
+				
+				while(a[j].key >= pivot && j > ilinks){
+					j--;
+				}
+				
+				if(i<j){
+					swap(i, j);
+				}
+			}while(i<j);
+			
+			//wieso swappe ich aber nur wenn key > pivot ist?!
+			if(a[i].key > pivot){
+				swap(i, irechts);
+			}
+			
+			quicksort3(ilinks, i-1);
+			quicksort3(i+1, irechts);
+		}
+	}
 
 	private void swap(int i, int j) {
 		Dataset tmp;
