@@ -15,20 +15,21 @@ public class Quicksort {
 	}
 
 	// uni crap algo
-	// void quicksort(int ilinks, int irechts) {
+	// public void quicksort(int ilinks, int irechts) {
 	// boolean stopped = false;
 	// int pivot, i, j;
 	// if (irechts > ilinks) {
 	// i = ilinks;
-	// j = irechts - 1;
+	// j = irechts;
 	// pivot = a[irechts].key;
 	// while (!stopped) {
 	// while (a[i].key < pivot) {
 	// i++;
 	// }
 	// while (a[j].key >= pivot) {
+	// if(j==0)break;
 	// j--;// Vorsicht: Stop-Element einbauen, z.B. mit -1 rennen
-	// // ...
+	//
 	// }
 	// if (i >= j) {
 	// stopped = true; // in der Mitte getroffen
@@ -40,20 +41,24 @@ public class Quicksort {
 	// quicksort(i + 1, irechts);
 	// }
 	// }
+
 	public void quicksort2(int ilinks, int irechts) {
 		int i = ilinks, j = irechts;
 		// int pivot = a[low + (high - low) / 2].key;
 		// int pivot = a[irechts].key;
-		System.out.println("ilinks: " + ilinks + "(" + a[ilinks].key + ")" + " irechts: " + irechts + "(" + a[irechts].key + ")");
+		System.out.println("ilinks: " + ilinks + "(" + a[ilinks].key + ")"
+				+ " irechts: " + irechts + "(" + a[irechts].key + ")");
 		int pivot = getPivot(ilinks, irechts);
 		System.out.println("pivot: " + pivot + "(" + a[pivot].key + ")");
 		while (i <= j) {
 			while (a[i].key < pivot) {
 				i++;
+				System.out.println("i: " + i);
 			}
 
 			while (a[j].key > pivot) {
 				j--;
+				System.out.println("j: " + j);
 			}
 
 			if (i <= j) {
@@ -63,15 +68,18 @@ public class Quicksort {
 				j--;
 			}
 		}
+//		swap(i, irechts);
 
 		if (ilinks < j) {
-//			System.out.println("i und j: " + i + ", " + j);
-//			System.out.println("linke Hälfte => ilinks: " + ilinks + "(" + a[ilinks].key + ")" + " j: " + j + "(" + a[j].key + ")");
+			// System.out.println("i und j: " + i + ", " + j);
+			// System.out.println("linke Hälfte => ilinks: " + ilinks + "(" +
+			// a[ilinks].key + ")" + " j: " + j + "(" + a[j].key + ")");
 			quicksort2(ilinks, j);
 		}
 		if (i < irechts) {
-//			System.out.println("i und j: " + i + ", " + j);
-//			System.out.println("rechte Hälfte =>i: " + i + "(" + a[i].key + ")" + " irechts: " + irechts + "(" + a[irechts].key + ")");
+			// System.out.println("i und j: " + i + ", " + j);
+			// System.out.println("rechte Hälfte =>i: " + i + "(" + a[i].key +
+			// ")" + " irechts: " + irechts + "(" + a[irechts].key + ")");
 			quicksort2(i, irechts);
 		}
 	}
@@ -85,7 +93,7 @@ public class Quicksort {
 
 	public int getPivot(int ilinks, int irechts) {
 		switch (pivotMethod) {
-		
+
 		case 1:
 			return a[irechts].key;
 
@@ -110,7 +118,7 @@ public class Quicksort {
 					&& a[irechts].key < a[middle].key) {
 				median = a[irechts].key;
 			}
-			if(median == 0){
+			if (median == 0) {
 				median = a[irechts].key;
 			}
 			return median;
