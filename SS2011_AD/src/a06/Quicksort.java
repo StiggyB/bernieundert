@@ -89,6 +89,9 @@ public class Quicksort {
 		if(ilinks < irechts){
 			int i = ilinks;
 			int j = irechts-1;
+			
+			//funktioniert bisher nur gut mit privotmethod = 1 ... 
+			//bei 2 ist es nur "fast" richtig sortiert, liegt wahrscheinlich am if median == 0 :P
 			int pivot = getPivot(ilinks, irechts);
 			
 			//ok im script isses ne while mit break, das aber hässlich ...
