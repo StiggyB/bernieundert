@@ -46,23 +46,23 @@ public class Quicksort {
 		int i = ilinks, j = irechts;
 		// int pivot = a[low + (high - low) / 2].key;
 		// int pivot = a[irechts].key;
-		System.out.println("ilinks: " + ilinks + "(" + a[ilinks].key + ")"
-				+ " irechts: " + irechts + "(" + a[irechts].key + ")");
+//		System.out.println("ilinks: " + ilinks + "(" + a[ilinks].key + ")"
+//				+ " irechts: " + irechts + "(" + a[irechts].key + ")");
 		int pivot = getPivot(ilinks, irechts);
-		System.out.println("pivot: " + pivot + "(" + a[pivot].key + ")");
+//		System.out.println("pivot: " + pivot + "(" + a[pivot].key + ")");
 		while (i <= j) {
 			while (a[i].key < pivot) {
 				i++;
-				System.out.println("i: " + i);
+//				System.out.println("i: " + i);
 			}
 
 			while (a[j].key > pivot) {
 				j--;
-				System.out.println("j: " + j);
+//				System.out.println("j: " + j);
 			}
 
 			if (i <= j) {
-				System.out.println("swap " + i + " und " + j);
+//				System.out.println("swap " + i + " und " + j);
 				swap(i, j);
 				i++;
 				j--;
@@ -145,29 +145,34 @@ public class Quicksort {
 			return a[irechts].key;
 
 		case 2:
+//			l==m || r==m return m
+//			l==r || m==r return r
 			int median = 0;
 			int middle = (ilinks + irechts) / 2;
-			if (a[ilinks].key < a[middle].key && a[middle].key < a[irechts].key
-					|| a[ilinks].key < a[middle].key
-					&& a[irechts].key > a[ilinks].key) {
+			System.out.println("link: " + a[ilinks].key + " rechts: " + a[irechts].key + " mitte:" + a[middle].key);
+			
+
+			if (a[ilinks].key < a[middle].key && a[irechts].key > a[middle].key	|| a[irechts].key < a[middle].key && a[ilinks].key > a[middle].key) {
 				median = a[middle].key;
 			}
 
-			if (a[ilinks].key < a[middle].key && a[irechts].key < a[ilinks].key
-					|| a[ilinks].key > a[middle].key
-					&& a[irechts].key > a[ilinks].key) {
+			if (a[irechts].key < a[ilinks].key && a[middle].key > a[ilinks].key	|| a[middle].key < a[ilinks].key && a[irechts].key > a[ilinks].key) {
 				median = a[ilinks].key;
 			}
 
-			if (a[middle].key < a[irechts].key
-					&& a[irechts].key < a[ilinks].key
-					|| a[ilinks].key < a[irechts].key
-					&& a[irechts].key < a[middle].key) {
+			if (a[middle].key < a[irechts].key && a[ilinks].key > a[irechts].key || a[ilinks].key < a[irechts].key && a[middle].key > a[irechts].key) {
 				median = a[irechts].key;
 			}
-			if (median == 0) {
+			if(a[ilinks].key == a[middle].key || a[irechts].key == a[middle].key){
+				median = a[middle].key;
+			}
+			if(a[ilinks].key == a[irechts].key || a[middle].key == a[irechts].key){
 				median = a[irechts].key;
 			}
+			System.out.println("median: " + median);
+//			if (median == 0) {
+//				median = a[irechts].key;
+//			}
 			return median;
 		case 3:
 			int i = rnd.nextInt(irechts);
