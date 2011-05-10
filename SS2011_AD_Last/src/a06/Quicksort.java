@@ -7,7 +7,7 @@ import java.util.Random;
 public class Quicksort {
 
 	final static int SIZE = 10;
-	static int PIVOT_NO = 0;
+	static int pivotNo = 2;
 	
 	static Data[] a = new Data[SIZE];
 	static Random rnd = new Random();
@@ -30,29 +30,37 @@ public class Quicksort {
 		if (left < right) {
 			i = left;
 			j = right - 1;
-			pivot = selectPivot(PIVOT_NO, left, right);
-			if(PIVOT_NO == 2) {
+			pivot = selectPivot(pivotNo, left, right);
+			if (pivotNo != 0) {
 				swap(pivot, right);
+				Benchmark.ops++;
+				pivot = a[right].key;
 			}
 			do {
 				while (a[i].key < pivot) {
 					i++;
+					Benchmark.ops++;
 				}
 				while (a[j].key >= pivot && j > left) {
 					j--;
+					Benchmark.ops++;
 				}
 				if(i < j) {
 					swap(i, j);
+					Benchmark.ops++;
 				}
 			} while (i < j);
 			
 			swap(i, right);
+			Benchmark.ops++;
 			quicksort(left, i - 1);
 			quicksort(i + 1, right);
 		}
 	}
 
 	/**
+	 * This method does not run correctly.
+	 * 
 	 * @param iLeft
 	 * @param iRight
 	 */
@@ -61,7 +69,7 @@ public class Quicksort {
 		if (iRight > iLeft) {
 			i = iLeft;
 			j = iRight - 1;
-			pivot = selectPivot(PIVOT_NO, iLeft, iRight);
+			pivot = selectPivot(pivotNo, iLeft, iRight);
 			while (true) {
 				while (a[i].key < pivot && i < iRight) {
 					i++;
@@ -97,7 +105,7 @@ public class Quicksort {
 				swap(mid, right);
 			}
 			swap(mid, right - 1);
-			int pivot = selectPivot(PIVOT_NO, left, right);
+			int pivot = selectPivot(pivotNo, left, right);
 			int i;
 			int j;
 			for(i = left, j = right - 1;;) {
@@ -125,9 +133,9 @@ public class Quicksort {
 		switch(pivotNo) {
 		case 0: pivot = selectPivotLast(right);
 		break;
-		case 1: pivot = selectPivotRandom(right);
+		case 1: pivot = selectPivotRandom(left, right);
 		break;		
-		case 2: pivot = selectPivotMiddle(7, 9);
+		case 2: pivot = selectPivotMiddle(left, right);
 		break;
 		}
 		return pivot;
@@ -145,46 +153,48 @@ public class Quicksort {
 	 * @param right
 	 * @return
 	 */
-	private static int selectPivotRandom(int right) {
-		return a[rnd.nextInt(right)].key;
+	private static int selectPivotRandom(int left, int right) {
+		return rnd.nextInt(right - left) + left;
 	}
 	
 	/**
 	 * @param off
 	 * @param len
 	 * @return
-	 * @see java.util.Arrays
 	 */
-	private static int selectPivotMiddle(int off, int len) {
-		System.out.println(off + ", " + len);
+	private static int selectPivotMiddle(int left, int right) {
+		int median = 0;
+		// besser wegen ueberlauf bei grossem idx: low+(high-low)/2
+		int middle = (left + right) / 2;
+		System.out.println("link: " + a[left].key + " rechts: "
+				+ a[right].key + " mitte:" + a[middle].key);
 
-		// Choose a partition element, v
-		int m = off + (len >> 1);       // Small arrays, middle element
+		if (a[left].key < a[middle].key && a[right].key > a[middle].key
+				|| a[right].key < a[middle].key
+				&& a[left].key > a[middle].key) {
+			median = middle;
+		}
 
-	    int l = off;
-	    int n = off + len - 1;	//Failure n > a.length-1!
-	    if (len > 40) {        // Big arrays, pseudomedian of 9
-			int s = len/8;
-			l = med3(a, l,     l+s, l+2*s);
-			m = med3(a, m-s,   m,   m+s);
-			n = med3(a, n-2*s, n-s, n);
-	    }
-	    m = med3(a, l, m, n); // Mid-size, med of 3
-		return a[m].key;
+		if (a[right].key < a[left].key && a[middle].key > a[left].key
+				|| a[middle].key < a[left].key
+				&& a[right].key > a[left].key) {
+			median = left;
+		}
+
+		if (a[middle].key < a[right].key
+				&& a[left].key > a[right].key
+				|| a[left].key < a[right].key
+				&& a[middle].key > a[right].key) {
+			median = right;
+		}
+
+		// sind zwei oder 3 werte gleich, nehme halt das rechte...
+		if (median == 0) {
+			median = right;
+		}
+		return median;
 	}
 	
-    /**
-     * Returns the index of the median of the three indexed integers.
-     * 
-     * @see java.util.Arrays
-     */
-    private static int med3(Data x[], int a, int b, int c) {
-    	System.out.println(a + ", " + b + ", " + c);
-    	return (x[a].key < x[b].key ?
-    			(x[b].key < x[c].key ? b : x[a].key < x[c].key ? c : a) :
-    				(x[b].key > x[c].key ? b : x[a].key > x[c].key ? c : a));
-    }
-
 	/**
 	 * @param i
 	 * @param j
@@ -195,19 +205,19 @@ public class Quicksort {
 		a[j] = tmp;
 	}
 	
-	private static void initSorted() {
+	static void initSorted() {
 		for (int i = 0; i < a.length; i++) {
 			a[i] = new Data(i);
 		}
 	}
 	
-	private static void initRandom() {
+	static void initRandom() {
 		for (int i = 0, j = rnd.nextInt(); i < a.length; i++, j = rnd.nextInt()) {
 			a[i] = new Data(j);
 		}
 	}
 	
-	private static void initReverse() {
+	static void initReverse() {
 		for (int i = 0, j = a.length-1; i < a.length; i++, j--) {
 			a[i] = new Data(j);
 		}
