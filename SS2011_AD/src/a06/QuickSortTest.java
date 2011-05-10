@@ -8,26 +8,39 @@ import java.util.Random;
 
 public class QuickSortTest {
 
-	private static final int MAX_DATA_SETS = 20;
 
+	private static final int MAX_RANDOM_NUM = 100000;
+
+
+	/**
+	 * @param a
+	 * @param pivotMethod
+	 * @param qs
+	 */
 	public static void quickSortAndPrint(Dataset[] a, int pivotMethod,
 			Quicksort qs) {
-		for (int i = 0; i < a.length; i++) {
-			System.out.print(a[i].key + " ");
-		}
-		System.out.println();
+		//Ausgabe des Arrayinhalts
+//		for (int i = 0; i < a.length; i++) {
+//			System.out.print(a[i].key + " ");
+//		}
+//		System.out.println();
 
 		qs.setA(a);
 		qs.setPivotMethod(pivotMethod);
 		Benchmark.ops = 0;
 		qs.quicksort3(0, a.length - 1);
 
-		for (int i = 0; i < a.length; i++) {
-			System.out.print(a[i].key + " ");
-		}
-		System.out.println();
+		//Ausgabe des Arrayinhalts
+//		for (int i = 0; i < a.length; i++) {
+//			System.out.print(a[i].key + " ");
+//		}
+//		System.out.println();
 	}
 
+	/**
+	 * @param a
+	 * @param ss
+	 */
 	public static void selectionSortAndPrint(Dataset[] a, Selectionsort ss) {
 		for (int i = 0; i < a.length; i++) {
 			System.out.print(a[i].key + " ");
@@ -41,37 +54,51 @@ public class QuickSortTest {
 		}
 		System.out.println();
 	}
-
-	public static void main(String[] args) {
-
-		Dataset[] testarray = new Dataset[MAX_DATA_SETS];
-		Dataset[] testarrayCopy1 = new Dataset[MAX_DATA_SETS];
-		Dataset[] testarrayCopy2 = new Dataset[MAX_DATA_SETS];
-		Dataset[] testarrayCopy3 = new Dataset[MAX_DATA_SETS];
-		Dataset[] testarrayCopy4 = new Dataset[MAX_DATA_SETS];
-		Random rnd = new Random();
-
-		// for (int i = 0; i < testarray.length; i++) {
-		// testarray[i] = new Dataset(rnd.nextInt(20));
-		// }
-		for (int i = 0; i < testarray.length; i++) {
-			testarray[i] = new Dataset(i);
+	
+	/**
+	 * @param a
+	 */
+	public static void initWorstCase(Dataset[] a)  {
+		for (int i = 0; i < a.length; i++) {
+			a[i] = new Dataset(i);
 		}
-
-		System.arraycopy(testarray, 0, testarrayCopy1, 0, testarray.length);
-		System.arraycopy(testarray, 0, testarrayCopy2, 0, testarray.length);
-		System.arraycopy(testarray, 0, testarrayCopy3, 0, testarray.length);
-		System.arraycopy(testarray, 0, testarrayCopy4, 0, testarray.length);
-
-		Quicksort qs = new Quicksort(testarrayCopy1, 1);
-		Selectionsort ss = new Selectionsort(testarrayCopy4);
-		// Aufpassen in Zeile 21!!!!!!!
-		// qs.quicksort3(0, a.length - 1); <--- anpassen, welcher algo genutzt
-		// werden soll, 1,2 oder 3 ... ;)
-		quickSortAndPrint(testarrayCopy1, 1, qs);
-		// quickSortAndPrint(testarrayCopy2, 2, qs);
-		// quickSortAndPrint(testarrayCopy3, 3, qs);
-		// selectionSortAndPrint(testarrayCopy4, ss);
-
 	}
+	
+	/**
+	 * @param a
+	 */
+	public static void initBestCase(Dataset[] a) {
+		Random rnd = new Random();
+		for (int i = 0; i < a.length; i++) {
+			if(i < a.length /2) {
+				a[i] = new Dataset(rnd.nextInt(a.length/2));
+			} else if (i == a.length-1) {
+				a[i] = new Dataset(a.length / 2);
+			} else if(i >= a.length/2){
+				a[i] = new Dataset(rnd.nextInt(a.length/2) + (a.length/2));
+			}
+		}
+//		printArr(a);
+	}
+	
+	/**
+	 * @param a
+	 */
+	public static void initAvgCase(Dataset[] a) {
+		Random rnd = new Random();
+		for (int i = 0; i < a.length; i++) {
+			a[i] = new Dataset(rnd.nextInt(MAX_RANDOM_NUM));
+		}
+	}
+	
+	/**
+	 * @param arr
+	 */
+	public static void printArr(Dataset... arr) {
+		for (int i = 0; i < arr.length; i++) {
+			System.out.print(arr[i].key + " ");
+		}
+	}
+
+
 }
