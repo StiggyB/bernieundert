@@ -5,7 +5,14 @@ package a06;
 //http://www.stefan-baur.de/cs.algo.quicksort.html
 
 import java.util.Random;
-
+/**
+ * 
+ * @author Team TugendUndLaster
+ * 
+ *         In dieser Klasse befinden sich Methoden, die das Array 
+ *         zur Aufwandsbestimmung mit verschiedenen Verfahren initialisieren.
+ * 
+ */
 public class QuickSortTest {
 
 

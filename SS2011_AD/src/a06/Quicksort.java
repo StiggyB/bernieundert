@@ -3,8 +3,14 @@ package a06;
 import java.util.Random;
 
 /**
- * @author tellmuller-pettenpohl
- *
+ * 
+ * @author Team TugendUndLaster
+ * 
+ *         In dieser Klasse sind zwei Algorithmen implementiert,
+ *         die den Quicksort-Algorithmus darstellen.
+ *         Weiterhin ist eine Methode zur Pivotelementwahl
+ *         enthalten.
+ * 
  */
 public class Quicksort {
 

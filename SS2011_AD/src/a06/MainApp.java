@@ -1,5 +1,15 @@
 package a06;
 
+/**
+ * 
+ * @author Team TugendUndLaster
+ * 
+ *         Diese Klasse ruft die verschiedenen Testmethoden aus 
+ *         QuickSortTest.java auf. Es werden Testarrays 
+ *         verschiedener Laenge erstellt, um den Aufwand fuer 
+ *         die verschiedenen Implementationen zu ermitteln.
+ * 
+ */
 public class MainApp {
 	
 	private static final int MAX_EMPIRICAL_NUM = 20;
