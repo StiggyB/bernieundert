@@ -14,105 +14,57 @@ public class Quicksort {
 		this.rnd = new Random();
 	}
 
-	// uni crap algo
-	// public void quicksort(int ilinks, int irechts) {
-	// boolean stopped = false;
-	// int pivot, i, j;
-	// if (irechts > ilinks) {
-	// i = ilinks;
-	// j = irechts;
-	// pivot = a[irechts].key;
-	// while (!stopped) {
-	// while (a[i].key < pivot) {
-	// i++;
-	// }
-	// while (a[j].key >= pivot) {
-	// if(j==0)break;
-	// j--;// Vorsicht: Stop-Element einbauen, z.B. mit -1 rennen
-	//
-	// }
-	// if (i >= j) {
-	// stopped = true; // in der Mitte getroffen
-	// }
-	// swap(i, j);// vertauschen
-	// }
-	// swap(i, irechts);// Pivotelement in die Mitte tauschen
-	// quicksort(ilinks, i - 1);
-	// quicksort(i + 1, irechts);
-	// }
-	// }
-
 	public void quicksort2(int ilinks, int irechts) {
 		int i = ilinks, j = irechts;
-		// int pivot = a[low + (high - low) / 2].key;
-		// int pivot = a[irechts].key;
-//		System.out.println("ilinks: " + ilinks + "(" + a[ilinks].key + ")"
-//				+ " irechts: " + irechts + "(" + a[irechts].key + ")");
 		int pivot = getPivot(ilinks, irechts);
-//		System.out.println("pivot: " + pivot + "(" + a[pivot].key + ")");
+		if (pivotMethod != 1) {
+			pivot = a[pivot].key;
+		}
 		while (i <= j) {
 			while (a[i].key < pivot) {
+				Benchmark.ops++;
 				i++;
-//				System.out.println("i: " + i);
 			}
 
 			while (a[j].key > pivot) {
+				Benchmark.ops++;
 				j--;
-//				System.out.println("j: " + j);
 			}
 
 			if (i <= j) {
-//				System.out.println("swap " + i + " und " + j);
 				swap(i, j);
 				i++;
 				j--;
 			}
 		}
-		// swap(i, irechts);
 
 		if (ilinks < j) {
-			// System.out.println("i und j: " + i + ", " + j);
-			// System.out.println("linke Hälfte => ilinks: " + ilinks + "(" +
-			// a[ilinks].key + ")" + " j: " + j + "(" + a[j].key + ")");
 			quicksort2(ilinks, j);
 		}
 		if (i < irechts) {
-			// System.out.println("i und j: " + i + ", " + j);
-			// System.out.println("rechte Hälfte =>i: " + i + "(" + a[i].key +
-			// ")" + " irechts: " + irechts + "(" + a[irechts].key + ")");
 			quicksort2(i, irechts);
 		}
 	}
 
-	// hab den algo nochmal eben nach wikipedia selber geproggt ... der funzt
-	// sogar :D
 	public void quicksort3(int ilinks, int irechts) {
 		if (ilinks < irechts) {
 			int i = ilinks;
 			int j = irechts - 1;
-			// ein fehler gefunden :D Wenn pivot==2 ist, darf er natürlich nich
-			// bei irechts -1 anfangen, da irechts ja nicht pivot ele ist,
-			// allerdings isses dennoch nicht 100% richtig sortiert :(
-			if (pivotMethod == 2) {
-				j = irechts;
+
+			int pivot = getPivot(ilinks, irechts);
+			if (pivotMethod != 1) {
+				swap(pivot, irechts);
+				pivot = a[irechts].key;
 			}
 
-			// funktioniert bisher nur gut mit privotmethod = 1 ...
-			// bei 2 ist es nur "fast" richtig sortiert, liegt wahrscheinlich am
-			// if median == 0 :P
-			// 3er geht hierbei gar nicht ...
-			int pivot = getPivot(ilinks, irechts);
-
-			// ok im script isses ne while mit break, das aber hässlich ...
-			// is do/while ok oder besser erstmal bedingung prüfen also mit
-			// while() anfangen?!
-			// dann brauch ich lediglich n abburchkriterium
 			do {
 				while (a[i].key <= pivot && i < irechts) {
+					Benchmark.ops++;
 					i++;
 				}
 
 				while (a[j].key >= pivot && j > ilinks) {
+					Benchmark.ops++;
 					j--;
 				}
 
@@ -145,38 +97,39 @@ public class Quicksort {
 			return a[irechts].key;
 
 		case 2:
-//			l==m || r==m return m
-//			l==r || m==r return r
 			int median = 0;
+			// besser wegen ueberlauf bei grossem idx: low+(high-low)/2
 			int middle = (ilinks + irechts) / 2;
-			System.out.println("link: " + a[ilinks].key + " rechts: " + a[irechts].key + " mitte:" + a[middle].key);
-			
+			System.out.println("link: " + a[ilinks].key + " rechts: "
+					+ a[irechts].key + " mitte:" + a[middle].key);
 
-			if (a[ilinks].key < a[middle].key && a[irechts].key > a[middle].key	|| a[irechts].key < a[middle].key && a[ilinks].key > a[middle].key) {
-				median = a[middle].key;
-			}
-
-			if (a[irechts].key < a[ilinks].key && a[middle].key > a[ilinks].key	|| a[middle].key < a[ilinks].key && a[irechts].key > a[ilinks].key) {
-				median = a[ilinks].key;
+			if (a[ilinks].key < a[middle].key && a[irechts].key > a[middle].key
+					|| a[irechts].key < a[middle].key
+					&& a[ilinks].key > a[middle].key) {
+				median = middle;
 			}
 
-			if (a[middle].key < a[irechts].key && a[ilinks].key > a[irechts].key || a[ilinks].key < a[irechts].key && a[middle].key > a[irechts].key) {
-				median = a[irechts].key;
+			if (a[irechts].key < a[ilinks].key && a[middle].key > a[ilinks].key
+					|| a[middle].key < a[ilinks].key
+					&& a[irechts].key > a[ilinks].key) {
+				median = ilinks;
 			}
-			if(a[ilinks].key == a[middle].key || a[irechts].key == a[middle].key){
-				median = a[middle].key;
+
+			if (a[middle].key < a[irechts].key
+					&& a[ilinks].key > a[irechts].key
+					|| a[ilinks].key < a[irechts].key
+					&& a[middle].key > a[irechts].key) {
+				median = irechts;
 			}
-			if(a[ilinks].key == a[irechts].key || a[middle].key == a[irechts].key){
-				median = a[irechts].key;
+
+			// sind zwei oder 3 werte gleich, nehme halt das rechte...
+			if (median == 0) {
+				median = irechts;
 			}
-			System.out.println("median: " + median);
-//			if (median == 0) {
-//				median = a[irechts].key;
-//			}
 			return median;
 		case 3:
-			int i = rnd.nextInt(irechts);
-			return a[i].key;
+			return rnd.nextInt(irechts - ilinks) + ilinks;
+
 		default:
 			throw new IllegalArgumentException();
 
