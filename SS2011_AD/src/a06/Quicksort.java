@@ -2,18 +2,30 @@ package a06;
 
 import java.util.Random;
 
+/**
+ * @author tellmuller-pettenpohl
+ *
+ */
 public class Quicksort {
 
 	private Dataset a[];
 	private int pivotMethod;
 	private Random rnd;
 
+	/**
+	 * @param a
+	 * @param pivotMethod
+	 */
 	public Quicksort(Dataset[] a, int pivotMethod) {
 		this.a = a;
 		this.pivotMethod = pivotMethod;
 		this.rnd = new Random();
 	}
 
+	/**
+	 * @param ilinks
+	 * @param irechts
+	 */
 	public void quicksort2(int ilinks, int irechts) {
 		int i = ilinks, j = irechts;
 		int pivot = getPivot(ilinks, irechts);
@@ -46,6 +58,10 @@ public class Quicksort {
 		}
 	}
 
+	/**
+	 * @param ilinks
+	 * @param irechts
+	 */
 	public void quicksort3(int ilinks, int irechts) {
 		if (ilinks < irechts) {
 			int i = ilinks;
@@ -83,6 +99,10 @@ public class Quicksort {
 		}
 	}
 
+	/**
+	 * @param i
+	 * @param j
+	 */
 	private void swap(int i, int j) {
 		Dataset tmp;
 		tmp = a[i];
@@ -90,6 +110,11 @@ public class Quicksort {
 		a[j] = tmp;
 	}
 
+	/**
+	 * @param ilinks
+	 * @param irechts
+	 * @return
+	 */
 	public int getPivot(int ilinks, int irechts) {
 		switch (pivotMethod) {
 
@@ -100,8 +125,6 @@ public class Quicksort {
 			int median = 0;
 			// besser wegen ueberlauf bei grossem idx: low+(high-low)/2
 			int middle = (ilinks + irechts) / 2;
-			System.out.println("link: " + a[ilinks].key + " rechts: "
-					+ a[irechts].key + " mitte:" + a[middle].key);
 
 			if (a[ilinks].key < a[middle].key && a[irechts].key > a[middle].key
 					|| a[irechts].key < a[middle].key
@@ -136,10 +159,16 @@ public class Quicksort {
 		}
 	}
 
+	/**
+	 * @param pivotMethod
+	 */
 	public void setPivotMethod(int pivotMethod) {
 		this.pivotMethod = pivotMethod;
 	}
 
+	/**
+	 * @param a
+	 */
 	public void setA(Dataset[] a) {
 		this.a = a;
 	}
