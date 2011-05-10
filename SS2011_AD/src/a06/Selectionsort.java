@@ -1,6 +1,13 @@
 package a06;
 
-
+/**
+ * 
+ * @author Team TugendUndLaster
+ * 
+ *         Diese Klasse enthaelt eine Implementation des
+ *         Selectionsort Algorithmus.
+ * 
+ */
 public class Selectionsort {
 	
 	private Dataset a[];
