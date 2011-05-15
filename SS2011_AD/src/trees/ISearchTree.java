@@ -6,14 +6,14 @@ public interface ISearchTree<E extends Comparable<E>> extends ITree<E> {
 	//               wenn die Operation erfolgreich war, andernfalls (wenn
 	//               key bereits existiert) false
 	//**********************************************************************
-	public boolean addKey(E key);
+	public boolean addKey(E key) throws DuplicateItemException;
 	
 	//**********************************************************************
 	// deleteKey(E key) löscht das Element key aus dem Baum. Liefert true, 
 	//                  wenn die Operation erfolgreich war, andernfalls 
 	//                  (wenn key nicht existiert) false
 	//**********************************************************************
-	public boolean deleteKey(E key);
+	public boolean deleteKey(E key) throws ItemNotFoundException;
 	
 	//**********************************************************************
 	// findMin() liefert das minimale Element im Baum bzw. null bei einem
