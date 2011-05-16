@@ -7,4 +7,9 @@ class Knoten<T> {
 
 	T key;
 	Knoten<T> links, rechts, vater;
+	
+	@Override
+	public String toString() {
+		return key.toString();
+	}
 }
