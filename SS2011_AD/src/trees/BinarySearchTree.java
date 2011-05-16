@@ -1,45 +1,55 @@
 package trees;
 
-public class BinarySearchTree<E extends Comparable<E>> implements
-		IBinarySearchTree<E> {
+public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchTree<E> {
 
 	Knoten<E> root;
 	private int nodeCount;
 
 	@Override
-	public boolean addKey(E key) throws DuplicateItemException {
-		root = addKey(key, root);
-		return true;
+	public boolean addKey(E key) {
+		if (root == null) {
+			root = new Knoten<E>(key);
+		}
+		return addKey(key, root);
 	}
 
-	public Knoten<E> addKey(E key, Knoten<E> node)
-			throws DuplicateItemException {
-		if (node == null)
-			node = new Knoten<E>(key);
-		else if (key.compareTo(node.key) < 0)
-			node.links = addKey(key, node.links);
-		else if (key.compareTo(node.key) > 0)
-			node.rechts = addKey(key, node.rechts);
-		else
-			throw new DuplicateItemException(key.toString()); // Duplicate
-		return node;
+	public boolean addKey(E key, Knoten<E> node) {
+		if (key.compareTo(node.key) < 0) {
+			if (node.links == null) {
+				Knoten<E> newNode = new Knoten<E>(key);
+				node.links = newNode;
+				return true;
+			} else {
+				return addKey(key, node.links);
+			}
+		} else if (key.compareTo(node.key) > 0) {
+			if (node.rechts == null) {
+				Knoten<E> newNode = new Knoten<E>(key);
+				node.rechts = newNode;
+				return true;
+			} else {
+				return addKey(key, node.rechts);
+			}
+		} else {
+			return false;
+		}
 	}
 
 	@Override
-	public boolean deleteKey(E key) throws ItemNotFoundException {
+	public boolean deleteKey(E key) {
 		root = deleteKey(key, root);
 		return true;
 	}
 
-	private Knoten<E> deleteKey(E key, Knoten<E> node)
-			throws ItemNotFoundException {
-		if (node == null)
-			throw new ItemNotFoundException(key.toString());
-		if (key.compareTo(node.key) < 0)
+	private Knoten<E> deleteKey(E key, Knoten<E> node) {
+		if (node == null) {
+//			throw new ItemNotFoundException(key.toString());
+		}
+		if (key.compareTo(node.key) < 0) {
 			node.links = deleteKey(key, node.links);
-		else if (key.compareTo(node.key) > 0)
+		} else if (key.compareTo(node.key) > 0) {
 			node.rechts = deleteKey(key, node.rechts);
-		else if (node.links != null && node.rechts != null) // Two children
+		} else if (node.links != null && node.rechts != null) // Two children
 		{
 			node.key = getMin(node.rechts).key;
 			node.rechts = removeMin(node.rechts);
@@ -48,10 +58,11 @@ public class BinarySearchTree<E extends Comparable<E>> implements
 		return node;
 	}
 
-	private Knoten<E> removeMin(Knoten<E> node) throws ItemNotFoundException {
-		if (node == null)
-			throw new ItemNotFoundException(null);
-		else if (node.links != null) {
+	private Knoten<E> removeMin(Knoten<E> node) {
+		if (node == null) {
+//			throw new ItemNotFoundException(null);
+			return null;
+		} else if (node.links != null) {
 			node.links = removeMin(node.links);
 			return node;
 		} else
@@ -119,8 +130,7 @@ public class BinarySearchTree<E extends Comparable<E>> implements
 
 	@Override
 	public boolean isLeaf() {
-		return root != null && (root.links == null || root.rechts == null) ? true
-				: false;
+		return root != null && root.links == null && root.rechts == null;
 	}
 
 	@Override
@@ -131,8 +141,28 @@ public class BinarySearchTree<E extends Comparable<E>> implements
 
 	@Override
 	public String inOrderTraverse() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		inOrderTraverse(root, sb);
+		return sb.toString();
+	}
+
+	private void inOrderTraverse(Knoten<E> node, StringBuilder sb) {
+		sb.append("(");
+		if (node != null) {
+			if (node.links != null) {
+				inOrderTraverse(node.links, sb);
+			}
+			sb.append(node.key.toString());
+			if (node.rechts != null) {
+				inOrderTraverse(node.rechts, sb);
+			}
+		}
+		sb.append(")");
+	}
+	
+	@Override
+	public String toString() {
+		return inOrderTraverse();
 	}
 
 }
