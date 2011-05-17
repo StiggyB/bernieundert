@@ -43,13 +43,13 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 			}
 		}
 	}
-
-	@Override
-	public boolean deleteKey(E key) {
+//	zweiter versuch ... :p
+//	@Override
+	public boolean deleteKey2(E key) {
 		if(this.key == key)  {
 			if (left == null && right == null) {
 				// kein sohn
-				kickIt(this);
+				delete(this);
 				return true;
 			} else if (left != null && right == null) {
 				// nur ein linker sohn
@@ -92,7 +92,7 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 		return false;
 	}
 	
-	private void kickIt(BinarySearchTree<E> accTree)  {
+	private void delete(BinarySearchTree<E> accTree)  {
 		accTree = null;
 	}
 	
@@ -102,8 +102,9 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 //		nextTree = null;
 	}
 	
-	//@Override
-	public boolean deleteKey2(E key) {
+	//loescht so einiges, aber nicht, wenn man den root baum löschen will:D
+	@Override
+	public boolean deleteKey(E key) {
 		if(this.key == key){
 			//links unten
 		}
