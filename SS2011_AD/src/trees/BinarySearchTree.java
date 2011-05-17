@@ -1,5 +1,8 @@
 package trees;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchTree<E> {
 
 	
@@ -43,6 +46,9 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 
 	@Override
 	public boolean deleteKey(E key) {
+		if(this.key == key){
+			links unten
+		}
 		if (left != null && left.key == key) {
 			if (left.left == null && left.right == null) {
 				// kein sohn
@@ -98,9 +104,13 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 				right = currentTree;
 			}
 		} else if (key.compareTo(this.key) < 0) {
-			left.deleteKey(key);
+			if (left != null) {
+				left.deleteKey(key);
+			}
 		} else if (key.compareTo(this.key) > 0) {
-			right.deleteKey(key);
+			if (right != null) {
+				right.deleteKey(key);
+			}
 		}
 		return false;
 	}
@@ -149,52 +159,75 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 //	zu fassen gestattet.
 	@Override
 	public int getHeight() {
-		if(isEmpty()){
-			return 0;
-		} else {
-//			
-//		
-//				int linksHeight = 0;
-//		int rechtsHeight = 0;
-//		if (!isEmpty()) {
-//			linksHeight++;
-//			rechtsHeight++;
-//		}
-//		if (left != null) {
-//			linksHeight += left.getHeight();
-//		}
-//		if (right != null) {
-//			rechtsHeight += right.getHeight();
-//		}
-//		return 1+Math.max(linksHeight, rechtsHeight);
-		return 1+Math.max(left.getHeight(), right.getHeight());
+		int linksHeight = 0;
+		int rechtsHeight = 0;
+		if (!isEmpty()) {
+			linksHeight++;
+			rechtsHeight++;
 		}
-		
-	}
+		if (left != null) {
+			linksHeight += left.getHeight();
+		}
+		if (right != null) {
+			rechtsHeight += right.getHeight();
+		}
+		return Math.max(linksHeight,rechtsHeight);
+	}		
 
 	@Override
 	public String preOrderTraverse() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append(key.toString() + " ");
+		if (key != null) {
+			if (left != null) {
+				sb.append(left.preOrderTraverse());
+			}
+			if (right != null) {
+				sb.append(right.preOrderTraverse());
+			}
+		}
+		return sb.toString();
 	}
 
 	@Override
 	public String postOrderTraverse() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		if (key != null) {
+			if (left != null) {
+				sb.append(left.postOrderTraverse());
+			}
+			if (right != null) {
+				sb.append(right.postOrderTraverse());
+			}
+			sb.append(key.toString() + " ");
+		}
+		return sb.toString();
 	}
 
 	@Override
 	public String levelOrderTraverse() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		Queue<BinarySearchTree<E>> q = new ArrayDeque<BinarySearchTree<E>>();
+		q.add(this);
+		while (!q.isEmpty()) {
+			BinarySearchTree<E> t = q.remove();
+			if (t.left != null) {
+				q.add(t.left);
+			}
+			if (t.left != null) {
+				q.add(t.right);
+			}
+			sb.append(t.key.toString() + " ");
+		}
+		return sb.toString();
 	}
-
+	
 	@Override
 	public boolean isLeaf() {
 		return left == null && right == null;
 	}
 
+	//mehrere returns?!
 	@Override
 	public boolean find(E key) {
 		if (isEmpty()) {
@@ -217,23 +250,33 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 	@Override
 	public String inOrderTraverse() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("(");
 		if (key != null) {
 			if (left != null) {
 				sb.append(left.inOrderTraverse());
 			}
-			sb.append(key.toString());
+			sb.append(key.toString() + " ");
 			if (right != null) {
 				sb.append(right.inOrderTraverse());
 			}
 		}
-		sb.append(")");
 		return sb.toString();
 	}
 	
 	@Override
 	public String toString() {
-		return inOrderTraverse();
+		StringBuilder sb = new StringBuilder();
+		sb.append("(");
+		if (key != null) {
+			if (left != null) {
+				sb.append(left.toString());
+			}
+			sb.append(key.toString());
+			if (right != null) {
+				sb.append(right.toString());
+			}
+		}
+		sb.append(")");
+		return sb.toString();
 	}
 
 }
