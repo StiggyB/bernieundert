@@ -49,39 +49,36 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 		if(this.key == key)  {
 			if (left == null && right == null) {
 				// kein sohn
-				this.key = null;
+				kickIt(this);
 				return true;
 			} else if (left != null && right == null) {
 				// nur ein linker sohn
-//				BinarySearchTree<E> newTree = left;
-				this.key = left.key;
-				shift(left, left.right);
-				left.right = null;
+				if(left.right != null) {
+					shift(this, left.right);
+					left.right = null;
+				} else {
+					shift(this, left);
+					left = null;
+				}
 			} else if (right != null && left == null) {
 				// nur ein rechter sohn
-//				BinarySearchTree<E> newTree = right;
 				if(right.left != null)  {
-					
+					shift(this, right.left);
+					right.left = null;
+				} else {
+					shift(this, right);
+					right = null;
 				}
-				this.key = right.key;
-				shift(right, right.left);
-				right.left = null;
 			} else {
 				// zwei S�hne
 				BinarySearchTree<E> currentTree = left;
+				BinarySearchTree<E> parentTree = this;
 				while (currentTree.right != null) {
+					parentTree = currentTree;
 					currentTree = currentTree.right;
 				}
 				this.key = currentTree.key;
-				this.left = currentTree.left;
-				
-				
-//				if (right != currentTree) {
-//					currentTree.right = right;
-//				}
-//				currentTree.left = left;
-//				this.key = currentTree.key;
-//				shift(right, right.left);
+				parentTree.right = null;
 			}
 		} else if (key.compareTo(this.key) < 0) {
 			if (left != null) {
@@ -95,8 +92,14 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 		return false;
 	}
 	
+	private void kickIt(BinarySearchTree<E> accTree)  {
+		accTree = null;
+	}
+	
 	private void shift(BinarySearchTree<E> accTree, BinarySearchTree<E> nextTree)  {
 		accTree.key = nextTree.key;
+		//Warum hier call by value?!
+//		nextTree = null;
 	}
 	
 	//@Override
