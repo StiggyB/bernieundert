@@ -46,8 +46,63 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 
 	@Override
 	public boolean deleteKey(E key) {
+		if(this.key == key)  {
+			if (left == null && right == null) {
+				// kein sohn
+				this.key = null;
+				return true;
+			} else if (left != null && right == null) {
+				// nur ein linker sohn
+//				BinarySearchTree<E> newTree = left;
+				this.key = left.key;
+				shift(left, left.right);
+				left.right = null;
+			} else if (right != null && left == null) {
+				// nur ein rechter sohn
+//				BinarySearchTree<E> newTree = right;
+				if(right.left != null)  {
+					
+				}
+				this.key = right.key;
+				shift(right, right.left);
+				right.left = null;
+			} else {
+				// zwei Sï¿½hne
+				BinarySearchTree<E> currentTree = left;
+				while (currentTree.right != null) {
+					currentTree = currentTree.right;
+				}
+				this.key = currentTree.key;
+				this.left = currentTree.left;
+				
+				
+//				if (right != currentTree) {
+//					currentTree.right = right;
+//				}
+//				currentTree.left = left;
+//				this.key = currentTree.key;
+//				shift(right, right.left);
+			}
+		} else if (key.compareTo(this.key) < 0) {
+			if (left != null) {
+				left.deleteKey(key);
+			}
+		} else if (key.compareTo(this.key) > 0) {
+			if (right != null) {
+				right.deleteKey(key);
+			}
+		}
+		return false;
+	}
+	
+	private void shift(BinarySearchTree<E> accTree, BinarySearchTree<E> nextTree)  {
+		accTree.key = nextTree.key;
+	}
+	
+	//@Override
+	public boolean deleteKey2(E key) {
 		if(this.key == key){
-			links unten
+			//links unten
 		}
 		if (left != null && left.key == key) {
 			if (left.left == null && left.right == null) {
@@ -65,7 +120,7 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 				left.right = null;
 				left = newLinks;
 			} else {
-				// zwei Söhne
+				// zwei Sï¿½hne
 				BinarySearchTree<E> currentTree = left;
 				while (currentTree.right != null) {
 					currentTree = currentTree.right;
@@ -92,7 +147,7 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 				right.right = null;
 				right = newLinks;
 			} else {
-				// zwei Söhne
+				// zwei Sï¿½hne
 				BinarySearchTree<E> currentTree = right;
 				while (currentTree.right != null) {
 					currentTree = currentTree.right;
@@ -152,10 +207,10 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 	}
 
 //	Tiefe eines Knotens ist die Anzahl der Kanten bis zur Wurzel
-//	Die Höhe eines Wurzelbaums ist die maximal auftretende Tiefe. 
-//	Viele Autoren setzen sie aber um 1 höher, da man so dem leeren 
-//	Baum die Höhe 0 und dem nur aus der Wurzel bestehenden Baum 
-//	die Höhe 1 geben kann, was gewisse rekursive Definitionen kürzer 
+//	Die Hï¿½he eines Wurzelbaums ist die maximal auftretende Tiefe. 
+//	Viele Autoren setzen sie aber um 1 hï¿½her, da man so dem leeren 
+//	Baum die Hï¿½he 0 und dem nur aus der Wurzel bestehenden Baum 
+//	die Hï¿½he 1 geben kann, was gewisse rekursive Definitionen kï¿½rzer 
 //	zu fassen gestattet.
 	@Override
 	public int getHeight() {
@@ -177,29 +232,34 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 	@Override
 	public String preOrderTraverse() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(key.toString() + " ");
-		if (key != null) {
-			if (left != null) {
-				sb.append(left.preOrderTraverse());
-			}
-			if (right != null) {
-				sb.append(right.preOrderTraverse());
+		if (!isEmpty()) {
+			sb.append(key.toString() + " ");
+			if (key != null) {
+				if (left != null) {
+					sb.append(left.preOrderTraverse());
+				}
+				if (right != null) {
+					sb.append(right.preOrderTraverse());
+				}
 			}
 		}
+
 		return sb.toString();
 	}
 
 	@Override
 	public String postOrderTraverse() {
 		StringBuilder sb = new StringBuilder();
-		if (key != null) {
-			if (left != null) {
-				sb.append(left.postOrderTraverse());
+		if (!isEmpty()) {
+			if (key != null) {
+				if (left != null) {
+					sb.append(left.postOrderTraverse());
+				}
+				if (right != null) {
+					sb.append(right.postOrderTraverse());
+				}
+				sb.append(key.toString() + " ");
 			}
-			if (right != null) {
-				sb.append(right.postOrderTraverse());
-			}
-			sb.append(key.toString() + " ");
 		}
 		return sb.toString();
 	}
@@ -207,17 +267,19 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 	@Override
 	public String levelOrderTraverse() {
 		StringBuilder sb = new StringBuilder();
-		Queue<BinarySearchTree<E>> q = new ArrayDeque<BinarySearchTree<E>>();
-		q.add(this);
-		while (!q.isEmpty()) {
-			BinarySearchTree<E> t = q.remove();
-			if (t.left != null) {
-				q.add(t.left);
+		if (!isEmpty()) {
+			Queue<BinarySearchTree<E>> q = new ArrayDeque<BinarySearchTree<E>>();
+			q.add(this);
+			while (!q.isEmpty()) {
+				BinarySearchTree<E> t = q.remove();
+				if (t.left != null) {
+					q.add(t.left);
+				}
+				if (t.right != null) {
+					q.add(t.right);
+				}
+				sb.append(t.key.toString() + " ");
 			}
-			if (t.left != null) {
-				q.add(t.right);
-			}
-			sb.append(t.key.toString() + " ");
 		}
 		return sb.toString();
 	}
@@ -250,13 +312,15 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 	@Override
 	public String inOrderTraverse() {
 		StringBuilder sb = new StringBuilder();
-		if (key != null) {
-			if (left != null) {
-				sb.append(left.inOrderTraverse());
-			}
-			sb.append(key.toString() + " ");
-			if (right != null) {
-				sb.append(right.inOrderTraverse());
+		if (!isEmpty()) {
+			if (key != null) {
+				if (left != null) {
+					sb.append(left.inOrderTraverse());
+				}
+				sb.append(key.toString() + " ");
+				if (right != null) {
+					sb.append(right.inOrderTraverse());
+				}
 			}
 		}
 		return sb.toString();

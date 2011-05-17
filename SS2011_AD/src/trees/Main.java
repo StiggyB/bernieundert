@@ -5,8 +5,8 @@ public class Main {
 	public static void main(String[] args) {
 		IBinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
 		bst.addKey(4);
-//		bst.addKey(2);
-//		bst.addKey(3);
+		bst.addKey(2);
+		bst.addKey(3);
 //		bst.addKey(1);
 //		bst.addKey(8);
 //		bst.addKey(12);
@@ -31,7 +31,7 @@ public class Main {
 		System.out.println("postorder: " + bst.postOrderTraverse());
 		System.out.println("preorder: " + bst.preOrderTraverse());
 		System.out.println("levelorder: " + bst.levelOrderTraverse());
-		System.out.println(bst.deleteKey(8));
+		System.out.println(bst.deleteKey(4));
 		System.out.println(bst);
 		
 //		http://www.java-tips.org/java-se-tips/java.lang/binary-search-tree-implementation-in-java.html
