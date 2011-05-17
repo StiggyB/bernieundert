@@ -105,9 +105,6 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 	//loescht so einiges, aber nicht, wenn man den root baum löschen will:D
 	@Override
 	public boolean deleteKey(E key) {
-		if(this.key == key){
-			//links unten
-		}
 		if (left != null && left.key == key) {
 			if (left.left == null && left.right == null) {
 				// kein sohn
