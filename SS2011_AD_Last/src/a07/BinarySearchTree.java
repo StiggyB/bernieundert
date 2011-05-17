@@ -26,7 +26,7 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 
 	@Override
 	public boolean isEmpty() {
-		return this.nodeCount == 0 ? true : false;
+		return this.nodeCount == 0;
 	}
 
 	
@@ -103,7 +103,7 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 		return sb.toString();
 	}
 	
-	private boolean visited(Node<E> accNode) {
+	boolean visited(Node<E> accNode) {
 		return this.head.equals(accNode);
 	}
 
@@ -120,13 +120,13 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 			if(this.left.isLeaf()) {
 				result = false;
 			} else {
-				this.left.find(key);
+				result = this.left.find(key);
 			}
 		} if(key.compareTo(this.head.right.key) > 0) {
 			if(this.right.isLeaf()) {
 				result = false;
 			} else {
-				this.right.find(key);
+				result = this.right.find(key);
 			}
 		} else {
 			result = true;
