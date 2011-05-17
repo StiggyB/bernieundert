@@ -4,13 +4,13 @@ public class Main {
 
 	public static void main(String[] args) {
 		IBinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
-//		bst.addKey(4);
-//		bst.addKey(2);
-//		bst.addKey(3);
-//		bst.addKey(1);
-//		bst.addKey(8);
-//		bst.addKey(12);
-//		bst.addKey(5);
+		bst.addKey(4);
+		bst.addKey(2);
+		bst.addKey(3);
+		bst.addKey(1);
+		bst.addKey(8);
+		bst.addKey(12);
+		bst.addKey(5);
 
 		// bst.addKey(20);
 		// bst.addKey(10);
@@ -31,7 +31,7 @@ public class Main {
 		System.out.println("postorder: " + bst.postOrderTraverse());
 		System.out.println("preorder: " + bst.preOrderTraverse());
 		System.out.println("levelorder: " + bst.levelOrderTraverse());
-//		System.out.println("deletekey: " + bst.deleteKey(5));
+		System.out.println("deletekey: " + bst.deleteKey(9));
 		System.out.println("tostring: " + bst);
 
 	}
