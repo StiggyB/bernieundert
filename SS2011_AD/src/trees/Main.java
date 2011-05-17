@@ -3,7 +3,7 @@ package trees;
 public class Main {
 	
 	public static void main(String[] args) {
-		IBinarySearchTree<Integer> bst = new MuffisTree<Integer>();
+		IBinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
 		bst.addKey(4);
 		bst.addKey(2);
 		bst.addKey(3);

@@ -2,112 +2,174 @@ package trees;
 
 public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchTree<E> {
 
-	Knoten<E> root;
-	private int nodeCount;
+	
+	private BinarySearchTree<E> left;
+	private BinarySearchTree<E> right;
+	private E key;
+	
+	
+	public BinarySearchTree(E key) {
+		this.key = key;
+	}
+
+	public BinarySearchTree() {
+	}
 
 	@Override
 	public boolean addKey(E key) {
-		if (root == null) {
-			root = new Knoten<E>(key);
-		}
-		return addKey(key, root);
-	}
-
-	public boolean addKey(E key, Knoten<E> node) {
-		if (key.compareTo(node.key) < 0) {
-			if (node.links == null) {
-				Knoten<E> newNode = new Knoten<E>(key);
-				node.links = newNode;
-				return true;
-			} else {
-				return addKey(key, node.links);
-			}
-		} else if (key.compareTo(node.key) > 0) {
-			if (node.rechts == null) {
-				Knoten<E> newNode = new Knoten<E>(key);
-				node.rechts = newNode;
-				return true;
-			} else {
-				return addKey(key, node.rechts);
-			}
+		if (isEmpty()) {
+			this.key = key;
+			return true;
 		} else {
-			return false;
+			if (key.compareTo(this.key) < 0) {
+				if (left == null) {
+					left = new BinarySearchTree<E>(key);
+					return true;
+				} else {
+					return left.addKey(key);
+				}
+			} else if (key.compareTo(this.key) > 0) {
+				if (right == null) {
+					right = new BinarySearchTree<E>(key);
+					return true;
+				} else {
+					return right.addKey(key);
+				}
+			} else {
+				return false;
+			}
 		}
 	}
 
 	@Override
 	public boolean deleteKey(E key) {
-		root = deleteKey(key, root);
-		return true;
-	}
-
-	private Knoten<E> deleteKey(E key, Knoten<E> node) {
-		if (node == null) {
-//			throw new ItemNotFoundException(key.toString());
+		if (left != null && left.key == key) {
+			if (left.left == null && left.right == null) {
+				// kein sohn
+				left = null;
+				return true;
+			} else if (left.left != null && left.right == null) {
+				// nur ein linker sohn
+				BinarySearchTree<E> newLinks = left.left;
+				left.left = null;
+				left = newLinks;
+			} else if (left.right != null && left.left == null) {
+				// nur ein rechter sohn
+				BinarySearchTree<E> newLinks = left.right;
+				left.right = null;
+				left = newLinks;
+			} else {
+				// zwei Söhne
+				BinarySearchTree<E> currentTree = left;
+				while (currentTree.right != null) {
+					currentTree = currentTree.right;
+				}
+				if (left.right != currentTree) {
+					currentTree.right = left.right;
+				}
+				currentTree.left = left.left;
+				left = currentTree;
+			}
+		} else if (right != null && right.key == key) {
+			if (right.left == null && right.right == null) {
+				// kein sohn
+				right = null;
+				return true;
+			} else if (right.left != null && right.right == null) {
+				// nur ein linker sohn
+				BinarySearchTree<E> newLinks = right.left;
+				right.left = null;
+				right = newLinks;
+			} else if (right.right != null && right.left == null) {
+				// nur ein rechter sohn
+				BinarySearchTree<E> newLinks = right.right;
+				right.right = null;
+				right = newLinks;
+			} else {
+				// zwei Söhne
+				BinarySearchTree<E> currentTree = right;
+				while (currentTree.right != null) {
+					currentTree = currentTree.right;
+				}
+				if (right.right != currentTree) {
+					currentTree.right = left.right;
+				}
+				currentTree.left = right.left;
+				right = currentTree;
+			}
+		} else if (key.compareTo(this.key) < 0) {
+			left.deleteKey(key);
+		} else if (key.compareTo(this.key) > 0) {
+			right.deleteKey(key);
 		}
-		if (key.compareTo(node.key) < 0) {
-			node.links = deleteKey(key, node.links);
-		} else if (key.compareTo(node.key) > 0) {
-			node.rechts = deleteKey(key, node.rechts);
-		} else if (node.links != null && node.rechts != null) // Two children
-		{
-			node.key = getMin(node.rechts).key;
-			node.rechts = removeMin(node.rechts);
-		} else
-			node = (node.links != null) ? node.links : node.rechts;
-		return node;
-	}
-
-	private Knoten<E> removeMin(Knoten<E> node) {
-		if (node == null) {
-//			throw new ItemNotFoundException(null);
-			return null;
-		} else if (node.links != null) {
-			node.links = removeMin(node.links);
-			return node;
-		} else
-			return node.rechts;
-	}
-
-	private Knoten<E> getMin(Knoten<E> node) {
-		if (node != null)
-			while (node.links != null)
-				node = node.links;
-
-		return node;
+		return false;
 	}
 
 	@Override
 	public E findMin() {
-		Knoten<E> node = null;
-		if (root != null)
-			while (root.links != null)
-				node = node.links;
-
-		return node.key;
+		if (left != null) {
+			return left.findMin();
+		} 
+		return key;
 	}
 
 	@Override
 	public E findMax() {
-		// TODO Auto-generated method stub
-		return null;
+		if (right != null) {
+			return right.findMax();
+		} 
+		return key;
 	}
 
 	@Override
 	public int getNodeCount() {
-		return nodeCount;
+		int count = 0;
+		if (!isEmpty()) {
+			count = 1;
+		}
+		if (left != null) {
+			count += left.getNodeCount();
+		}
+		if (right != null) {
+			count += right.getNodeCount();
+		}
+		return count;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return root == null;
-		// return nodeCount == 0;
+		return key == null;
 	}
 
+//	Tiefe eines Knotens ist die Anzahl der Kanten bis zur Wurzel
+//	Die Höhe eines Wurzelbaums ist die maximal auftretende Tiefe. 
+//	Viele Autoren setzen sie aber um 1 höher, da man so dem leeren 
+//	Baum die Höhe 0 und dem nur aus der Wurzel bestehenden Baum 
+//	die Höhe 1 geben kann, was gewisse rekursive Definitionen kürzer 
+//	zu fassen gestattet.
 	@Override
 	public int getHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		if(isEmpty()){
+			return 0;
+		} else {
+//			
+//		
+//				int linksHeight = 0;
+//		int rechtsHeight = 0;
+//		if (!isEmpty()) {
+//			linksHeight++;
+//			rechtsHeight++;
+//		}
+//		if (left != null) {
+//			linksHeight += left.getHeight();
+//		}
+//		if (right != null) {
+//			rechtsHeight += right.getHeight();
+//		}
+//		return 1+Math.max(linksHeight, rechtsHeight);
+		return 1+Math.max(left.getHeight(), right.getHeight());
+		}
+		
 	}
 
 	@Override
@@ -130,34 +192,43 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 
 	@Override
 	public boolean isLeaf() {
-		return root != null && root.links == null && root.rechts == null;
+		return left == null && right == null;
 	}
 
 	@Override
 	public boolean find(E key) {
-		// TODO Auto-generated method stub
-		return false;
+		if (isEmpty()) {
+			return false;
+		} else if (key.compareTo(this.key) < 0) {
+			if (left == null) {
+				return false;
+			}
+			return left.find(key);
+		} else if (key.compareTo(this.key) > 0) {
+			if (right == null) {
+				return false;
+			}
+			return right.find(key);
+		} else {
+			return true;
+		}
 	}
 
 	@Override
 	public String inOrderTraverse() {
 		StringBuilder sb = new StringBuilder();
-		inOrderTraverse(root, sb);
-		return sb.toString();
-	}
-
-	private void inOrderTraverse(Knoten<E> node, StringBuilder sb) {
 		sb.append("(");
-		if (node != null) {
-			if (node.links != null) {
-				inOrderTraverse(node.links, sb);
+		if (key != null) {
+			if (left != null) {
+				sb.append(left.inOrderTraverse());
 			}
-			sb.append(node.key.toString());
-			if (node.rechts != null) {
-				inOrderTraverse(node.rechts, sb);
+			sb.append(key.toString());
+			if (right != null) {
+				sb.append(right.inOrderTraverse());
 			}
 		}
 		sb.append(")");
+		return sb.toString();
 	}
 	
 	@Override
