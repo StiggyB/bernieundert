@@ -16,7 +16,7 @@ public class MainApp {
 	public static void main(String[] args) {
 		
 		Helper.printOps(ITERATIONS);
-		Helper.printTriangles(N);
+//		Helper.printTriangles(N);
 
 	}
 }

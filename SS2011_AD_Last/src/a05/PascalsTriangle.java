@@ -169,11 +169,11 @@ public class PascalsTriangle {
 		int j = 0;
 		long x = 1;
 		for (j = 0, x = 1; j <= n; j++) {
-			// System.out.print(x + " ");
+			 System.out.print(x + " ");
 			x = x * (n - j) / (j + 1);
 			Benchmark.ops++;
 		}
-		// System.out.println();
+		 System.out.println();
 
 	}
 
