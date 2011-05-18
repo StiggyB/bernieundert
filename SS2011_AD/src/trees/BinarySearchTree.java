@@ -43,6 +43,45 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 			}
 		}
 	}
+
+	@Override
+	public boolean deleteKey(E key) {
+		if (this.isEmpty()) {
+			return false;
+		}
+		int compareresult = key.compareTo(this.key);
+		if (compareresult < 0) {
+			return this.left.deleteKey(key);
+		}
+		if (compareresult > 0) {
+			return this.right.deleteKey(key);
+		} else {
+			if (left.isEmpty() && right.isEmpty()) {
+				this.key = null;
+				this.left = null;
+				this.right = null;
+				return true;
+			}
+			if (!left.isEmpty() && right.isEmpty()) {
+				this.key = this.left.key;
+				this.right = this.left.right;
+				this.left = this.left.left;
+				return true;
+			}
+			if (left.isEmpty() && !right.isEmpty()) {
+				this.key = this.right.key;
+				this.left = this.right.left;
+				this.right = this.right.right;
+				return true;
+			} else {
+				E minKey = this.right.findMin();
+				this.key = minKey;
+				return this.right.deleteKey(minKey);
+
+			}
+		}
+	}
+	
 //	zweiter versuch ... :p
 //	@Override
 	public boolean deleteKey2(E key) {
@@ -102,9 +141,9 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 //		nextTree = null;
 	}
 	
-	//loescht so einiges, aber nicht, wenn man den root baum löschen will:D
-	@Override
-	public boolean deleteKey(E key) {
+	//loescht so einiges, aber nicht, wenn man den root baum lï¿½schen will:D
+//	@Override
+	public boolean deleteKey3(E key) {
 		if(isEmpty()){
 			return false;
 		}
@@ -176,18 +215,24 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 
 	@Override
 	public E findMin() {
-		if (left != null) {
-			return left.findMin();
-		} 
-		return key;
+		if (this.isEmpty()) {
+			return null;
+		}
+		if (this.left.isEmpty()) {
+			return this.key;
+		}
+		return this.left.findMin();
 	}
 
 	@Override
 	public E findMax() {
-		if (right != null) {
-			return right.findMax();
-		} 
-		return key;
+		if (this.isEmpty()) {
+			return null;
+		}
+		if (this.right.isEmpty()) {
+			return this.key;
+		}
+		return this.right.findMax();
 	}
 
 	@Override
