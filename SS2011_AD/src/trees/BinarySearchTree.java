@@ -22,6 +22,8 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 	public boolean addKey(E key) {
 		if (isEmpty()) {
 			this.key = key;
+			this.left =new BinarySearchTree<E>();
+			this.right=new BinarySearchTree<E>();
 			return true;
 		} else {
 			if (key.compareTo(this.key) < 0) {
@@ -237,17 +239,10 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 
 	@Override
 	public int getNodeCount() {
-		int count = 0;
-		if (!isEmpty()) {
-			count = 1;
+		if (this.isEmpty()) {
+			return 0;
 		}
-		if (left != null) {
-			count += left.getNodeCount();
-		}
-		if (right != null) {
-			count += right.getNodeCount();
-		}
-		return count;
+		return 1 + left.getNodeCount() + right.getNodeCount();
 	}
 
 	@Override
@@ -263,19 +258,10 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 //	zu fassen gestattet.
 	@Override
 	public int getHeight() {
-		int linksHeight = 0;
-		int rechtsHeight = 0;
-		if (!isEmpty()) {
-			linksHeight++;
-			rechtsHeight++;
+		if (this.isEmpty()) {
+			return 0;
 		}
-		if (left != null) {
-			linksHeight += left.getHeight();
-		}
-		if (right != null) {
-			rechtsHeight += right.getHeight();
-		}
-		return Math.max(linksHeight,rechtsHeight);
+		return Math.max(left.getHeight(), right.getHeight()) + 1;
 	}		
 
 	@Override
@@ -284,10 +270,10 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 		if (!isEmpty()) {
 			sb.append(key.toString() + " ");
 			if (key != null) {
-				if (left != null) {
+				if (left.key != null) {
 					sb.append(left.preOrderTraverse());
 				}
-				if (right != null) {
+				if (right.key != null) {
 					sb.append(right.preOrderTraverse());
 				}
 			}
@@ -301,10 +287,10 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 		StringBuilder sb = new StringBuilder();
 		if (!isEmpty()) {
 			if (key != null) {
-				if (left != null) {
+				if (left.key != null) {
 					sb.append(left.postOrderTraverse());
 				}
-				if (right != null) {
+				if (right.key != null) {
 					sb.append(right.postOrderTraverse());
 				}
 				sb.append(key.toString() + " ");
@@ -321,10 +307,10 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 			q.add(this);
 			while (!q.isEmpty()) {
 				BinarySearchTree<E> t = q.remove();
-				if (t.left != null) {
+				if (t.left.key != null) {
 					q.add(t.left);
 				}
-				if (t.right != null) {
+				if (t.right.key != null) {
 					q.add(t.right);
 				}
 				sb.append(t.key.toString() + " ");
@@ -363,11 +349,11 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 		StringBuilder sb = new StringBuilder();
 		if (!isEmpty()) {
 			if (key != null) {
-				if (left != null) {
+				if (left.key != null) {
 					sb.append(left.inOrderTraverse());
 				}
 				sb.append(key.toString() + " ");
-				if (right != null) {
+				if (right.key != null) {
 					sb.append(right.inOrderTraverse());
 				}
 			}
@@ -380,11 +366,11 @@ public class BinarySearchTree<E extends Comparable<E>> implements IBinarySearchT
 		StringBuilder sb = new StringBuilder();
 		sb.append("(");
 		if (key != null) {
-			if (left != null) {
+			if (left.key != null) {
 				sb.append(left.toString());
 			}
 			sb.append(key.toString());
-			if (right != null) {
+			if (right.key != null) {
 				sb.append(right.toString());
 			}
 		}
