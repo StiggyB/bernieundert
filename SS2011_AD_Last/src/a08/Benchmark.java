@@ -8,17 +8,11 @@ public class Benchmark implements IGraph {
 	@Override
 	public void readXML(File xml) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public Node[] getAdjacencys(Node node) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int[] getWeights(Node node) {
+	public int[] getWeights(int nodeIdx) {
 		// TODO Auto-generated method stub
 		return null;
 	}

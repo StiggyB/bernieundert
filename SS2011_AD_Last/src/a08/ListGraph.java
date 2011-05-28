@@ -15,8 +15,9 @@ public class ListGraph extends Benchmark implements IGraph {
 
 	}
 
-	@Override
-	public Node[] getAdjacencys(Node node) {
+//	@Override
+	public Node[] getAdjacencys(int nodeIdx) {
+		Node node = adjancencyList.get(nodeIdx);
 		if(!(node.equals(null))) {
 //			throw NullPointerException;
 		}
@@ -28,7 +29,8 @@ public class ListGraph extends Benchmark implements IGraph {
 	}
 
 	@Override
-	public int[] getWeights(Node node) {
+	public int[] getWeights(int nodeIdx) {
+		Node node = adjancencyList.get(nodeIdx);
 		if(!(node.equals(null))) {
 //			throw NullPointerException;
 		}
