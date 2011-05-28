@@ -5,7 +5,8 @@ import java.io.FileNotFoundException;
 
 public class MatrixGraph implements IGraph {
 
-	private Node[][] adjacencyMatrix = new Node[3][3];
+//	Node[][] adjacencyMatrix = new Node[3][3];
+	int[][] adjancencyMatrix = new int[3][3];
 	
 
 	@Override
@@ -14,28 +15,48 @@ public class MatrixGraph implements IGraph {
 
 	}
 
-	@Override
-	public Node[] getAdjacencys(Node node) {
-		// TODO Auto-generated method stub
-		return null;
+//	@Override
+	public int[] getAdjacencys(int nodeIdx) {
+		if(nodeIdx < 1 || nodeIdx > adjancencyMatrix.length) {
+			//Do something!
+		}
+		int[] adjacencyIndexArr = new int[adjancencyMatrix.length];
+		for (int i = 0; i < adjancencyMatrix.length; i++) {
+			if(adjancencyMatrix[nodeIdx-1][i] != 0) {
+				adjacencyIndexArr[i] = i + 1;
+			}
+		}
+		return adjacencyIndexArr;
 	}
 
 	@Override
-	public int[] getWeights(Node node) {
-		// TODO Auto-generated method stub
-		return null;
+	public int[] getWeights(int nodeIdx) {
+		if(nodeIdx < 1 || nodeIdx > adjancencyMatrix.length) {
+			//Do something!
+		}
+		int[] weightArr = new int[adjancencyMatrix.length];
+		for (int i = 0; i < adjancencyMatrix.length; i++) {
+			weightArr[i] = adjancencyMatrix[nodeIdx-1][i];
+		}
+		return weightArr;
 	}
 
 	@Override
 	public int getOrder() {
-		// TODO Auto-generated method stub
-		return 0;
+		return adjancencyMatrix.length;
 	}
 
 	@Override
 	public int getHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		int height = 0;
+		for (int i = 0; i < adjancencyMatrix.length; i++) {
+			for (int j = 0; j < adjancencyMatrix[0].length; j++) {
+				if(adjancencyMatrix[i][j] != 0) {
+					height++;
+				}
+			}
+		}
+		return height;
 	}
 
 }
