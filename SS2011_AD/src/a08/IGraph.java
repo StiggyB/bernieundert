@@ -6,10 +6,11 @@ import java.io.FileNotFoundException;
 public interface IGraph {
 
 	void readXML(File xml) throws FileNotFoundException;
+
+	//TODO Which kind of design?
+//	Node[] getAdjacencys(int nodeIdx);
 	
-	Node[] getAdjacencys(Node node);
-	
-	int[] getWeights(Node node);
+	int[] getWeights(int nodeIdx);
 	
 	int getOrder();
 	
