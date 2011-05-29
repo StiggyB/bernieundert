@@ -2,6 +2,8 @@ package a08;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MatrixGraph implements IGraph {
 
@@ -21,6 +23,13 @@ public class MatrixGraph implements IGraph {
 			//Do something!
 		}
 		int[] adjacencyIndexArr = new int[adjancencyMatrix.length];
+		
+		Node[] adjecencyArr = new Node[adjancencyMatrix.length];
+		List<Edge> list = new ArrayList<Edge>();
+		list.add(new Edge(null, 3));
+		Node node = new Node(1, list);
+		adjecencyArr[0] = node;
+		
 		for (int i = 0; i < adjancencyMatrix.length; i++) {
 			if(adjancencyMatrix[nodeIdx-1][i] != 0) {
 				adjacencyIndexArr[i] = i + 1;

@@ -1,0 +1,41 @@
+soooo,
+
+
+XML:
+- Ist das eine vernünftige XML Struktur, um den Graphen in eine Matrix/Liste zu parsen?
+- Wie baut man das xml File auf und wie liest man es dann in Java wieder in das Array/Liste ein?
+<Graph>
+	<nodes>
+		<node1>
+			<id>
+			0
+			</id>
+			<nachbarn>
+				<id>
+				1
+				</id>
+				<kosten>
+				5
+				</kotsten>
+				<id>
+				2
+				</id>
+				<cost>
+				4
+				</cost>
+			</nachbarn>
+		<node2>
+			<id>
+			1
+			</id>
+			.
+			.
+			.
+
+Designfragen:
+- bzgl. Zeile 11 aus unserem Interface. Wie kriegen wir die Methode konsistent in der Klasse MatrixGraph und ListGraph implementiert?
+  Momentan gibt die Liste ein Node-Array zurück und die Matrix ein int-Array. Laut Interface sollte es ja bei beiden der gleiche Rückgabetyp sein.
+  
+- Wie kann man den Dijkstra-Algo implementieren, so dass beide Implementierungen (Matrix/Liste) in einer Methode genutzt werden können?
+  In unseren Augen besteht, dass Problem darin, dass beide Implementierungen eine eigene Datenstruktur haben (2D-Array und Liste). Wie geht dat? :> 
+			
