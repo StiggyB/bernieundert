@@ -34,7 +34,7 @@ public class DijkstraAlgorithm {
 	
 	Node[] getShortestPath(/*I*/ListGraph g, Node startNode) {
 		costArr = initCostNodes(g);
-		adjacencyArr = g.getAdjacencys(startNode);
+//		adjacencyArr = g.getAdjacencys(startNode);
 		for (int i = 1; i < adjacencyArr.length; i++) {
 			costArr[i].pred = costArr[0];
 		}
@@ -42,7 +42,9 @@ public class DijkstraAlgorithm {
 		
 		//TODO implement Method selectShortestPath() use getWeights()!
 		while (adjacencyArr.length != 0) {
+			
 			for (int i = 0; i < adjacencyArr.length; i++) {
+				
 			}
 		}
 		return null;
