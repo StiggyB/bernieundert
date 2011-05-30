@@ -6,7 +6,6 @@ public class DijkstraAlgorithm {
 	Node[] adjacencyArr;
 	CostNode[] Q;
 	
-	
 	Node[] getShortestPath2(/*I*/ListGraph g, Node startNode) {
 //		 1  Funktion Dijkstra(Graph, Startknoten):
 		Q = initCostNodes(g);

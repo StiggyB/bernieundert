@@ -8,13 +8,13 @@ public class TestMatrixGraph {
 							{ 4, 5, 6 }, 
 							{ 7, 8, 9 }  };
 		mg.adjancencyMatrix = matrix;
-		printArr(mg.adjancencyMatrix);
+		Helper.printArr(mg.adjancencyMatrix);
 		System.out.println("#######");
 		int[] arr = mg.getAdjacencys(1);
-		printArr(arr);
+		Helper.printArr(arr);
 		System.out.println("#######");
 		arr = mg.getWeights(1);
-		printArr(arr);
+		Helper.printArr(arr);
 		
 		System.out.println("Nodes: " + mg.getOrder());
 		
@@ -22,21 +22,8 @@ public class TestMatrixGraph {
 	}
 
 	public static void main(String[] args) {
-		test();
+		TestListGraph.test();
 	}
 	
-	static void printArr(int...arr) {
-		for (int i : arr) {
-			System.out.print(i + ", ");
-		}
-		System.out.println();
-	}
-	static void printArr(int[][] arr) {
-		for (int i = 0; i < arr.length; i++) {
-			for (int j = 0; j < arr[0].length; j++) {
-				System.out.print(arr[i][j] + ", ");
-			}
-			System.out.println();
-		}
-	}
+
 }

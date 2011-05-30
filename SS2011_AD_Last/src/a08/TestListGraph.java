@@ -12,7 +12,7 @@ public class TestListGraph {
 		l.add(new Edge(new Node(2, null), 2));
 		lg.adjancencyList.add(new Node(1, l));
 		
-//		System.out.println(lg.getAdjacencys(lg.adjancencyList.get(0)));
+		Helper.printArr(lg.getAdjacencys(0));
 	}
 	
 
