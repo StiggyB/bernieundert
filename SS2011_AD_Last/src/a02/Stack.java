@@ -27,7 +27,7 @@ public class Stack<T> implements IStack<T> {
 	 */
 	@Override
 	public void push(T elem) {
-		this.stack.insert(this.stack.getHead(), elem);
+		this.stack.append(elem);
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class Stack<T> implements IStack<T> {
 		if(isEmpty()) {
 			throw new NoSuchElementException("Stack empty: underflow");
 		}
-		this.stack.delete(this.stack.getHead());
+		this.stack.delete(this.stack.getTail());
 	}
 
 	/**
