@@ -12,4 +12,9 @@ public class Node {
 		this.data = data;
 		this.adjacencies = adjacencies;
 	}
+	
+	@Override
+	public String toString() {
+		return data+"";
+	}
 }
