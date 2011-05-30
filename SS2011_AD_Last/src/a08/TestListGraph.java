@@ -2,8 +2,6 @@ package a08;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestListGraph {
 
@@ -11,13 +9,14 @@ public class TestListGraph {
 		
 		ListGraph lg = new ListGraph();
 		try {
-			lg.readXML(new File("src/a08/graph"));
+			lg.readXML(new File("src/a08/graph.xml"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		Helper.printArr(lg.adjancencyList);
+//		Helper.printArr(lg.adjancencyList);
+		System.out.println(lg.toString());
 		
 //		List<Edge> l = new ArrayList<Edge>();
 //		l.add(new Edge(new Node(2, null), 2));
