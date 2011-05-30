@@ -7,8 +7,7 @@ public interface IGraph {
 
 	void readXML(File xml) throws FileNotFoundException;
 
-	//TODO Which kind of design?
-//	Node[] getAdjacencys(int nodeIdx);
+	int[] getAdjacencys(int nodeIdx);
 	
 	int[] getWeights(int nodeIdx);
 	
