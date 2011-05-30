@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class ListGraph extends Benchmark implements IGraph {
+public class ListGraph implements IGraph {
 	
 	List<Node> adjancencyList = new ArrayList<Node>();
 
@@ -31,29 +31,47 @@ public class ListGraph extends Benchmark implements IGraph {
 		Element docEle = doc.getDocumentElement();
 
 		NodeList nl = docEle.getElementsByTagName("node");
-		if(nl != null && nl.getLength() > 0) {
-			for(int i = 0 ; i < nl.getLength();i++) {
-
-				//get the employee element
+		if (nl != null) {
+			for(int i = 0 ; i < nl.getLength(); i++) {
 				Element el = (Element)nl.item(i);
-				//get the Employee object
-				int data = getIntValue(el, "id");
+				String idString = el.getAttribute("id");
+				int id = Integer.parseInt(idString);
 				
-				//TODO how to implement the chain of nodes?
-				NodeList nlAdj = docEle.getElementsByTagName("adjacency");
-				List<Edge> edgeList = new ArrayList<Edge>();
-				for (int j = 0; j < nlAdj.getLength(); j++) {
-					Element el2 = (Element)nl.item(i);
-					Node node = new Node(getIntValue(el2, "id"), null);
-					Edge e = new Edge(node, getIntValue(el2, "cost"));
-					edgeList.add(e);
-				}
-				Node node = new Node(data, edgeList);
+				adjancencyList.add(new Node(id, new ArrayList<Edge>()));
+			}
+			for (int i = 0 ; i < nl.getLength(); i++) {
+				Element el = (Element)nl.item(i);
+				String idString = el.getAttribute("id");
+				int id = Integer.parseInt(idString);
+				
+				Node node = findNodeWithId(id);
 
-				//add it to list
-				adjancencyList.add(node);
+				NodeList childNodes = el.getChildNodes();
+				for (int j = 0 ; j < childNodes.getLength(); j++) {
+					Element childNode = (Element) childNodes.item(i);
+					int edgeNodeId = Integer.parseInt(childNode.getAttribute("id"));
+					Node edgeNode = findNodeWithId(edgeNodeId);
+					int cost = Integer.parseInt(childNode.getAttribute("cost"));
+					node.adjacencies.add(new Edge(edgeNode, cost));
+				}
 			}
 		}
+		
+//				//TODO how to implement the chain of nodes?
+//				NodeList nlAdj = docEle.getElementsByTagName("adjacency");
+//				List<Edge> edgeList = new ArrayList<Edge>();
+//				for (int j = 0; j < nlAdj.getLength(); j++) {
+//					Element el2 = (Element)nl.item(i);
+//					Node node = new Node(getIntValue(el2, "id"), null);
+//					Edge e = new Edge(node, getIntValue(el2, "cost"));
+//					edgeList.add(e);
+//				}
+//				Node node = new Node(data, edgeList);
+//
+//				//add it to list
+//				adjancencyList.add(node);
+//			}
+//		}
 	    
 	    NodeList nList = doc.getElementsByTagName("node");
 	    
@@ -85,6 +103,15 @@ public class ListGraph extends Benchmark implements IGraph {
 		}
 	}
 	
+	private Node findNodeWithId(int id) {
+		for (Node node : adjancencyList) {
+			if (node.data == id) {
+				return node;
+			}
+		}
+		return null;
+	}
+
 	private String getTextValue(Element ele, String tagName) {
 		String textVal = null;
 		NodeList nl = ele.getElementsByTagName(tagName);
@@ -107,9 +134,9 @@ public class ListGraph extends Benchmark implements IGraph {
 		if(!(node.equals(null))) {
 //			throw NullPointerException;
 		}
-		int[] adjancencyArr = new int[node.adjacencys.size()];
+		int[] adjancencyArr = new int[node.adjacencies.size()];
 		for (int i = 0; i < adjancencyArr.length; i++) {
-			adjancencyArr[i] = node.adjacencys.get(i).node.data;
+			adjancencyArr[i] = node.adjacencies.get(i).node.data;
 		}
 		return adjancencyArr;
 	}
@@ -120,9 +147,9 @@ public class ListGraph extends Benchmark implements IGraph {
 		if(!(node.equals(null))) {
 //			throw NullPointerException;
 		}
-		int[] weightArr = new int[node.adjacencys.size()];
+		int[] weightArr = new int[node.adjacencies.size()];
 		for (int i = 0; i < weightArr.length; i++) {
-			weightArr[i++] = node.adjacencys.get(i).weight;
+			weightArr[i++] = node.adjacencies.get(i).weight;
 		}
 		return weightArr;
 	}
@@ -136,11 +163,17 @@ public class ListGraph extends Benchmark implements IGraph {
 	public int getHeight() {
 		int height = 0;
 		for (Node node : adjancencyList) {
-			for (Edge edge : node.adjacencys) {
+			for (Edge edge : node.adjacencies) {
 				height += edge.weight;
 			}
 		}
 		return height;
+	}
+
+	@Override
+	public int getLowestNodeWeight(int nodeIdx) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

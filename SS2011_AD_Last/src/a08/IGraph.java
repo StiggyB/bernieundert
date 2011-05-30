@@ -11,6 +11,8 @@ public interface IGraph {
 	
 	int[] getWeights(int nodeIdx);
 	
+	int getLowestNodeWeight(int nodeIdx);
+	
 	int getOrder();
 	
 	int getHeight();

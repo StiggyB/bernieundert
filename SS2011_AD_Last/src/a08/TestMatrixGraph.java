@@ -7,8 +7,8 @@ public class TestMatrixGraph {
 		int[][] matrix = {  { 0, 0, 1 }, 
 							{ 4, 5, 6 }, 
 							{ 7, 8, 9 }  };
-		mg.adjancencyMatrix = matrix;
-		Helper.printArr(mg.adjancencyMatrix);
+		mg.adjacencyMatrix = matrix;
+		Helper.printArr(mg.adjacencyMatrix);
 		System.out.println("#######");
 		int[] arr = mg.getAdjacencys(1);
 		Helper.printArr(arr);
@@ -20,10 +20,4 @@ public class TestMatrixGraph {
 		
 		System.out.println("Edges: " + mg.getHeight());
 	}
-
-	public static void main(String[] args) {
-		TestListGraph.test();
-	}
-	
-
 }
