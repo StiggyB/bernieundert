@@ -7,8 +7,7 @@ import java.util.List;
 
 public class MatrixGraph implements IGraph {
 
-//	Node[][] adjacencyMatrix = new Node[3][3];
-	int[][] adjancencyMatrix = new int[3][3];
+	int[][] adjacencyMatrix = new int[3][3];
 	
 
 	@Override
@@ -19,12 +18,12 @@ public class MatrixGraph implements IGraph {
 
 	@Override
 	public int[] getAdjacencys(int nodeIdx) {
-		if(nodeIdx < 1 || nodeIdx > adjancencyMatrix.length) {
+		if(nodeIdx < 1 || nodeIdx > adjacencyMatrix.length) {
 			//Do something!
 		}
-		int[] adjacencyIndexArr = new int[adjancencyMatrix.length];
-		for (int i = 0; i < adjancencyMatrix.length; i++) {
-			if(adjancencyMatrix[nodeIdx-1][i] != 0) {
+		int[] adjacencyIndexArr = new int[adjacencyMatrix.length];
+		for (int i = 0; i < adjacencyMatrix.length; i++) {
+			if(adjacencyMatrix[nodeIdx-1][i] != 0) {
 				adjacencyIndexArr[i] = i + 1;
 			}
 		}
@@ -33,32 +32,47 @@ public class MatrixGraph implements IGraph {
 
 	@Override
 	public int[] getWeights(int nodeIdx) {
-		if(nodeIdx < 1 || nodeIdx > adjancencyMatrix.length) {
+		if(nodeIdx < 1 || nodeIdx > adjacencyMatrix.length) {
 			//Do something!
 		}
-		int[] weightArr = new int[adjancencyMatrix.length];
-		for (int i = 0; i < adjancencyMatrix.length; i++) {
-			weightArr[i] = adjancencyMatrix[nodeIdx-1][i];
+		int[] weightArr = new int[adjacencyMatrix.length];
+		for (int i = 0; i < adjacencyMatrix.length; i++) {
+			weightArr[i] = adjacencyMatrix[nodeIdx-1][i];
 		}
 		return weightArr;
 	}
-
+	
+	@Override
+	public int getLowestNodeWeight(int nodeIdx) {
+		int[] adjacencyArr = getWeights(nodeIdx);
+		int lowestWeight = adjacencyArr[0];
+		int adjacencyIdx = 0;
+		for (int i = 1; i < adjacencyArr.length; i++) {
+			if(adjacencyArr[i] < lowestWeight) {
+				//..
+				adjacencyIdx = i;
+			}
+		}
+		return adjacencyIdx;
+	}
+	
 	@Override
 	public int getOrder() {
-		return adjancencyMatrix.length;
+		return adjacencyMatrix.length;
 	}
 
 	@Override
 	public int getHeight() {
 		int height = 0;
-		for (int i = 0; i < adjancencyMatrix.length; i++) {
-			for (int j = 0; j < adjancencyMatrix[0].length; j++) {
-				if(adjancencyMatrix[i][j] != 0) {
+		for (int i = 0; i < adjacencyMatrix.length; i++) {
+			for (int j = 0; j < adjacencyMatrix[0].length; j++) {
+				if(adjacencyMatrix[i][j] != 0) {
 					height++;
 				}
 			}
 		}
 		return height;
 	}
+
 
 }
