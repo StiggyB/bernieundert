@@ -14,8 +14,8 @@ public class Edge {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(node.toString() + " ");
-		sb.append(weight);
+		sb.append("nachbar: " + node.toString() + " ");
+		sb.append("kosten: " + weight);
 		
 		return sb.toString();
 	}

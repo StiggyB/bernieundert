@@ -9,12 +9,14 @@ public class TestMatrixGraph {
 							{ 7, 8, 9 }  };
 		mg.adjacencyMatrix = matrix;
 		Helper.printArr(mg.adjacencyMatrix);
-		System.out.println("#######");
-		int[] arr = mg.getAdjacencys(1);
+		System.out.println("####### getAdjacencies #######");
+		int[] arr = mg.getAdjacencies(1);
 		Helper.printArr(arr);
-		System.out.println("#######");
+		System.out.println("####### getWeights #######");
 		arr = mg.getWeights(1);
 		Helper.printArr(arr);
+		System.out.println("####### getLowestNodeWeight #######");
+		Helper.printArr(mg.getLowestNodeWeight(1));
 		
 		System.out.println("Nodes: " + mg.getOrder());
 		

@@ -12,7 +12,7 @@ public class Benchmark implements IGraph {
 	}
 	
 	@Override
-	public int[] getAdjacencys(int nodeIdx) {
+	public int[] getAdjacencies(int nodeIdx) {
 		// TODO Auto-generated method stub
 		return null;
 	}
