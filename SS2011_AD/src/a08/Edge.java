@@ -10,4 +10,13 @@ public class Edge {
 		this.node = node;
 		this.weight = weight;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(node.toString() + " ");
+		sb.append(weight);
+		
+		return sb.toString();
+	}
 }
