@@ -49,10 +49,12 @@ public class DijkstraAlgorithm {
 	Node[] getShortestPath(IGraph graph, int startNode) {
 		CostNode[] costNodeArr = initCostNodes(graph);
 		List<CostNode> costArrTmp = new ArrayList<CostNode>();
+		Helper.printArr(costArrTmp);
 		
-		int [] adjacencyArr = graph.getAdjacencys(startNode);
+		int [] adjacencyArr = graph.getAdjacencies(startNode);
+		Helper.printArr(adjacencyArr);
 		int [] costArr = graph.getWeights(startNode);
-		
+		Helper.printArr(costArr);
 		//TODO implement getLowestWeight(int nodeIdx) in IGraph
 		
 		for (int i = 0; i < adjacencyArr.length; i++) {
@@ -62,7 +64,7 @@ public class DijkstraAlgorithm {
 		}
 		int minCost = costArrTmp.get(0).cost;
 		int costNodeArrIdx = 0;
-		for(int i = 1; costArrTmp.size() != 0; i++) {
+		for(int i = 1; i < costArrTmp.size() && costArrTmp.size() != 0; i++) {
 			if(costArrTmp.get(i).cost < minCost) {
 				costNodeArrIdx = i;
 			}
@@ -98,13 +100,13 @@ public class DijkstraAlgorithm {
 	}
 
 
-	private CostNode[] initCostNodes(IGraph graph) {
+	public CostNode[] initCostNodes(IGraph graph) {
 		CostNode[] costNodeArr = new CostNode[graph.getOrder()];
-		CostNode cn =  new CostNode(1, null, 0, true);
+		CostNode cn =  new CostNode(0, null, 0, true);
 		cn.pred = cn;
 		costNodeArr[0] = cn;
 		for (int i = 1; i < costNodeArr.length; i++) {
-			costNodeArr[i] = new CostNode(i+1, null, Integer.MAX_VALUE, false);
+			costNodeArr[i] = new CostNode(i, null, Integer.MAX_VALUE, false);
 		}
 		return costNodeArr;
 	}

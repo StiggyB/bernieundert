@@ -7,7 +7,7 @@ public interface IGraph {
 
 	void readXML(File xml) throws FileNotFoundException;
 
-	int[] getAdjacencys(int nodeIdx);
+	int[] getAdjacencies(int nodeIdx);
 	
 	int[] getWeights(int nodeIdx);
 	
