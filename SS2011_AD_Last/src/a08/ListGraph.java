@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 
 public class ListGraph implements IGraph {
 
-	List<Node> adjancencyList = new ArrayList<Node>();
+	List<Node> adjacencyList = new ArrayList<Node>();
 
 	@Override
 	public void readXML(File xml) throws FileNotFoundException {
@@ -37,7 +37,7 @@ public class ListGraph implements IGraph {
 					String idString = el.getAttribute("id");
 					int id = Integer.parseInt(idString);
 
-					adjancencyList.add(new Node(id, new ArrayList<Edge>()));
+					adjacencyList.add(new Node(id, new ArrayList<Edge>()));
 				}
 				for (int i = 0; i < nl.getLength(); i++) {
 					Element el = (Element) nl.item(i);
@@ -72,7 +72,7 @@ public class ListGraph implements IGraph {
 	}
 
 	private Node findNodeWithId(int id) {
-		for (Node node : adjancencyList) {
+		for (Node node : adjacencyList) {
 			if (node.data == id) {
 				return node;
 			}
@@ -80,25 +80,9 @@ public class ListGraph implements IGraph {
 		return null;
 	}
 
-	private String getTextValue(Element ele, String tagName) {
-		String textVal = null;
-		NodeList nl = ele.getElementsByTagName(tagName);
-		if (nl != null && nl.getLength() > 0) {
-			Element el = (Element) nl.item(0);
-			textVal = el.getFirstChild().getNodeValue();
-		}
-
-		return textVal;
-	}
-
-	private int getIntValue(Element ele, String tagName) {
-		// in production application you would catch the exception
-		return Integer.parseInt(getTextValue(ele, tagName));
-	}
-
 	@Override
 	public int[] getAdjacencies(int nodeIdx) {
-		Node node = adjancencyList.get(nodeIdx);
+		Node node = adjacencyList.get(nodeIdx);
 		if (!(node.equals(null))) {
 			// throw NullPointerException;
 		}
@@ -111,7 +95,7 @@ public class ListGraph implements IGraph {
 
 	@Override
 	public int[] getWeights(int nodeIdx) {
-		Node node = adjancencyList.get(nodeIdx);
+		Node node = adjacencyList.get(nodeIdx);
 		if (!(node.equals(null))) {
 			// throw NullPointerException;
 		}
@@ -124,13 +108,13 @@ public class ListGraph implements IGraph {
 
 	@Override
 	public int getOrder() {
-		return adjancencyList.size();
+		return adjacencyList.size();
 	}
 
 	@Override
 	public int getHeight() {
 		int height = 0;
-		for (Node node : adjancencyList) {
+		for (Node node : adjacencyList) {
 			for (Edge edge : node.adjacencies) {
 				height += edge.weight;
 			}
@@ -140,14 +124,25 @@ public class ListGraph implements IGraph {
 
 	@Override
 	public int getLowestNodeWeight(int nodeIdx) {
-		// TODO Auto-generated method stub
-		return 0;
+		Node node = adjacencyList.get(nodeIdx);
+		if(!(node.equals(null))) {
+			// throw NullPointerException;
+		}
+		int lowestWeight = node.adjacencies.get(0).weight;
+		int adjacencyIdx = 0;
+		for (int i = 0; i < node.adjacencies.size(); i++) {
+			if(node.adjacencies.get(i).weight < lowestWeight) {
+				lowestWeight = node.adjacencies.get(i).weight;
+				adjacencyIdx = i;
+			}
+		}
+		return node.adjacencies.get(adjacencyIdx).node.data;
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for (Node node : adjancencyList) {
+		for (Node node : adjacencyList) {
 			sb.append("node id: " + node.data);
 //			sb.append(node.adjacencies.size());
 			for (Edge edges : node.adjacencies) {

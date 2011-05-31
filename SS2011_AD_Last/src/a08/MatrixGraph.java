@@ -2,6 +2,16 @@ package a08;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class MatrixGraph implements IGraph {
 
@@ -10,8 +20,44 @@ public class MatrixGraph implements IGraph {
 
 	@Override
 	public void readXML(File xml) throws FileNotFoundException {
-		// TODO Auto-generated method stub
+		try {
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(xml);
+			doc.getDocumentElement().normalize();
 
+			Element docEle = doc.getDocumentElement();
+
+			NodeList nl = docEle.getElementsByTagName("node");
+			adjacencyMatrix = new int[nl.getLength()][nl.getLength()];
+			if (nl != null) {
+				for (int i = 0; i < nl.getLength(); i++) {
+					Element el = (Element) nl.item(i);
+					String idString = el.getAttribute("id");
+					int id = Integer.parseInt(idString);
+
+					NodeList childNodes = el.getChildNodes();
+					for (int j = 0; j < childNodes.getLength(); j++) {
+						if (childNodes.item(j).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+							Element childNode = (Element) childNodes.item(j);
+							int edgeNodeId = Integer.parseInt(childNode.getAttribute("id"));
+							int cost = Integer.parseInt(childNode.getAttribute("cost"));
+							adjacencyMatrix[id][edgeNodeId] = cost; 
+						}
+					}
+				}
+			}
+
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
