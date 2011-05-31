@@ -5,11 +5,16 @@ import java.util.List;
 public class Node {
 
 	int data;
-	List<Edge> adjacencys;
+	List<Edge> adjacencies;
 	
-	public Node(int data, List<Edge> adjacencys) {
+	public Node(int data, List<Edge> adjacencies) {
 		super();
 		this.data = data;
-		this.adjacencys = adjacencys;
+		this.adjacencies = adjacencies;
+	}
+	
+	@Override
+	public String toString() {
+		return data+"";
 	}
 }

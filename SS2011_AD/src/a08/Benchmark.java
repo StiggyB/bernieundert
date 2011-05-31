@@ -10,6 +10,12 @@ public class Benchmark implements IGraph {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public int[] getAdjacencys(int nodeIdx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public int[] getWeights(int nodeIdx) {
@@ -28,5 +34,13 @@ public class Benchmark implements IGraph {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public int getLowestNodeWeight(int nodeIdx) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
 
 }
