@@ -22,8 +22,11 @@ public class TestListGraph {
 //		l.add(new Edge(new Node(2, null), 2));
 //		lg.adjancencyList.add(new Node(1, l));
 		
-		Helper.printArr(lg.getAdjacencies(0));
-		Helper.printArr(lg.getWeights(0));
+		Helper.printArr(lg.getAdjacencies(1));
+		Helper.printArr(lg.getWeights(1));
+		for (int i = 0; i < lg.adjacencyList.size(); i++) {
+			Helper.printArr(lg.getLowestNodeWeight(i));
+		}
 	}
 	
 

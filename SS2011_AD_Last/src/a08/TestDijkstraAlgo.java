@@ -7,14 +7,14 @@ public class TestDijkstraAlgo {
 
 	public static void test() {
 		DijkstraAlgorithm da = new DijkstraAlgorithm();
-		IGraph graph = new ListGraph();
+		IGraph graph = new MatrixGraph();
 		try {
 			graph.readXML(new File("src/a08/graph.xml"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Helper.printArr(da.initCostNodes(graph));
+//		Helper.printArr(da.initCostNodes(graph));
 		da.getShortestPath(graph, 0);
 	}
 	
