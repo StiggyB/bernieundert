@@ -40,12 +40,13 @@ public class MatrixGraph implements IGraph {
 					int id = Integer.parseInt(idString);
 
 					NodeList childNodes = el.getChildNodes();
-//					NodeList childNodes = el.getElementsByTagName("id");
 					for (int j = 0; j < childNodes.getLength(); j++) {
-						Element childNode = (Element) childNodes.item(j);
-						int edgeNodeId = Integer.parseInt(childNode.getAttribute("id"));
-						int cost = Integer.parseInt(childNode.getAttribute("cost"));
-						adjacencyMatrix[id][edgeNodeId] = cost; 
+						if (childNodes.item(j).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+							Element childNode = (Element) childNodes.item(j);
+							int edgeNodeId = Integer.parseInt(childNode.getAttribute("id"));
+							int cost = Integer.parseInt(childNode.getAttribute("cost"));
+							adjacencyMatrix[id][new Integer(edgeNodeId)] = cost; 
+						}
 					}
 				}
 			}
