@@ -47,32 +47,17 @@ public class ListGraph implements IGraph {
 					Node node = findNodeWithId(id);
 
 					NodeList childNodes = el.getChildNodes();
-//					NodeList childNodes = el.getElementsByTagName("id");
 					for (int j = 0; j < childNodes.getLength(); j++) {
-						Element childNode = (Element) childNodes.item(j);
-						int edgeNodeId = Integer.parseInt(childNode.getAttribute("id"));
-						Node edgeNode = findNodeWithId(edgeNodeId);
-						int cost = Integer.parseInt(childNode.getAttribute("cost"));
-						node.adjacencies.add(new Edge(edgeNode, cost));
-					}
+						if (childNodes.item(j).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+							Element childNode = (Element) childNodes.item(j);
+							int edgeNodeId = Integer.parseInt(childNode.getAttribute("id"));
+							Node edgeNode = findNodeWithId(edgeNodeId);
+							int cost = Integer.parseInt(childNode.getAttribute("cost"));
+							node.adjacencies.add(new Edge(edgeNode, cost));
+						}
+						}
 				}
 			}
-
-			// //TODO how to implement the chain of nodes?
-			// NodeList nlAdj = docEle.getElementsByTagName("adjacency");
-			// List<Edge> edgeList = new ArrayList<Edge>();
-			// for (int j = 0; j < nlAdj.getLength(); j++) {
-			// Element el2 = (Element)nl.item(i);
-			// Node node = new Node(getIntValue(el2, "id"), null);
-			// Edge e = new Edge(node, getIntValue(el2, "cost"));
-			// edgeList.add(e);
-			// }
-			// Node node = new Node(data, edgeList);
-			//
-			// //add it to list
-			// adjancencyList.add(node);
-			// }
-			// }
 
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -163,11 +148,12 @@ public class ListGraph implements IGraph {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (Node node : adjancencyList) {
-			sb.append(node.data + ", ");
-			sb.append(node.adjacencies.size());
+			sb.append("node id: " + node.data);
+//			sb.append(node.adjacencies.size());
 			for (Edge edges : node.adjacencies) {
 				sb.append("(" + edges.toString() + ")");
 			}
+			sb.append(",\n");
 		}
 		
 		return sb.toString();
