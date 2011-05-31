@@ -32,7 +32,7 @@ public class MatrixGraph implements IGraph {
 			Element docEle = doc.getDocumentElement();
 
 			NodeList nl = docEle.getElementsByTagName("node");
-			adjacencyMatrix = new int[nl.getLength()][];
+			adjacencyMatrix = new int[nl.getLength()][nl.getLength()];
 			if (nl != null) {
 				for (int i = 0; i < nl.getLength(); i++) {
 					Element el = (Element) nl.item(i);
@@ -45,7 +45,7 @@ public class MatrixGraph implements IGraph {
 							Element childNode = (Element) childNodes.item(j);
 							int edgeNodeId = Integer.parseInt(childNode.getAttribute("id"));
 							int cost = Integer.parseInt(childNode.getAttribute("cost"));
-							adjacencyMatrix[id][new Integer(edgeNodeId)] = cost; 
+							adjacencyMatrix[id][edgeNodeId] = cost; 
 						}
 					}
 				}
@@ -123,7 +123,16 @@ public class MatrixGraph implements IGraph {
 
 	@Override
 	public String toString() {
-		return Arrays.toString(adjacencyMatrix);
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < adjacencyMatrix.length; i++) {
+			sb.append("knoten " + i + ": ");
+			for (int j = 0; j < adjacencyMatrix.length; j++) {
+				sb.append(adjacencyMatrix[i][j] + "\t");	
+			}
+			sb.append("\n");
+		}
+		
+		return sb.toString();
 	}
-
 }
+
