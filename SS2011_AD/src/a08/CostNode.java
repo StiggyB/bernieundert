@@ -18,16 +18,16 @@ public class CostNode {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(data + ", ");
+		sb.append("node: " + data + "\t\t");
 		if (pred == null) {
-			sb.append("null" + ", ");
+			sb.append("vorgaenger: null" + "\t");
 		} else if (!(pred.equals(this))) {
-			sb.append(pred.toString() + ", ");
+			sb.append("vorgaenger: " + pred.data + "\t\t");
 		} else {
-			sb.append(this.data + ", ");
+			sb.append("vorgaenger: " + this.data + "\t\t");
 		}
-		sb.append(cost + ", ");
-		sb.append(marked);
+		sb.append("kosten: " + cost + "\t");
+		sb.append("fertig: " + marked);
 		return sb.toString();
 	}
 }
