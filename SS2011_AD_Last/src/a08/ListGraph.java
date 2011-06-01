@@ -27,47 +27,48 @@ public class ListGraph implements IGraph {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(xml);
 			doc.getDocumentElement().normalize();
-
 			Element docEle = doc.getDocumentElement();
-
-			NodeList nl = docEle.getElementsByTagName("node");
-			if (nl != null) {
-				for (int i = 0; i < nl.getLength(); i++) {
-					Element el = (Element) nl.item(i);
-					String idString = el.getAttribute("id");
-					int id = Integer.parseInt(idString);
-
-					adjacencyList.add(new Node(id, new ArrayList<Edge>()));
-				}
-				for (int i = 0; i < nl.getLength(); i++) {
-					Element el = (Element) nl.item(i);
-					String idString = el.getAttribute("id");
-					int id = Integer.parseInt(idString);
-
-					Node node = findNodeWithId(id);
-
-					NodeList childNodes = el.getChildNodes();
-					for (int j = 0; j < childNodes.getLength(); j++) {
-						if (childNodes.item(j).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-							Element childNode = (Element) childNodes.item(j);
-							int edgeNodeId = Integer.parseInt(childNode.getAttribute("id"));
-							Node edgeNode = findNodeWithId(edgeNodeId);
-							int cost = Integer.parseInt(childNode.getAttribute("cost"));
-							node.adjacencies.add(new Edge(edgeNode, cost));
-						}
-						}
-				}
-			}
-
+			readNodes(docEle);
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	private void readNodes(Element docEle) {
+		NodeList nl = docEle.getElementsByTagName("node");
+		if (nl != null) {
+			for (int i = 0; i < nl.getLength(); i++) {
+				Element el = (Element) nl.item(i);
+				String idString = el.getAttribute("id");
+				int id = Integer.parseInt(idString);
+				adjacencyList.add(new Node(id, new ArrayList<Edge>()));
+			}
+			readAdjacencies(nl);
+		}
+	}
+
+	private void readAdjacencies(NodeList nl) {
+		for (int i = 0; i < nl.getLength(); i++) {
+			Element el = (Element) nl.item(i);
+			String idString = el.getAttribute("id");
+			int id = Integer.parseInt(idString);
+			Node node = findNodeWithId(id);
+			NodeList childNodes = el.getChildNodes();
+			for (int j = 0; j < childNodes.getLength(); j++) {
+				if (childNodes.item(j).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+					Element childNode = (Element) childNodes.item(j);
+					int edgeNodeId = Integer.parseInt(childNode
+							.getAttribute("id"));
+					Node edgeNode = findNodeWithId(edgeNodeId);
+					int cost = Integer.parseInt(childNode
+							.getAttribute("cost"));
+					node.adjacencies.add(new Edge(edgeNode, cost));
+				}
+			}
 		}
 	}
 
@@ -82,10 +83,10 @@ public class ListGraph implements IGraph {
 
 	@Override
 	public int[] getAdjacencies(int nodeIdx) {
-		Node node = adjacencyList.get(nodeIdx);
-		if (!(node.equals(null))) {
-			// throw NullPointerException;
+		if (nodeIdx < 0 || nodeIdx > adjacencyList.size()) {
+			 throw new NullPointerException("Invalid index!");
 		}
+		Node node = adjacencyList.get(nodeIdx);
 		int[] adjancencyArr = new int[node.adjacencies.size()];
 		for (int i = 0; i < adjancencyArr.length; i++) {
 			adjancencyArr[i] = node.adjacencies.get(i).node.data;
@@ -95,10 +96,10 @@ public class ListGraph implements IGraph {
 
 	@Override
 	public int[] getWeights(int nodeIdx) {
-		Node node = adjacencyList.get(nodeIdx);
-		if (!(node.equals(null))) {
-			// throw NullPointerException;
+		if (nodeIdx < 0 || nodeIdx > adjacencyList.size()) {
+			throw new NullPointerException("Invalid index!");
 		}
+		Node node = adjacencyList.get(nodeIdx);
 		int[] weightArr = new int[node.adjacencies.size()];
 		for (int i = 0; i < weightArr.length; i++) {
 			weightArr[i] = node.adjacencies.get(i).weight;
@@ -124,33 +125,33 @@ public class ListGraph implements IGraph {
 
 	@Override
 	public int getLowestNodeWeight(int nodeIdx) {
+		if (nodeIdx < 0 || nodeIdx > adjacencyList.size()) {
+			 throw new NullPointerException("Invalid index!");
+		}		
 		Node node = adjacencyList.get(nodeIdx);
-		if(!(node.equals(null))) {
-			// throw NullPointerException;
-		}
 		int lowestWeight = node.adjacencies.get(0).weight;
 		int adjacencyIdx = 0;
 		for (int i = 0; i < node.adjacencies.size(); i++) {
-			if(node.adjacencies.get(i).weight < lowestWeight) {
+			if (node.adjacencies.get(i).weight < lowestWeight) {
 				lowestWeight = node.adjacencies.get(i).weight;
 				adjacencyIdx = i;
 			}
 		}
 		return node.adjacencies.get(adjacencyIdx).node.data;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (Node node : adjacencyList) {
 			sb.append("node id: " + node.data);
-//			sb.append(node.adjacencies.size());
+			// sb.append(node.adjacencies.size());
 			for (Edge edges : node.adjacencies) {
 				sb.append("(" + edges.toString() + ")");
 			}
 			sb.append(",\n");
 		}
-		
+
 		return sb.toString();
 	}
 
