@@ -16,59 +16,63 @@ import org.xml.sax.SAXException;
 public class MatrixGraph implements IGraph {
 
 	int[][] adjacencyMatrix = new int[3][3];
-	
 
 	@Override
 	public void readXML(File xml) throws FileNotFoundException {
 		try {
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(xml);
 			doc.getDocumentElement().normalize();
-
 			Element docEle = doc.getDocumentElement();
-
-			NodeList nl = docEle.getElementsByTagName("node");
-			adjacencyMatrix = new int[nl.getLength()][nl.getLength()];
-			if (nl != null) {
-				for (int i = 0; i < nl.getLength(); i++) {
-					Element el = (Element) nl.item(i);
-					String idString = el.getAttribute("id");
-					int id = Integer.parseInt(idString);
-
-					NodeList childNodes = el.getChildNodes();
-					for (int j = 0; j < childNodes.getLength(); j++) {
-						if (childNodes.item(j).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-							Element childNode = (Element) childNodes.item(j);
-							int edgeNodeId = Integer.parseInt(childNode.getAttribute("id"));
-							int cost = Integer.parseInt(childNode.getAttribute("cost"));
-							adjacencyMatrix[id][edgeNodeId] = cost; 
-						}
-					}
-				}
-			}
-
+			readNodes(docEle);
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	private void readNodes(Element docEle) {
+		NodeList nl = docEle.getElementsByTagName("node");
+		adjacencyMatrix = new int[nl.getLength()][nl.getLength()];
+		if (nl != null) {
+			for (int i = 0; i < nl.getLength(); i++) {
+				Element el = (Element) nl.item(i);
+				String idString = el.getAttribute("id");
+				int id = Integer.parseInt(idString);
+				readAdjacencies(el, id);
+			}
+		}
+	}
+
+	private void readAdjacencies(Element el, int id) {
+		NodeList childNodes = el.getChildNodes();
+		for (int j = 0; j < childNodes.getLength(); j++) {
+			if (childNodes.item(j).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+				Element childNode = (Element) childNodes.item(j);
+				int edgeNodeId = Integer.parseInt(childNode
+						.getAttribute("id"));
+				int cost = Integer.parseInt(childNode
+						.getAttribute("cost"));
+				adjacencyMatrix[id][edgeNodeId] = cost;
+			}
 		}
 	}
 
 	@Override
 	public int[] getAdjacencies(int nodeIdx) {
-		if(nodeIdx < 0 || nodeIdx > adjacencyMatrix.length) {
-			//Do something!
+		if (nodeIdx < 0 || nodeIdx > adjacencyMatrix.length) {
+			 throw new ArrayIndexOutOfBoundsException();
 		}
-		int[] adjacencyIndexArr = new int[adjacencyMatrix.length];
+		int[] adjacencyIndexArr = new int[getLength(adjacencyMatrix[nodeIdx])];
+		int adjacencyIdx = 0;
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
-			if(adjacencyMatrix[nodeIdx][i] != 0) {
-				adjacencyIndexArr[i] = i;
+			if (adjacencyMatrix[nodeIdx][i] != 0) {
+				adjacencyIndexArr[adjacencyIdx++] = i;
 			}
 		}
 		return adjacencyIndexArr;
@@ -76,30 +80,43 @@ public class MatrixGraph implements IGraph {
 
 	@Override
 	public int[] getWeights(int nodeIdx) {
-		if(nodeIdx < 0 || nodeIdx > adjacencyMatrix.length) {
-			//Do something!
+		if (nodeIdx < 0 || nodeIdx > adjacencyMatrix.length) {
+			 throw new ArrayIndexOutOfBoundsException();
 		}
-		int[] weightArr = new int[adjacencyMatrix.length];
+		int[] weightArr = new int[getLength(adjacencyMatrix[nodeIdx])];
+		int weightIdx = 0;
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
-			weightArr[i] = adjacencyMatrix[nodeIdx][i];
+			if (adjacencyMatrix[nodeIdx][i] != 0) {
+				weightArr[weightIdx++] = adjacencyMatrix[nodeIdx][i];
+			}
 		}
 		return weightArr;
 	}
-	
+
+	private int getLength(int[] arr) {
+		int count = 0;
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] != 0) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 	@Override
 	public int getLowestNodeWeight(int nodeIdx) {
 		int[] adjacencyArr = getWeights(nodeIdx);
 		int lowestWeight = adjacencyArr[0];
 		int adjacencyIdx = 0;
 		for (int i = 1; i < adjacencyArr.length; i++) {
-			if(adjacencyArr[i] < lowestWeight) {
+			if (adjacencyArr[i] < lowestWeight) {
 				lowestWeight = adjacencyArr[i];
 				adjacencyIdx = i;
 			}
 		}
 		return adjacencyIdx;
 	}
-	
+
 	@Override
 	public int getOrder() {
 		return adjacencyMatrix.length;
@@ -110,13 +127,12 @@ public class MatrixGraph implements IGraph {
 		int height = 0;
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
 			for (int j = 0; j < adjacencyMatrix[0].length; j++) {
-				if(adjacencyMatrix[i][j] != 0) {
+				if (adjacencyMatrix[i][j] != 0) {
 					height++;
 				}
 			}
 		}
 		return height;
 	}
-
 
 }
