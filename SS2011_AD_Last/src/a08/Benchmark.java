@@ -8,7 +8,6 @@ public class Benchmark implements IGraph {
 	@Override
 	public void readXML(File xml) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
