@@ -20,17 +20,10 @@ public class Helper {
 	
 	static void printArr(List<?> list) {
 		for (Object wCard : list) {
-			System.out.println(wCard);
+			System.out.println(wCard + " ");
 		}
 		System.out.println();
 	}
-	
-//	static void printArr(List<Node> arr) {
-//		for (Node i : arr) {
-//			System.out.print(i + " ");
-//		}
-//		System.out.println();
-//	}
 	
 	static void printArr(int[][] arr) {
 		for (int i = 0; i < arr.length; i++) {
