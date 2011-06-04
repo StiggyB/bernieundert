@@ -27,7 +27,7 @@ public class DijkstraAlgorithm {
 		int[] shortestPath = new int[costNodeArr.length];
 		List<CostNode> boundarySet = new ArrayList<CostNode>();
 		builtBoundarySet(graph, startNode, costNodeArr, boundarySet);
-		Helper.printArr(boundarySet);
+		Helper.printList(boundarySet);
 		int nextNode = 0;
 		int pathIdx = 0;
 		shortestPath[pathIdx++] = nextNode;

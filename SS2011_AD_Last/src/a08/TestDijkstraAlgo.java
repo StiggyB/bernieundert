@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
- * Das Interface wurde um die Methode size() erweitert.
+ * Testklasse fuer den Dijkstra-Algorithmus mit der Listen-
+ * und Matriximplementation
  * 
  * @author Tugend und Laster
  */
@@ -13,13 +13,16 @@ public class TestDijkstraAlgo {
 
 	public static void test() {
 		DijkstraAlgorithm da = new DijkstraAlgorithm();
-		IGraph graph = new MatrixGraph();
+		IGraph graphMatrix = new MatrixGraph();
+//		IGraph graphList = new ListGraph();
 		try {
-			graph.readXML(new File("src/a08/graph.xml"));
+			graphMatrix.readXML(new File("src/a08/graph.xml"));
+//			graphList.readXML(new File("src/a08/graph.xml"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		int[] shortestPath = da.getShortestPath(graph, 0);
+		int[] shortestPath = da.getShortestPath(graphMatrix, 0);
+//		int[] shortestPath = da.getShortestPath(graphList, 0);
 		Helper.printArr(shortestPath);
 	}
 	
