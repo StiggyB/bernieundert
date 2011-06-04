@@ -16,8 +16,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
- * Das Interface wurde um die Methode size() erweitert.
+ * Implementierung des Interface IGraph mit Adjazenzliste.
  * 
  * @author Tugend und Laster
  */
@@ -25,6 +24,13 @@ public class ListGraph implements IGraph {
 
 	List<Node> adjacencyList = new ArrayList<Node>();
 
+	/**
+	 * Liest einen Graphen aus einer XML-Datei in die 
+	 * Datenstruktur ein (Adjazenzliste oder Matrix)
+	 * 
+	 * @param xml XML-Datei des Graphen
+	 * @throws FileNotFoundException
+	 */
 	@Override
 	public void readXML(File xml) throws FileNotFoundException {
 		try {
@@ -44,6 +50,12 @@ public class ListGraph implements IGraph {
 		}
 	}
 
+	/**
+	 * Hilfsmethode: Diese Methode liest die einzelnen Knoten aus der 
+	 * XML-Datei ein
+	 * 
+	 * @param docEle Liste von Elementen, in denen die Knoten enthalten sind
+	 */
 	private void readNodes(Element docEle) {
 		NodeList nl = docEle.getElementsByTagName("node");
 		if (nl != null) {
@@ -57,6 +69,13 @@ public class ListGraph implements IGraph {
 		}
 	}
 
+	/**
+	 * Hilfsmethode: Diese Methode liest aus einem Knoten seine Nachbarn aus
+	 * und traegt diese in die Adjazenzmatrix ein.
+	 * 
+	 * @param el Knoten als Element
+	 * @param id Knotenname
+	 */
 	private void readAdjacencies(NodeList nl) {
 		for (int i = 0; i < nl.getLength(); i++) {
 			Element el = (Element) nl.item(i);
@@ -78,6 +97,12 @@ public class ListGraph implements IGraph {
 		}
 	}
 
+	/**
+	 * Hilfsmethode: Sucht in der Adjazenzliste Knoten mit der uebergebenen ID
+	 * 
+	 * @param id Knotenname (ID)
+	 * @return Knoten mit entsprechender ID
+	 */
 	private Node findNodeWithId(int id) {
 		for (Node node : adjacencyList) {
 			if (node.data == id) {
@@ -87,6 +112,11 @@ public class ListGraph implements IGraph {
 		return null;
 	}
 
+	/**
+	 * Liefert alle Nachbarn eines Knotens 
+	 * @param nodeIdx zu pruefender Knoten
+	 * @return alle Nachbarn des Knotens
+	 */
 	@Override
 	public int[] getAdjacencies(int nodeIdx) {
 		if (nodeIdx < 0 || nodeIdx > adjacencyList.size()) {
@@ -100,6 +130,12 @@ public class ListGraph implements IGraph {
 		return adjancencyArr;
 	}
 
+	/**
+	 * Liefert alle Kosten von allen Kanten eiens Knotens
+	 * 
+	 * @param nodeIdx zu pruefender Knoten
+	 * @return alle Kosten
+	 */
 	@Override
 	public int[] getWeights(int nodeIdx) {
 		if (nodeIdx < 0 || nodeIdx > adjacencyList.size()) {
@@ -113,11 +149,21 @@ public class ListGraph implements IGraph {
 		return weightArr;
 	}
 
+	/**
+	 * Liefert die Anzahl der Knoten des Graphen
+	 * 
+	 * @return Anzahl der Knoten
+	 */
 	@Override
 	public int getOrder() {
 		return adjacencyList.size();
 	}
 
+	/**
+	 * Liefert die Anzahl der Kanten des Graphen
+	 * 
+	 * @return Anzahl der Kanten
+	 */
 	@Override
 	public int getHeight() {
 		int height = 0;
@@ -129,6 +175,13 @@ public class ListGraph implements IGraph {
 		return height;
 	}
 
+	/**
+	 * Liefert die niedrigstens Kosten von allen Kanten des 
+	 * uebergebenen Knotens
+	 * 
+	 * @param nodeIdx zu pruefender Knoten
+	 * @return niedrigste Kosten
+	 */
 	@Override
 	public int getLowestNodeWeight(int nodeIdx) {
 		if (nodeIdx < 0 || nodeIdx > adjacencyList.size()) {
@@ -146,6 +199,11 @@ public class ListGraph implements IGraph {
 		return node.adjacencies.get(adjacencyIdx).node.data;
 	}
 
+	/**
+	 * Hilfsmethode: Passende String-Repraesentation des Graphen
+	 * 
+	 * @return String-Repraesentation des Graphen
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
