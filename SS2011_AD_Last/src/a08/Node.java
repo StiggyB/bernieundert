@@ -2,6 +2,12 @@ package a08;
 
 import java.util.List;
 
+/**
+ * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
+ * Das Interface wurde um die Methode size() erweitert.
+ * 
+ * @author Tugend und Laster
+ */
 public class Node {
 
 	int data;
