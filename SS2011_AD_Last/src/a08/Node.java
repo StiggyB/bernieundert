@@ -3,7 +3,7 @@ package a08;
 import java.util.List;
 
 /**
- * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
+ * Interface fï¿½r die Implementierung einer Queue nach dem TI3-AD_Script.
  * Das Interface wurde um die Methode size() erweitert.
  * 
  * @author Tugend und Laster
