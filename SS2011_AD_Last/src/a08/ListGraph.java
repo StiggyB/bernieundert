@@ -129,6 +129,14 @@ public class ListGraph implements IGraph {
 		return adjancencyArr;
 	}
 
+	/**
+	 * Hilfsmethode: Inhalt der for-Schleife aus der getAdjacencies()-Methode
+	 * ausgelagert, damit spaeter via AOP der Counter hier ansetzen kann.
+	 * 
+	 * @param node
+	 * @param adjancencyArr
+	 * @param i
+	 */
 	protected void getAdjacenciesFor(Node node, int[] adjancencyArr, int i) {
 		adjancencyArr[i] = node.adjacencies.get(i).node.data;
 	}
@@ -152,6 +160,13 @@ public class ListGraph implements IGraph {
 		return weightArr;
 	}
 
+	/**
+	 * Hilfsmethode: Inhalt der for-Schleife aus der getWeights()-Methode
+	 * ausgelagert, damit spaeter via AOP der Counter hier ansetzen kann.
+	 * @param node
+	 * @param weightArr
+	 * @param i
+	 */
 	protected void getWeightsFor(Node node, int[] weightArr, int i) {
 		weightArr[i] = node.adjacencies.get(i).weight;
 	}
@@ -182,6 +197,13 @@ public class ListGraph implements IGraph {
 		return height;
 	}
 
+	/**
+	 * Hilfsmethode: Inhalt der for-Schleife aus der getHeight()-Methode
+	 * ausgelagert, damit spaeter via AOP der Counter hier ansetzen kann.
+	 * @param height
+	 * @param edge
+	 * @return
+	 */
 	protected int getHeightFor(int height, Edge edge) {
 		height += edge.weight;
 		return height;

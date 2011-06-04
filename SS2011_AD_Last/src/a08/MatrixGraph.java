@@ -107,6 +107,15 @@ public class MatrixGraph implements IGraph {
 		return adjacencyIndexArr;
 	}
 
+	/**
+	 * Hilfsmethode: Inhalt der for-Schleife aus der getAdjacencies()-Methode
+	 * ausgelagert, damit spaeter via AOP der Counter hier ansetzen kann.
+	 * @param nodeIdx
+	 * @param adjacencyIndexArr
+	 * @param adjacencyIdx
+	 * @param i
+	 * @return
+	 */
 	protected int getAdjecenciesFor(int nodeIdx, int[] adjacencyIndexArr,
 			int adjacencyIdx, int i) {
 		if (adjacencyMatrix[nodeIdx][i] != 0) {
@@ -134,6 +143,15 @@ public class MatrixGraph implements IGraph {
 		return weightArr;
 	}
 
+	/**
+	 * Hilfsmethode: Inhalt der for-Schleife aus der getWeights()-Methode
+	 * ausgelagert, damit spaeter via AOP der Counter hier ansetzen kann.
+	 * @param nodeIdx
+	 * @param weightArr
+	 * @param weightIdx
+	 * @param i
+	 * @return
+	 */
 	protected int getWeightsFor(int nodeIdx, int[] weightArr, int weightIdx, int i) {
 		if (adjacencyMatrix[nodeIdx][i] != 0) {
 			weightArr[weightIdx++] = adjacencyMatrix[nodeIdx][i];
@@ -156,6 +174,14 @@ public class MatrixGraph implements IGraph {
 		return count;
 	}
 
+	/**
+	 * Hilfsmethode: Inhalt der for-Schleife aus der getCountOfAdjacenciesForNode()-
+	 * Methode ausgelagert, damit spaeter via AOP der Counter hier ansetzen kann.
+	 * @param arr
+	 * @param count
+	 * @param i
+	 * @return
+	 */
 	protected int getCountOfAdjacenciesForNodeFor(int[] arr, int count, int i) {
 		if (arr[i] != 0) {
 			count++;
@@ -190,6 +216,14 @@ public class MatrixGraph implements IGraph {
 		return height;
 	}
 
+	/**
+	 * Hilfsmethode: Inhalt der for-Schleife aus der getHeight()-Methode
+	 * ausgelagert, damit spaeter via AOP der Counter hier ansetzen kann.
+	 * @param height
+	 * @param i
+	 * @param j
+	 * @return
+	 */
 	protected int getHeightFor(int height, int i, int j) {
 		if (adjacencyMatrix[i][j] != 0) {
 			height++;

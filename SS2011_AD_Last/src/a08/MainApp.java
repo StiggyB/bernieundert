@@ -4,30 +4,46 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * Interface f�r die Implementierung einer Queue nach dem TI3-AD_Script.
- * Das Interface wurde um die Methode size() erweitert.
+ * Startklasse fuer die Implementierung eines Graphen mit Adjazenz Matrix und
+ * Liste, ausserdem fuer Dijkstra.
  * 
  * @author Tugend und Laster
  */
 public class MainApp {
-	//TODO implement AOP Benchmark & JavaDoc
+
 	public static void main(String[] args) {
-		
-//		TestListGraph.test();
-//		TestMatrixGraph.test();
-//		TestDijkstraAlgo.test();
-		
-		
+
+		// TestListGraph.test();
+		// TestMatrixGraph.test();
+		// TestDijkstraAlgo.test();
+
+		//Benchmark-Objekte erzeugen
+		ListBenchmark lb = new ListBenchmark();
+		MatrixBenchmark mb = new MatrixBenchmark();
 		DijkstraAlgorithm da = new DijkstraAlgorithm();
-		IGraph graph = new MatrixGraph();
+
+		//Graph einlesen 2x
 		try {
-			graph.readXML(new File("src/a08/graph.xml"));
+			lb.readXML(new File("src/a08/graph.xml"));
+			mb.readXML(new File("src/a08/graph.xml"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		MatrixBenchmark mb = new MatrixBenchmark(da);
-		Helper.printArr(mb.getShortestPath(graph, 0));
-		System.out.println(mb.ops);
+
+		//kuerzesten Pfad berechnen nach Dijkstra
+		Helper.printArr(da.getShortestPath(lb, 0));
+		Helper.printArr(da.getShortestPath(mb, 0));
+		//Ops ausgeben
+		System.out.println("Listen OPs: " + lb.ops);
+		System.out.println("Matrix OPs: " + mb.ops);
+		//Ops resetten
+		lb.resetOps();
+		mb.resetOps();
+		//Nachbarn fuer Knoten ermiteln
+		Helper.printArr((lb.getAdjacencies(0)));
+		Helper.printArr((mb.getAdjacencies(0)));
+		//Ops ausgeben
+		System.out.println("Listen OPs: " + lb.ops);
+		System.out.println("Matrix OPs: " + mb.ops);
 	}
 }
