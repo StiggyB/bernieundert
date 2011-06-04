@@ -6,9 +6,20 @@ package a08;
  * 
  * @author Tugend und Laster
  */
-public class MatrixBenchmark extends MatrixGraph {
+public class MatrixBenchmark extends MatrixGraph implements IDijkstra {
 
 	int ops;
+	DijkstraAlgorithm da;
+	
+	public MatrixBenchmark(DijkstraAlgorithm da) {
+		this.da = da;
+	}
+
+	@Override
+	public int[] getShortestPath(IGraph graph, int startNode) {
+		return da.getShortestPath(graph, startNode);
+	}
+	
 
 	@Override
 	protected int getAdjecenciesFor(int nodeIdx, int[] adjacencyIndexArr,

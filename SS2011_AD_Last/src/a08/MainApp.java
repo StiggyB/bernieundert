@@ -1,7 +1,10 @@
 package a08;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 /**
- * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
+ * Interface fï¿½r die Implementierung einer Queue nach dem TI3-AD_Script.
  * Das Interface wurde um die Methode size() erweitert.
  * 
  * @author Tugend und Laster
@@ -12,6 +15,19 @@ public class MainApp {
 		
 //		TestListGraph.test();
 //		TestMatrixGraph.test();
-		TestDijkstraAlgo.test();
+//		TestDijkstraAlgo.test();
+		
+		
+		DijkstraAlgorithm da = new DijkstraAlgorithm();
+		IGraph graph = new MatrixGraph();
+		try {
+			graph.readXML(new File("src/a08/graph.xml"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		MatrixBenchmark mb = new MatrixBenchmark(da);
+		Helper.printArr(mb.getShortestPath(graph, 0));
+		System.out.println(mb.ops);
 	}
 }
