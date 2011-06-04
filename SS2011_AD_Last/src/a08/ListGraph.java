@@ -73,8 +73,7 @@ public class ListGraph implements IGraph {
 	 * Hilfsmethode: Diese Methode liest aus einem Knoten seine Nachbarn aus
 	 * und traegt diese in die Adjazenzmatrix ein.
 	 * 
-	 * @param el Knoten als Element
-	 * @param id Knotenname
+	 * @param nl Knoten als Element
 	 */
 	private void readAdjacencies(NodeList nl) {
 		for (int i = 0; i < nl.getLength(); i++) {
