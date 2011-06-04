@@ -14,8 +14,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
- * Das Interface wurde um die Methode size() erweitert.
+ * Implementierung des Interface IGraph mit Adjazenzmatrix.
  * 
  * @author Tugend und Laster
  */
@@ -23,6 +22,13 @@ public class MatrixGraph implements IGraph {
 
 	int[][] adjacencyMatrix = new int[3][3];
 
+	/**
+	 * Liest einen Graphen aus einer XML-Datei in die 
+	 * Datenstruktur ein (Adjazenzliste oder Matrix)
+	 * 
+	 * @param xml XML-Datei des Graphen
+	 * @throws FileNotFoundException
+	 */
 	@Override
 	public void readXML(File xml) throws FileNotFoundException {
 		try {
@@ -42,6 +48,12 @@ public class MatrixGraph implements IGraph {
 		}
 	}
 
+	/**
+	 * Hilfsmethode: Diese Methode liest die einzelnen Knoten aus der 
+	 * XML-Datei ein
+	 * 
+	 * @param docEle Liste von Elementen, in denen die Knoten enthalten sind
+	 */
 	private void readNodes(Element docEle) {
 		NodeList nl = docEle.getElementsByTagName("node");
 		adjacencyMatrix = new int[nl.getLength()][nl.getLength()];
@@ -55,6 +67,13 @@ public class MatrixGraph implements IGraph {
 		}
 	}
 
+	/**
+	 * Hilfsmethode: Diese Methode liest aus einem Knoten seine Nachbarn aus
+	 * und traegt diese in die Adjazenzmatrix ein.
+	 * 
+	 * @param el Knoten als Element
+	 * @param id Knotenname
+	 */
 	private void readAdjacencies(Element el, int id) {
 		NodeList childNodes = el.getChildNodes();
 		for (int j = 0; j < childNodes.getLength(); j++) {
@@ -69,12 +88,17 @@ public class MatrixGraph implements IGraph {
 		}
 	}
 
+	/**
+	 * Liefert alle Nachbarn eines Knotens 
+	 * @param nodeIdx zu pruefender Knoten
+	 * @return alle Nachbarn des Knotens
+	 */
 	@Override
 	public int[] getAdjacencies(int nodeIdx) {
 		if (nodeIdx < 0 || nodeIdx > adjacencyMatrix.length) {
 			 throw new ArrayIndexOutOfBoundsException();
 		}
-		int[] adjacencyIndexArr = new int[getLength(adjacencyMatrix[nodeIdx])];
+		int[] adjacencyIndexArr = new int[getCountOfAdjacenciesForNode(adjacencyMatrix[nodeIdx])];
 		int adjacencyIdx = 0;
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
 			if (adjacencyMatrix[nodeIdx][i] != 0) {
@@ -84,12 +108,18 @@ public class MatrixGraph implements IGraph {
 		return adjacencyIndexArr;
 	}
 
+	/**
+	 * Liefert alle Kosten von allen Kanten eiens Knotens
+	 * 
+	 * @param nodeIdx zu pruefender Knoten
+	 * @return alle Kosten
+	 */
 	@Override
 	public int[] getWeights(int nodeIdx) {
 		if (nodeIdx < 0 || nodeIdx > adjacencyMatrix.length) {
 			 throw new ArrayIndexOutOfBoundsException();
 		}
-		int[] weightArr = new int[getLength(adjacencyMatrix[nodeIdx])];
+		int[] weightArr = new int[getCountOfAdjacenciesForNode(adjacencyMatrix[nodeIdx])];
 		int weightIdx = 0;
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
 			if (adjacencyMatrix[nodeIdx][i] != 0) {
@@ -99,7 +129,14 @@ public class MatrixGraph implements IGraph {
 		return weightArr;
 	}
 
-	private int getLength(int[] arr) {
+	/**
+	 * Hilfsmethode: Ermittelt die Anzahl an Nachbarn fuer einen Knoten
+	 * (fuer eine Zeile in der Matrix)
+	 * 
+	 * @param arr ein Knoten (eine Zeile in der Matrix)
+	 * @return Anzahl der Nachbarn eines Knotens
+	 */
+	private int getCountOfAdjacenciesForNode(int[] arr) {
 		int count = 0;
 		for (int i = 0; i < arr.length; i++) {
 			if (arr[i] != 0) {
@@ -109,6 +146,13 @@ public class MatrixGraph implements IGraph {
 		return count;
 	}
 
+	/**
+	 * Liefert die niedrigstens Kosten von allen Kanten des 
+	 * uebergebenen Knotens
+	 * 
+	 * @param nodeIdx zu pruefender Knoten
+	 * @return niedrigste Kosten
+	 */
 	@Override
 	public int getLowestNodeWeight(int nodeIdx) {
 		int[] adjacencyArr = getWeights(nodeIdx);
@@ -123,11 +167,21 @@ public class MatrixGraph implements IGraph {
 		return adjacencyIdx;
 	}
 
+	/**
+	 * Liefert die Anzahl der Knoten des Graphen
+	 * 
+	 * @return Anzahl der Knoten
+	 */
 	@Override
 	public int getOrder() {
 		return adjacencyMatrix.length;
 	}
 
+	/**
+	 * Liefert die Anzahl der Kanten des Graphen
+	 * 
+	 * @return Anzahl der Kanten
+	 */
 	@Override
 	public int getHeight() {
 		int height = 0;
@@ -141,4 +195,22 @@ public class MatrixGraph implements IGraph {
 		return height;
 	}
 
+	/**
+	 * Hilfsmethode: Passende String-Repraesentation des Graphen
+	 * 
+	 * @return String-Repraesentation des Graphen
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < adjacencyMatrix.length; i++) {
+			sb.append("knoten " + i + ": ");
+			for (int j = 0; j < adjacencyMatrix.length; j++) {
+				sb.append(adjacencyMatrix[i][j] + "\t");	
+			}
+			sb.append("\n");
+		}
+		
+		return sb.toString();
+	}
 }
