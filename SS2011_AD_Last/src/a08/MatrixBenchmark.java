@@ -1,26 +1,19 @@
 package a08;
 
 /**
- * Interface f�r die Implementierung einer Queue nach dem TI3-AD_Script. Das
- * Interface wurde um die Methode size() erweitert.
+ * Benchmarkklasse fuer die Implementierung mit Adjazenz-Matrix
  * 
  * @author Tugend und Laster
  */
-public class MatrixBenchmark extends MatrixGraph implements IDijkstra {
-
-	int ops;
-	DijkstraAlgorithm da;
+public class MatrixBenchmark extends MatrixGraph{
 	
-	public MatrixBenchmark(DijkstraAlgorithm da) {
-		this.da = da;
-	}
-
-	@Override
-	public int[] getShortestPath(IGraph graph, int startNode) {
-		return da.getShortestPath(graph, startNode);
-	}
+	int ops = 0;
 	
-
+	/**
+	 * Methode der Oberklasse um Zaehler erweitert, Ops werden hier fuer 
+	 * Komplexitaet inkrementiert und anschliessend die Methode der Oberklasse
+	 * aufgerufen.
+	 */
 	@Override
 	protected int getAdjecenciesFor(int nodeIdx, int[] adjacencyIndexArr,
 			int adjacencyIdx, int i) {
@@ -29,6 +22,11 @@ public class MatrixBenchmark extends MatrixGraph implements IDijkstra {
 				adjacencyIdx, i);
 	}
 
+	/**
+	 * Methode der Oberklasse um Zaehler erweitert, Ops werden hier fuer 
+	 * Komplexitaet inkrementiert und anschliessend die Methode der Oberklasse
+	 * aufgerufen.
+	 */
 	@Override
 	protected int getWeightsFor(int nodeIdx, int[] weightArr, int weightIdx,
 			int i) {
@@ -36,15 +34,32 @@ public class MatrixBenchmark extends MatrixGraph implements IDijkstra {
 		return super.getWeightsFor(nodeIdx, weightArr, weightIdx, i);
 	}
 
+	/**
+	 * Methode der Oberklasse um Zaehler erweitert, Ops werden hier fuer 
+	 * Komplexitaet inkrementiert und anschliessend die Methode der Oberklasse
+	 * aufgerufen.
+	 */
 	@Override
 	protected int getCountOfAdjacenciesForNodeFor(int[] arr, int count, int i) {
 		ops++;
 		return super.getCountOfAdjacenciesForNodeFor(arr, count, i);
 	}
 
+	/**
+	 * Methode der Oberklasse um Zaehler erweitert, Ops werden hier fuer 
+	 * Komplexitaet inkrementiert und anschliessend die Methode der Oberklasse
+	 * aufgerufen.
+	 */
 	@Override
 	protected int getHeightFor(int height, int i, int j) {
 		ops++;
 		return super.getHeightFor(height, i, j);
+	}
+
+	/**
+	 * setter zum Resetten des Op-Zaehlers
+	 */
+	public void resetOps() {
+		this.ops = 0;
 	}
 }

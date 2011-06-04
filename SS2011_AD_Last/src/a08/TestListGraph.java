@@ -4,15 +4,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * Testklasse zum Testen der Implementierung des Graphen
- * mit Adjazenz-Liste
+ * Testklasse zum Testen der Implementierung des Graphen mit Adjazenz-Liste
  * 
  * @author Tugend und Laster
  */
 public class TestListGraph {
 
+	/**
+	 * Testmethode fuer die Implementierung des Graphen mit Adjazenz-Liste.
+	 */
 	static void test() {
-		
+
 		ListGraph lg = new ListGraph();
 		try {
 			lg.readXML(new File("src/a08/graph.xml"));
@@ -20,14 +22,12 @@ public class TestListGraph {
 			e.printStackTrace();
 		}
 		System.out.println(lg.toString());
-		
+
 		Helper.printArr(lg.getAdjacencies(1));
 		Helper.printArr(lg.getWeights(1));
 		for (int i = 0; i < lg.adjacencyList.size(); i++) {
 			Helper.printArr(lg.getLowestNodeWeight(i));
 		}
 	}
-	
 
-	
 }
