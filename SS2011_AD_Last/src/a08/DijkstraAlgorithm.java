@@ -10,7 +10,7 @@ import java.util.List;
  * 
  * @author Tugend und Laster
  */
-public class DijkstraAlgorithm {
+public class DijkstraAlgorithm implements IDijkstra{
 
 	/**
 	 * Diese Methode berechnet fuer einen gegebenen Graphen den kuerzesten Pfad
@@ -27,7 +27,6 @@ public class DijkstraAlgorithm {
 		int[] shortestPath = new int[costNodeArr.length];
 		List<CostNode> boundarySet = new ArrayList<CostNode>();
 		builtBoundarySet(graph, startNode, costNodeArr, boundarySet);
-		Helper.printList(boundarySet);
 		int nextNode = 0;
 		int pathIdx = 0;
 		shortestPath[pathIdx++] = nextNode;
