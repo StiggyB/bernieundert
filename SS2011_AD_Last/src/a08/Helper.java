@@ -3,13 +3,18 @@ package a08;
 import java.util.List;
 
 /**
- * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
- * Das Interface wurde um die Methode size() erweitert.
+ * Hilfsklasse: Dies ist einen Klasse, die Hilfsmethoden zum 
+ * ausgeben von Arrays und Listen bereitstellt
  * 
  * @author Tugend und Laster
  */
 public class Helper {
 
+	/**
+	 * Gibt ein Array variabler Laenge auf der Konsole aus
+	 * 
+	 * @param arr Array zum Printen
+	 */
 	static void printArr(int... arr) {
 		for (int i : arr) {
 			System.out.print(i + " ");
@@ -17,6 +22,12 @@ public class Helper {
 		System.out.println();
 	}
 	
+	/**
+	 * Gibt ein Array von CostNode variabler Laenge auf der 
+	 * Konsole aus
+	 * 
+	 * @param arr CostNode zum Printen
+	 */
 	static void printArr(CostNode... arr) {
 		for (CostNode costNode : arr) {
 			System.out.println(costNode + " ");
@@ -24,13 +35,22 @@ public class Helper {
 		System.out.println();
 	}
 	
-	static void printArr(List<?> list) {
+	/**
+	 * Gibt eine beliebige Liste auf der Konsole aus
+	 * 
+	 * @param list Liste zum Printen
+	 */
+	static void printList(List<?> list) {
 		for (Object wCard : list) {
 			System.out.println(wCard + " ");
 		}
 		System.out.println();
 	}
 	
+	/**
+	 * Gibt ein Array 2D-Array auf der Konsole aus
+	 * @param arr
+	 */
 	static void printArr(int[][] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < arr[0].length; j++) {

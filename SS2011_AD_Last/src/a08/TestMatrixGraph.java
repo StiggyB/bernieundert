@@ -1,8 +1,8 @@
 package a08;
 
 /**
- * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
- * Das Interface wurde um die Methode size() erweitert.
+ * Testklasse zum Testen der Implementierung des Graphen
+ * mit Adjazenz-Matrix
  * 
  * @author Tugend und Laster
  */
