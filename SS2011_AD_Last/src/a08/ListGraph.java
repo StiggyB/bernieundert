@@ -15,6 +15,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * Interface für die Implementierung einer Queue nach dem TI3-AD_Script.
+ * Das Interface wurde um die Methode size() erweitert.
+ * 
+ * @author Tugend und Laster
+ */
 public class ListGraph implements IGraph {
 
 	List<Node> adjacencyList = new ArrayList<Node>();
