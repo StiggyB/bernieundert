@@ -125,9 +125,13 @@ public class ListGraph implements IGraph {
 		Node node = adjacencyList.get(nodeIdx);
 		int[] adjancencyArr = new int[node.adjacencies.size()];
 		for (int i = 0; i < adjancencyArr.length; i++) {
-			adjancencyArr[i] = node.adjacencies.get(i).node.data;
+			getAdjacenciesFor(node, adjancencyArr, i);
 		}
 		return adjancencyArr;
+	}
+
+	protected void getAdjacenciesFor(Node node, int[] adjancencyArr, int i) {
+		adjancencyArr[i] = node.adjacencies.get(i).node.data;
 	}
 
 	/**
@@ -144,9 +148,13 @@ public class ListGraph implements IGraph {
 		Node node = adjacencyList.get(nodeIdx);
 		int[] weightArr = new int[node.adjacencies.size()];
 		for (int i = 0; i < weightArr.length; i++) {
-			weightArr[i] = node.adjacencies.get(i).weight;
+			getWeightsFor(node, weightArr, i);
 		}
 		return weightArr;
+	}
+
+	protected void getWeightsFor(Node node, int[] weightArr, int i) {
+		weightArr[i] = node.adjacencies.get(i).weight;
 	}
 
 	/**
@@ -169,9 +177,14 @@ public class ListGraph implements IGraph {
 		int height = 0;
 		for (Node node : adjacencyList) {
 			for (Edge edge : node.adjacencies) {
-				height += edge.weight;
+				height = getHeightFor(height, edge);
 			}
 		}
+		return height;
+	}
+
+	protected int getHeightFor(int height, Edge edge) {
+		height += edge.weight;
 		return height;
 	}
 

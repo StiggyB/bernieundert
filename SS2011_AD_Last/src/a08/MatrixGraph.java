@@ -101,11 +101,18 @@ public class MatrixGraph implements IGraph {
 		int[] adjacencyIndexArr = new int[getCountOfAdjacenciesForNode(adjacencyMatrix[nodeIdx])];
 		int adjacencyIdx = 0;
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
-			if (adjacencyMatrix[nodeIdx][i] != 0) {
-				adjacencyIndexArr[adjacencyIdx++] = i;
-			}
+			adjacencyIdx = getAdjecenciesFor(nodeIdx, adjacencyIndexArr,
+					adjacencyIdx, i);
 		}
 		return adjacencyIndexArr;
+	}
+
+	protected int getAdjecenciesFor(int nodeIdx, int[] adjacencyIndexArr,
+			int adjacencyIdx, int i) {
+		if (adjacencyMatrix[nodeIdx][i] != 0) {
+			adjacencyIndexArr[adjacencyIdx++] = i;
+		}
+		return adjacencyIdx;
 	}
 
 	/**
@@ -122,11 +129,16 @@ public class MatrixGraph implements IGraph {
 		int[] weightArr = new int[getCountOfAdjacenciesForNode(adjacencyMatrix[nodeIdx])];
 		int weightIdx = 0;
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
-			if (adjacencyMatrix[nodeIdx][i] != 0) {
-				weightArr[weightIdx++] = adjacencyMatrix[nodeIdx][i];
-			}
+			weightIdx = getWeightsFor(nodeIdx, weightArr, weightIdx, i);
 		}
 		return weightArr;
+	}
+
+	protected int getWeightsFor(int nodeIdx, int[] weightArr, int weightIdx, int i) {
+		if (adjacencyMatrix[nodeIdx][i] != 0) {
+			weightArr[weightIdx++] = adjacencyMatrix[nodeIdx][i];
+		}
+		return weightIdx;
 	}
 
 	/**
@@ -139,11 +151,50 @@ public class MatrixGraph implements IGraph {
 	private int getCountOfAdjacenciesForNode(int[] arr) {
 		int count = 0;
 		for (int i = 0; i < arr.length; i++) {
-			if (arr[i] != 0) {
-				count++;
-			}
+			count = getCountOfAdjacenciesForNodeFor(arr, count, i);
 		}
 		return count;
+	}
+
+	protected int getCountOfAdjacenciesForNodeFor(int[] arr, int count, int i) {
+		if (arr[i] != 0) {
+			count++;
+		}
+		return count;
+	}
+
+
+	/**
+	 * Liefert die Anzahl der Knoten des Graphen
+	 * 
+	 * @return Anzahl der Knoten
+	 */
+	@Override
+	public int getOrder() {
+		return adjacencyMatrix.length;
+	}
+
+	/**
+	 * Liefert die Anzahl der Kanten des Graphen
+	 * 
+	 * @return Anzahl der Kanten
+	 */
+	@Override
+	public int getHeight() {
+		int height = 0;
+		for (int i = 0; i < adjacencyMatrix.length; i++) {
+			for (int j = 0; j < adjacencyMatrix[0].length; j++) {
+				height = getHeightFor(height, i, j);
+			}
+		}
+		return height;
+	}
+
+	protected int getHeightFor(int height, int i, int j) {
+		if (adjacencyMatrix[i][j] != 0) {
+			height++;
+		}
+		return height;
 	}
 
 	/**
@@ -166,35 +217,7 @@ public class MatrixGraph implements IGraph {
 		}
 		return adjacencyIdx;
 	}
-
-	/**
-	 * Liefert die Anzahl der Knoten des Graphen
-	 * 
-	 * @return Anzahl der Knoten
-	 */
-	@Override
-	public int getOrder() {
-		return adjacencyMatrix.length;
-	}
-
-	/**
-	 * Liefert die Anzahl der Kanten des Graphen
-	 * 
-	 * @return Anzahl der Kanten
-	 */
-	@Override
-	public int getHeight() {
-		int height = 0;
-		for (int i = 0; i < adjacencyMatrix.length; i++) {
-			for (int j = 0; j < adjacencyMatrix[0].length; j++) {
-				if (adjacencyMatrix[i][j] != 0) {
-					height++;
-				}
-			}
-		}
-		return height;
-	}
-
+	
 	/**
 	 * Hilfsmethode: Passende String-Repraesentation des Graphen
 	 * 
