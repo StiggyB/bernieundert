@@ -36,18 +36,6 @@ public class Helper {
 	}
 	
 	/**
-	 * Gibt eine beliebige Liste auf der Konsole aus
-	 * 
-	 * @param list Liste zum Printen
-	 */
-	static void printList(List<?> list) {
-		for (Object wCard : list) {
-			System.out.println(wCard + " ");
-		}
-		System.out.println();
-	}
-	
-	/**
 	 * Gibt ein Array 2D-Array auf der Konsole aus
 	 * @param arr
 	 */
@@ -60,4 +48,15 @@ public class Helper {
 		}
 	}
 	
+	/**
+	 * Gibt eine beliebige Liste auf der Konsole aus
+	 * 
+	 * @param list Liste zum Printen
+	 */
+	static void printList(List<?> list) {
+		for (Object wCard : list) {
+			System.out.println(wCard + " ");
+		}
+		System.out.println();
+	}
 }

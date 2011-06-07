@@ -10,7 +10,7 @@ import java.util.List;
  * 
  * @author Tugend und Laster
  */
-public class DijkstraAlgorithm{
+public class DijkstraAlgorithm {
 
 	/**
 	 * Diese Methode berechnet fuer einen gegebenen Graphen den kuerzesten Pfad
