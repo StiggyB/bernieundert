@@ -114,7 +114,7 @@ public class MatrixGraph implements IGraph {
 	 * @param adjacencyIndexArr
 	 * @param adjacencyIdx
 	 * @param i
-	 * @return
+	 * @return Ergebnis der for-Schleife
 	 */
 	protected int getAdjecenciesFor(int nodeIdx, int[] adjacencyIndexArr,
 			int adjacencyIdx, int i) {
@@ -150,7 +150,7 @@ public class MatrixGraph implements IGraph {
 	 * @param weightArr
 	 * @param weightIdx
 	 * @param i
-	 * @return
+	 * @return Ergebnis der for-Schleife
 	 */
 	protected int getWeightsFor(int nodeIdx, int[] weightArr, int weightIdx, int i) {
 		if (adjacencyMatrix[nodeIdx][i] != 0) {
@@ -180,7 +180,7 @@ public class MatrixGraph implements IGraph {
 	 * @param arr
 	 * @param count
 	 * @param i
-	 * @return
+	 * @return Ergebnis der for-Schleife
 	 */
 	protected int getCountOfAdjacenciesForNodeFor(int[] arr, int count, int i) {
 		if (arr[i] != 0) {
@@ -222,7 +222,7 @@ public class MatrixGraph implements IGraph {
 	 * @param height
 	 * @param i
 	 * @param j
-	 * @return
+	 * @return Ergebnis der for-Schleife
 	 */
 	protected int getHeightFor(int height, int i, int j) {
 		if (adjacencyMatrix[i][j] != 0) {

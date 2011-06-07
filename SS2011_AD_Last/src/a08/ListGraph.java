@@ -202,7 +202,7 @@ public class ListGraph implements IGraph {
 	 * ausgelagert, damit spaeter via AOP der Counter hier ansetzen kann.
 	 * @param height
 	 * @param edge
-	 * @return
+	 * @return Ergebnis der for-Schleife
 	 */
 	protected int getHeightFor(int height, Edge edge) {
 		height += edge.weight;
