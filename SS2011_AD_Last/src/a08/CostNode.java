@@ -40,7 +40,7 @@ public class CostNode {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("node: " + data + "\t\t");
+		sb.append("node: " + data + " \t\t");
 		if (pred == null) {
 			sb.append("vorgaenger: null" + "\t");
 		} else if (!(pred.equals(this))) {
