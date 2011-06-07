@@ -5,12 +5,16 @@ import java.io.FileNotFoundException;
 
 /**
  * Benchmarkklasse fuer die Aufwandsanalyse des Dijkstraalgorithmus mit
- * inkrementell wachsenden Graphen. 
+ * inkrementell wachsenden Graphen.
  * 
  * @author Tugend und Laster
  */
 public class BenchmarkApp {
 
+	/**
+	 * Benchmarkmethode, welche die Aufwandsanalyse vornimmt.
+	 * 
+	 */
 	public static void runBenchmark() {
 		// Benchmark-Objekte erzeugen
 		ListBenchmark lb;
@@ -29,28 +33,54 @@ public class BenchmarkApp {
 				e.printStackTrace();
 			}
 
-			System.out.println("Graph " + i + "x");
+			System.out.println("Graph " + i + "x, Knoten: " + lb.getOrder());
 			System.out.println("==============");
-			
+
 			// kuerzesten Pfad berechnen nach Dijkstra
 			System.out.println("Dijkstra: getShortestPath()");
 			Helper.printArr(da.getShortestPath(lb, 0));
 			Helper.printArr(da.getShortestPath(mb, 0));
-			
+
 			// Ops ausgeben
 			System.out.println("Aufwandszaehler ausgeben getShortestPath()");
 			System.out.println("Listen OPs: " + lb.ops);
 			System.out.println("Matrix OPs: " + mb.ops);
-			
+
 			// Ops resetten
 			lb.resetOps();
 			mb.resetOps();
-			
+
 			// Nachbarn fuer Knoten ermiteln
 			System.out.println("Aufwandszaehler ausgeben getAdjacencies()");
 			lb.getAdjacencies(0);
 			mb.getAdjacencies(0);
-			
+
+			// Ops ausgeben
+			System.out.println("Listen OPs: " + lb.ops);
+			System.out.println("Matrix OPs: " + mb.ops);
+
+			// Ops resetten
+			lb.resetOps();
+			mb.resetOps();
+
+			// Gewicht fuer Knoten ermiteln
+			System.out.println("Aufwandszaehler ausgeben getWeights()");
+			lb.getWeights(0);
+			mb.getWeights(0);
+
+			// Ops ausgeben
+			System.out.println("Listen OPs: " + lb.ops);
+			System.out.println("Matrix OPs: " + mb.ops);
+
+			// Ops resetten
+			lb.resetOps();
+			mb.resetOps();
+
+			// Hoehe fuer Graphen ermiteln
+			System.out.println("Aufwandszaehler ausgeben getHeight()");
+			lb.getHeight();
+			mb.getHeight();
+
 			// Ops ausgeben
 			System.out.println("Listen OPs: " + lb.ops);
 			System.out.println("Matrix OPs: " + mb.ops);
