@@ -42,7 +42,7 @@ public interface IHashMap<K, V> {
 	 * @param vaule
 	 * @return true wenn Element vorhanden
 	 */
-	boolean containsValue(V vaule);
+	boolean containsValue(V value);
 	
 	/**
 	 * Diese Methode leert die HashMap.
