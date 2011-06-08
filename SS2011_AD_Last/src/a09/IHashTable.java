@@ -1,9 +1,9 @@
 package a09;
 
-public interface IHashMap<K, V> {
+public interface IHashTable<K, V> {
 
 	/**
-	 * Diese Methode fuegt ein neues Element in die HashMap ein.
+	 * Diese Methode fuegt ein neues Element in die HashTable ein.
 	 * 
 	 * @param key
 	 * @param value
@@ -11,7 +11,7 @@ public interface IHashMap<K, V> {
 	void insert(K key, V value);
 	
 	/**
-	 * Diese Methode loescht ein Element aus der HashMap.
+	 * Diese Methode loescht ein Element aus der HashTable.
 	 * 
 	 * @param key
 	 */
@@ -28,7 +28,7 @@ public interface IHashMap<K, V> {
 	
 	/**
 	 * Diese Methode prueft ob der Schluessel 
-	 * in der HashMap vorhanden ist.
+	 * in der HashTable vorhanden ist.
 	 * 
 	 * @param key
 	 * @return true wenn Schluessel vorhanden
@@ -37,7 +37,7 @@ public interface IHashMap<K, V> {
 	
 	/**
 	 * Diese Methode prueft ob das Element 
-	 * in der HashMap vorhanden ist.
+	 * in der HashTable vorhanden ist.
 	 * 
 	 * @param vaule
 	 * @return true wenn Element vorhanden
@@ -45,27 +45,31 @@ public interface IHashMap<K, V> {
 	boolean containsValue(V value);
 	
 	/**
-	 * Diese Methode leert die HashMap.
+	 * Diese Methode leert die HashTable.
 	 */
 	void clear();
 	
 	/**
-	 * Diese Methode prueft ob die HashMap leer ist.
+	 * Diese Methode prueft ob die HashTable leer ist.
 	 * 
-	 * @return true wenn HashMap leer ist
+	 * @return true wenn HashTable leer ist
 	 */
 	boolean isEmpty();
 	
 	/**
-	 * Diese Mathode gibt die Groesse der HashMap zurueck.
+	 * Diese Mathode gibt die Groesse der HashTable zurueck.
 	 * 
-	 * @return groesse der HashMap
+	 * @return groesse der HashTable
 	 */
 	int size();
 	
 	
 	//Wird bei verschiedenen Hashtables genutzt -- ist das nötig?
-//	void hash();
 	
+	/**
+	 * Diese Methode berechnet den Index fuer einen Schluessel 
+	 * in der Datenstruktur der HashTable
+	 */
+	void hash(); 
 	
 }
