@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  */
 public class MatrixGraph implements IGraph {
 
-	int[][] adjacencyMatrix = new int[3][3];
+	int[][] adjacencyMatrix;
 
 	/**
 	 * Liest einen Graphen aus einer XML-Datei in die 
