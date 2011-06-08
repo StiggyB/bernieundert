@@ -15,7 +15,7 @@ public class BinarySearchTreeTest {
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
 		
-		System.out.println("Höhe des Baumes: " + bst.getHeight());
+		System.out.println("Hï¿½he des Baumes: " + bst.getHeight());
 		System.out.println("Leerer Baum?     " + bst.isEmpty());
 		System.out.println("Knotenanzahl:    " + bst.getNodeCount());
 		
@@ -26,17 +26,17 @@ public class BinarySearchTreeTest {
 			e.printStackTrace();
 		}
 		
-		System.out.println("4 einfügen    " + bst.addKey(4));
+		System.out.println("4 einfï¿½gen    " + bst.addKey(4));
 		System.out.println(bst.toString());
-		System.out.println("2 einfügen    " + bst.addKey(2));
+		System.out.println("2 einfï¿½gen    " + bst.addKey(2));
 		System.out.println(bst.toString());
-		System.out.println("6 einfügen    " + bst.addKey(6));
+		System.out.println("6 einfï¿½gen    " + bst.addKey(6));
 		System.out.println(bst.toString());
-		System.out.println("5 einfügen    " + bst.addKey(5));
+		System.out.println("5 einfï¿½gen    " + bst.addKey(5));
 		System.out.println(bst.toString());
-		System.out.println("7 einfügen    " + bst.addKey(7));
+		System.out.println("7 einfï¿½gen    " + bst.addKey(7));
 		System.out.println(bst.toString());
-		System.out.println("5 einfügen    " + bst.addKey(5));
+		System.out.println("5 einfï¿½gen    " + bst.addKey(5));
 		System.out.println(bst.toString());
 		
 		try {
@@ -46,7 +46,7 @@ public class BinarySearchTreeTest {
 			e.printStackTrace();
 		}
 		
-		System.out.println("Höhe des Baumes: " + bst.getHeight());
+		System.out.println("Hï¿½he des Baumes: " + bst.getHeight());
 		System.out.println("Leerer Baum?     " + bst.isEmpty());
 		System.out.println("Knotenanzahl:    " + bst.getNodeCount());
 		
@@ -81,17 +81,17 @@ public class BinarySearchTreeTest {
 			e.printStackTrace();
 		}
 		
-		System.out.println("4 löschen    " + bst.deleteKey(4));
+		System.out.println("4 lï¿½schen    " + bst.deleteKey(4));
 		System.out.println(bst.toString());
-		System.out.println("6 löschen    " + bst.deleteKey(6));
+		System.out.println("6 lï¿½schen    " + bst.deleteKey(6));
 		System.out.println(bst.toString());
-		System.out.println("9 löschen    " + bst.deleteKey(9));
+		System.out.println("9 lï¿½schen    " + bst.deleteKey(9));
 		System.out.println(bst.toString());
-		System.out.println("5 löschen    " + bst.deleteKey(5));
+		System.out.println("5 lï¿½schen    " + bst.deleteKey(5));
 		System.out.println(bst.toString());
-		System.out.println("7 löschen    " + bst.deleteKey(7));
+		System.out.println("7 lï¿½schen    " + bst.deleteKey(7));
 		System.out.println(bst.toString());
-		System.out.println("2 löschen    " + bst.deleteKey(2));
+		System.out.println("2 lï¿½schen    " + bst.deleteKey(2));
 		System.out.println(bst.toString()); 
 	}
 
