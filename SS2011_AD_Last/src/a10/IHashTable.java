@@ -63,19 +63,4 @@ public interface IHashTable<K, V> {
 	 */
 	int size();
 	
-	
-	//interne Methoden -- nicht fuer den User bestimmt!
-	
-	/**
-	 * Diese Methode berechnet den Index fuer einen Schluessel 
-	 * in der Datenstruktur der HashTable
-	 */
-	void hash(); 
-	
-	/**
-	 * Diese Methode laesst die Datenstruktur wachsen 
-	 * bzw. schrumpfen.
-	 */
-	void resize();
-	
 }

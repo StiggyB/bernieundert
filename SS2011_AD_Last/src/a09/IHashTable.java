@@ -8,14 +8,14 @@ public interface IHashTable<K, V> {
 	 * @param key
 	 * @param value
 	 */
-	void insert(K key, V value);
+	V put(K key, V value);
 	
 	/**
 	 * Diese Methode loescht ein Element aus der HashTable.
 	 * 
 	 * @param key
 	 */
-	void delete(K key);
+	V remove(K key);
 	
 	/**
 	 * Diese Methode gibt ein Element zu 
@@ -62,14 +62,5 @@ public interface IHashTable<K, V> {
 	 * @return groesse der HashTable
 	 */
 	int size();
-	
-	
-	//Wird bei verschiedenen Hashtables genutzt -- ist das nötig?
-	
-	/**
-	 * Diese Methode berechnet den Index fuer einen Schluessel 
-	 * in der Datenstruktur der HashTable
-	 */
-	void hash(); 
 	
 }
