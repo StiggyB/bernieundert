@@ -3,10 +3,15 @@ package a10;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 
 public class MainApp {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
 		Hashtable<Integer, String> testTable = new Hashtable<Integer, String>();
 		testTable.put(0, "a");
