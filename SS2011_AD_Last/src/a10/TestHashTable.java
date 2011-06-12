@@ -2,14 +2,20 @@ package a10;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 
 public class TestHashTable {
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
 		
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -56,7 +62,7 @@ public class TestHashTable {
 //		hTable.clear();
 		System.out.println(hTable.toString());
 		
-		new MainGUI(hTable, keys)
+		new MainGUI(hTable, keys, ips).startGUI();
 	}
 	
 }
