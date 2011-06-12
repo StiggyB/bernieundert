@@ -44,12 +44,14 @@ public class ExplorerTree<K, V> {
 	private JTree tree;
 	private HashTable<Integer, V> hashTable;
 	private List<Integer> keys;
+	private List<String> ips;
 	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
-	public ExplorerTree(HashTable<Integer, V> hashTable, List<Integer> keys) {
+	public ExplorerTree(HashTable<Integer, V> hashTable, List<Integer> keys, List<String> ips) {
 //		this.explorerIO = explorerIO;
 		this.hashTable = hashTable;
 		this.keys = keys;
+		this.ips = ips;
 	}
 
 	public void buildFrame() throws IOException {
@@ -80,12 +82,12 @@ public class ExplorerTree<K, V> {
 	}
 	
 	private JTree buildExplorerTree() throws IOException {
-		String rootDir = "Test";
+		String rootDir = "IPs";
 
 		DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(rootDir);
 		
-		for (int i = 0; i < keys.size(); i++) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(keys.get(i));
+		for (int i = 0; i < ips.size(); i++) {
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(ips.get(i));
 			rootDirNode.add(node);
 		}
 //		addNodes(rootDirNode);
@@ -97,10 +99,12 @@ public class ExplorerTree<K, V> {
 				if (e.getNewLeadSelectionPath() != null) {
 					DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) e.getNewLeadSelectionPath().getLastPathComponent();
 					
-					hashTable.get(Integer.valueOf((String)selectedNode.getUserObject()));
+//					hashTable.get(Integer.valueOf((String)selectedNode.getUserObject()));
 					
-					File selectedFile = (File) selectedNode.getUserObject();
-					fillTextAreaWithFileInfos(selectedFile);
+					String selectedIp = (String) selectedNode.getUserObject();
+//					File selectedFile = (File) selectedNode.getUserObject();
+//					fillTextAreaWithFileInfos(selectedFile);
+					fillTextAreaWithFileInfos(selectedIp);
 				}
 			}
 		});
@@ -122,14 +126,16 @@ public class ExplorerTree<K, V> {
 			public void actionPerformed(ActionEvent event) {
 
 				if (newDir == event.getSource()) {
-					try {
-						File rootDir = explorerIO.loadDir();
+//					try {
+//						File rootDir = explorerIO.loadDir();
+						File rootDir = null;
 						DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(rootDir);
 						addNodes(rootDirNode);
 						tree.setModel(new DefaultTreeModel(rootDirNode));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+//					} 
+//					catch (IOException e) {
+//						e.printStackTrace();
+//					}
 				}
 
 				if (closeApp == event.getSource()) {
@@ -180,23 +186,24 @@ public class ExplorerTree<K, V> {
 		aboutFrame.setVisible(true);
 	}
 
-	private void fillTextAreaWithFileInfos(File file) {
-		StringBuilder b = new StringBuilder();
-		b.append("Fileinfo:\n").append("- Name: ").append(file.getName())
-				.append("\n").append("- Größe: ")
-				.append(ExplorerUtils.byteCountToDisplaySize(file.length()))
-				.append("\n").append("- Ausführbar: ")
-				.append(file.canExecute() ? "ja" : "nein").append("\n")
-				.append("- Schreibrechte: ")
-				.append(file.canWrite() ? "ja" : "nein").append("\n")
-				.append("- Zuletzt geändert: ")
-				.append(sdf.format(file.lastModified()))
-				.append("\n\n- vollständiger Dateipfad: ")
-				.append(file.getAbsolutePath())
-				.append("\n- zugehöriges Oberverzeichnis: ")
-				.append(file.getParent());
+	private void fillTextAreaWithFileInfos(String file) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(file);
+//		b.append("Fileinfo:\n").append("- Name: ").append(file.getName())
+//				.append("\n").append("- Größe: ")
+////				.append(ExplorerUtils.byteCountToDisplaySize(file.length()))
+//				.append("\n").append("- Ausführbar: ")
+//				.append(file.canExecute() ? "ja" : "nein").append("\n")
+//				.append("- Schreibrechte: ")
+//				.append(file.canWrite() ? "ja" : "nein").append("\n")
+//				.append("- Zuletzt geändert: ")
+//				.append(sdf.format(file.lastModified()))
+//				.append("\n\n- vollständiger Dateipfad: ")
+//				.append(file.getAbsolutePath())
+//				.append("\n- zugehöriges Oberverzeichnis: ")
+//				.append(file.getParent());
 
-		fileInfoTextArea.setText(b.toString());
+		fileInfoTextArea.setText(sb.toString());
 	}
 
 	private void addNodes(DefaultMutableTreeNode parentNode) {
