@@ -101,4 +101,7 @@ public class KKRSJUnit {
 		assertEquals(kkrs.getPrice(18, Person.NORMAL, Kategorie.LOGE), 12);
 		assertEquals(kkrs.getPrice(65, Person.NORMAL, Kategorie.LOGE), 12);
 	}
+	
+	//Bauen Sie absichtlich Fehler in Ihre Implementation ein (z.B. Vorzeichenfehler, 
+	//„<“ „>=“ Fehler etc.) und schauen Sie, welche Ihrer Testfälle diese Fehler abfangen können.
 }
