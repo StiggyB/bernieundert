@@ -119,7 +119,6 @@ public class Quicksort {
 	/**
 	 * @param ilinks
 	 * @param irechts
-	 * @return
 	 */
 	public int getPivot(int ilinks, int irechts) {
 		switch (pivotMethod) {
