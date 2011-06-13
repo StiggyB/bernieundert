@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * JavaDoc this shit!
+ * The class HashTable based on the <tt>IHashTable<tt> interface. This 
+ * implementation provides a hash table with an array as data structure 
+ * and works with open addressing and chaining with equal entries.
  * 
- * @author Tugend und Laster
+ * @param <K> the type of keys maintained by this table
+ * @param <V> the type of the values in the table
  * 
- * @param <K>
- * @param <V>
+ * @author 	Tugend und Laster
+ * @see  	Object#hashCode()
+ * @see		IHashTable
  */
 public class HashTable<K, V> implements IHashTable<K, V> {
 
@@ -55,11 +59,15 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	 */
 	private int threshold;
 
-	/**
-	 * @param table
-	 * @param size
-	 * @param loadFactor
-	 */
+    /**
+     * Constructs an empty <tt>HashTable</tt> with the specified initial
+     * capacity and load factor.
+     *
+     * @param  initialCapacity the initial capacity
+     * @param  loadFactor      the load factor
+     * @throws IllegalArgumentException if the initial capacity is negative
+     *         or the load factor is non positive
+     */
 	@SuppressWarnings("unchecked")
 	public HashTable(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) {
@@ -79,16 +87,21 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		this.table = new Entry[initialCapacity];
 	}
 
-	/**
-	 * @param initialCapacity
-	 */
+    /**
+     * Constructs an empty <tt>HashTable</tt> with the specified initial
+     * capacity and the default load factor (0.75).
+     *
+     * @param  initialCapacity the initial capacity.
+     * @throws IllegalArgumentException if the initial capacity is negative.
+     */
 	public HashTable(int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
-	/**
-	 * 
-	 */
+    /**
+     * Constructs an empty <tt>HashTable</tt> with the default initial capacity
+     * (16) and the default load factor (0.75).
+     */
 	@SuppressWarnings("unchecked")
 	public HashTable() {
 		this.size = 0;
@@ -106,9 +119,12 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	}
 
 	/**
+	 * This method fills a associated key and value in the table.
+	 * In case of collisions 
+	 * 
 	 * @param key
 	 * @param value
-	 * @return
+	 * @return the value which filled in the table
 	 */
 	private V internalPut(K key, V value) {
 		int hash = hash(key, 0);
@@ -257,6 +273,9 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 				if (value.equals(entry.value)) {
 					return true;
 				}
+			}
+			if (value.equals(table[i].value)) {
+				return true;
 			}
 		}
 		return false;
