@@ -115,7 +115,7 @@ public class TestHashTableWithJUnit extends AbstractTestHashTable {
 			hTable.remove(ips.get(j));
 		}
 		
-		System.out.println("Diese Ausgabe zeigt die Funktion von remove:\n");
+		System.out.println("Diese Ausgabe zeigt die Funktion von TestRemove aus JUnit:\n");
 		System.out.println("============================================");
 		System.out.println(hTable.toString());
 		System.out.println("============================================");
