@@ -94,7 +94,8 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	
 	@Override
 	public V put(K key, V value) {
-		if(size++ >= threshold) {
+		if(size >= threshold) {
+			System.out.println("RESIZE!");
 			resize(2 * table.length);
 		}
 		return internalPut(key, value);
@@ -118,6 +119,7 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 				if (table[hash] == null) {
 					Entry<K, V> entry = new Entry<K, V>(key, value, null);
 					table[hash] = entry;
+					size++;
 					return table[hash].value;
 				} else if (i == DEFAULT_COUNT_OF_HASHES) {
 					resize(2 * table.length);
@@ -126,15 +128,17 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		}
 		Entry<K, V> entry = new Entry<K, V>(key, value, null);
 		table[hash] = entry;
+		size++;
 		return table[hash].value;
 	}
 
 	void addEntry(K key, V value, int bucketIndex) {
 		Entry<K, V> e = table[bucketIndex];
 		table[bucketIndex] = new Entry<K, V>(key, value, e);
-		if (size++ >= threshold) {
-			resize(2 * table.length);
-		}
+//		if (size++ >= threshold) {
+//			System.out.println("ENTRY_RESIZE!");
+//			resize(2 * table.length);
+//		}
 	}
 
 	/**
@@ -146,9 +150,10 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	 */
 	int hash(K key, int collCount) {
 		System.out.println("Kollision: " + collCount);
-		return ((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 3)))
+		System.out.println(("Key: " + key.hashCode() + "Hash: " + key.hashCode() % table.length));
+		return Math.abs(((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 3)))
 				* (collCount * collCount))
-				% table.length;
+				% table.length);
 	}
 
 	/**
@@ -159,15 +164,18 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		
 		Entry<K, V>[] oldTable = table;
 		@SuppressWarnings("unchecked")
-		Entry<K, V>[] newTable = (Entry<K, V>[])new Object[newCapacity];
+		Entry[] newTable = new Entry[newCapacity];
 		table = newTable;
+		size = 0;
         threshold = (int)(newCapacity * loadFactor);
         rehash(oldTable);
 	}
 	
 	void rehash(Entry<K, V>[] oldTable) {
 		for (int i = 0; i < oldTable.length; i++) {
-			internalPut(oldTable[i].key, oldTable[i].value);
+			if (oldTable[i] != null) {
+				internalPut(oldTable[i].key, oldTable[i].value);
+			}
 		}
 	}
 
@@ -185,6 +193,7 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 						e.isDeleted = true;
 					}
 				}
+				size--;
 				return table[hash].value;
 			}
 		}
