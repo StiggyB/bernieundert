@@ -1,14 +1,12 @@
 package test;
 
-import a01.LinkedList;
-import a01.Node;
 import a02.IStack;
 import a02.Stack;
 
 public class Test {
 	public static void main(String[] args) throws Exception {
 		
-		LinkedList<String> list = new LinkedList<String>();
+//		LinkedList<String> list = new LinkedList<String>();
 		IStack<String> test = new Stack<String>();
 		test.pop();
 		/*
