@@ -120,7 +120,9 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 
 	/**
 	 * This method fills a associated key and value in the table.
-	 * In case of collisions 
+	 * In case of collisions will calculate a new hash with 
+	 * double hashing. If the table contains the key the method 
+	 * chains the value at the same entry in the table.
 	 * 
 	 * @param key
 	 * @param value
@@ -158,16 +160,20 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	}
 
 	/**
+	 * This method add the value at the table index as the
+	 * separate chaining procedure.
+	 *
 	 * @param key
 	 * @param value
-	 * @param bucketIndex
+	 * @param tableIdx
 	 */
-	private void addEntry(K key, V value, int bucketIndex) {
-		Entry<K, V> e = table[bucketIndex];
-		table[bucketIndex] = new Entry<K, V>(key, value, e);
+	private void addEntry(K key, V value, int tableIdx) {
+		Entry<K, V> e = table[tableIdx];
+		table[tableIdx] = new Entry<K, V>(key, value, e);
 	}
 
 	/**
+	 * This method calculates the hash key for the 
 	 * Diese Methode berechnet den Index fuer einen Schluessel in der
 	 * Datenstruktur der HashTable.
 	 * 
@@ -283,6 +289,7 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		for (int i = 0; i < table.length; i++) {
 			this.table[i] = null;
 		}
+		size = 0;
 	}
 
 	@Override
