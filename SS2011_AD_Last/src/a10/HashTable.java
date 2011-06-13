@@ -217,9 +217,8 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		}
 		return null;
 	}
-	@SuppressWarnings("unchecked")
 	@Override
-	public V[] get(K key) {
+	public List<V> get(K key) {
 		List<V> valueList = new ArrayList<V>();
 		int hash;
 		for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
@@ -234,7 +233,7 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 						valueList.add(e.value);
 					}
 				}
-				return (V[]) valueList.toArray();
+				return valueList;
 			}
 		}
 		return null;
