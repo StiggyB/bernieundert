@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * JavaDoc this shit!
+ * 
+ * @author Tugend und Laster
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class HashTable<K, V> implements IHashTable<K, V> {
 
 	/**
@@ -46,7 +54,7 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	/**
 	 * The next size value at which to resize (capacity * load factor).
 	 */
-	int threshold;
+	private int threshold;
 
 	/**
 	 * @param table
@@ -95,15 +103,18 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	@Override
 	public V put(K key, V value) {
 		if(size >= threshold) {
-			System.out.println("RESIZE!");
 			resize(2 * table.length);
 		}
 		return internalPut(key, value);
 	}
 	
+	/**
+	 * @param key
+	 * @param value
+	 * @return
+	 */
 	private V internalPut(K key, V value) {
 		int hash = hash(key, 0);
-		System.out.println(hash);
 		if (table[hash] != null && key.equals(table[hash].key)) {
 			addEntry(key, value, hash);
 			return table[hash].value;
@@ -111,7 +122,6 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		if (!(table[hash] == null)) {
 			for (int i = 1; i < DEFAULT_COUNT_OF_HASHES; i++) {
 				hash = hash(key, i);
-				System.out.println(hash);
 				if (table[hash] != null && key.equals(table[hash].key)) {
 					addEntry(key, value, hash);
 					return table[hash].value;
@@ -122,38 +132,39 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 					size++;
 					return table[hash].value;
 				} else if (i == DEFAULT_COUNT_OF_HASHES-1) {
-					System.out.println(key + "MÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖP!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 					resize(2 * table.length);
+					size++;
 					return internalPut(key, value);
 				}
 			}
 		}
 		Entry<K, V> entry = new Entry<K, V>(key, value, null);
-//		System.out.println(entry);
 		table[hash] = entry;
 		size++;
-		System.out.println(this.toString());
-		System.out.println("####################################");
 		return table[hash].value;
 	}
 
-	void addEntry(K key, V value, int bucketIndex) {
+	/**
+	 * @param key
+	 * @param value
+	 * @param bucketIndex
+	 */
+	private void addEntry(K key, V value, int bucketIndex) {
 		Entry<K, V> e = table[bucketIndex];
 		table[bucketIndex] = new Entry<K, V>(key, value, e);
-//		if (size++ >= threshold) {
-//			System.out.println("ENTRY_RESIZE!");
-//			resize(2 * table.length);
-//		}
 	}
 
 	/**
+	 * Diese Methode berechnet den Index fuer einen Schluessel in der
+	 * Datenstruktur der HashTable.
+	 *
 	 * (key % table.length) + 1 + (key % (table.length -2)) % table.length
 	 * 
 	 * @param key
 	 * @param collCount
 	 * @return
 	 */
-	int hash(K key, int collCount) {
+	private int hash(K key, int collCount) {
 		System.out.println("Kollision: " + collCount);
 		System.out.println(("Key: " + key.hashCode() + "Hash: " + key.hashCode() % table.length));
 		return Math.abs(((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 2)))
@@ -162,22 +173,25 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	}
 
 	/**
-	 * Diese Methode laesst die Datenstruktur entsprechend des load factors
-	 * wachsen bzw. schrumpfen.
+	 * This Method increases or decreases the 
+	 * data structure depending on the load factor.
+	 *
+	 * @param newCapacity
 	 */
-	void resize(int newCapacity) {
-		System.out.println("RESIZE!*************************************");
-		System.out.println(this.toString());
+	@SuppressWarnings("unchecked")
+	private void resize(int newCapacity) {
 		Entry<K, V>[] oldTable = table;
-		@SuppressWarnings("unchecked")
-		Entry[] newTable = new Entry[newCapacity];
+		Entry<K, V>[] newTable = new Entry[newCapacity];
 		table = newTable;
 		size = 0;
         threshold = (int)(newCapacity * loadFactor);
         rehash(oldTable);
 	}
 	
-	void rehash(Entry<K, V>[] oldTable) {
+	/**
+	 * @param oldTable
+	 */
+	private void rehash(Entry<K, V>[] oldTable) {
 		for (int i = 0; i < oldTable.length; i++) {
 			if (oldTable[i] != null) {
 				internalPut(oldTable[i].key, oldTable[i].value);
@@ -190,10 +204,8 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		int hash;
 		for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
 			hash = hash(key, i);
-			System.out.println("hash : " + hash + " -- i : " + i);
 			if (table[hash] != null && key.equals(table[hash].key)) {
 				table[hash].isDeleted = true;
-				System.out.println("EQUALS!");
 				if (table[hash].next != null) {
 					for (Entry<K, V> e = table[hash]; e != null; e = e.next) {
 						e.isDeleted = true;
@@ -206,44 +218,15 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-//	@Override
-	public V[] get2(K key) {
-		V[] valueArr;
-		int hash;
-		for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
-			hash = hash(key, i);
-			System.out.println("hash : " + hash + " -- i : " + i);
-			if(table[hash] != null && key.equals(table[hash].key)) {
-				System.out.println("EQUALS!");
-				int countOfEntries = 1;
-				valueArr = (V[])new Object[countOfEntries];
-				valueArr[countOfEntries-1] = table[hash].value;
-				if(table[hash].next != null) {
-					System.out.println("BUCKETS!");
-					for (Entry<K, V> e = table[hash]; e != null ; e = e.next, countOfEntries++);
-					valueArr = (V[])new Object[countOfEntries];
-					for (Entry<K, V> e = table[hash]; e != null ; e = e.next, countOfEntries--)  {
-						valueArr[countOfEntries-1] = e.value;
-					}
-				}
-				return (V[])valueArr;
-			}
-		}
-		return null;
-	}
 	@Override
 	public List<V> get(K key) {
 		List<V> valueList = new ArrayList<V>();
 		int hash;
 		for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
 			hash = hash(key, i);
-			System.out.println("hash : " + hash + " -- i : " + i);
 			if(table[hash] != null && key.equals(table[hash].key)) {
-				System.out.println("EQUALS!");
 				valueList.add(table[hash].value);
 				if(table[hash].next != null) {
-					System.out.println("BUCKETS!");
 					for (Entry<K, V> e = table[hash]; e != null ; e = e.next)  {
 						valueList.add(e.value);
 					}
@@ -297,36 +280,6 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		return this.size;
 	}
 
-	// interne Methoden -- nicht fuer den User bestimmt!
-
-	/**
-	 * Diese Methode berechnet den Index fuer einen Schluessel in der
-	 * Datenstruktur der HashTable.
-	 */
-	int hash(K key) {
-		int hash = 0;
-		hash = key.hashCode() % table.length;
-		if (key.equals(table[hash].key)) {
-			return hash;
-		}
-		if (!(table[hash] == null)) {
-			for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
-				hash = ((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 2))
-						* (i * i)));
-				if (key.equals(table[hash].key)) {
-					return hash;
-				}
-				if (table[hash] == null) {
-					return hash;
-				} else if (i == DEFAULT_COUNT_OF_HASHES) {
-					resize(2 * table.length);
-					hash = hash(key);
-				}
-			}
-		}
-		return hash;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -343,9 +296,4 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		}
 		return sb.toString();
 	}
-	
-	public Entry<K, V>[] getTable() {
-		return table;
-	}
-
 }
