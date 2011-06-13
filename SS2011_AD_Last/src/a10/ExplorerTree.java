@@ -68,10 +68,11 @@ public class ExplorerTree<K, V> {
 		fileInfoTextArea = new JTextArea(sb.toString());
 
 		JSplitPane splitPane = new JSplitPane();
-		JScrollPane scrollPane = new JScrollPane(buildExplorerTree());
+		JScrollPane scrollPaneLeft = new JScrollPane(buildExplorerTree());
+		JScrollPane scrollPaneRight = new JScrollPane(fileInfoTextArea);
 
-		splitPane.setLeftComponent(scrollPane);
-		splitPane.setRightComponent(fileInfoTextArea);
+		splitPane.setLeftComponent(scrollPaneLeft);
+		splitPane.setRightComponent(scrollPaneRight);
 
 		frame.getContentPane().add(buildMenuBar(), BorderLayout.NORTH);
 		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
