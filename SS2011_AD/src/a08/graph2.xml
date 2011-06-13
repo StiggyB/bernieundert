@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graph>
+	<node id = "0">
+	 	<adjacency id = "1" cost = "4" />
+	 	<adjacency id = "6" cost = "5" />
+	 	<adjacency id = "5" cost = "10" />
+	 </node>
+	<node id = "1"> 
+		<adjacency id = "0" cost = "4" />
+		<adjacency id = "2" cost = "7" />
+		<adjacency id = "6" cost = "2" />
+	</node>
+	<node id = "2"> 
+		<adjacency id = "1" cost = "7" />
+		<adjacency id = "6" cost = "1" />
+		<adjacency id = "3" cost = "12" />
+	</node>
+	<node id = "3">
+	 	<adjacency id = "2" cost = "12" />
+	 	<adjacency id = "4" cost = "4" />
+	 	<adjacency id = "7" cost = "4" />
+	 	<adjacency id = "11" cost = "10" />
+	 	<adjacency id = "12" cost = "5" />
+	 </node>
+	 <node id = "4">
+	 	<adjacency id = "3" cost = "4" />
+	 	<adjacency id = "6" cost = "8" />
+	 	<adjacency id = "5" cost = "3" />
+	 </node>
+	 <node id = "5">
+	 	<adjacency id = "4" cost = "3" />
+	 	<adjacency id = "6" cost = "4" />
+	 	<adjacency id = "0" cost = "10" />
+	 </node>
+	 <node id = "6">
+	 	<adjacency id = "0" cost = "5" />
+	 	<adjacency id = "1" cost = "2" />
+	 	<adjacency id = "2" cost = "1" />
+	 	<adjacency id = "4" cost = "8" />
+	 	<adjacency id = "5" cost = "4" />
+	 </node>
+	 <node id = "7"> 
+		<adjacency id = "3" cost = "4" />
+		<adjacency id = "8" cost = "7" />
+		<adjacency id = "12" cost = "2" />
+	</node>
+	<node id = "8"> 
+		<adjacency id = "7" cost = "7" />
+		<adjacency id = "12" cost = "1" />
+		<adjacency id = "9" cost = "12" />
+	</node>
+	<node id = "9">
+	 	<adjacency id = "8" cost = "12" />
+	 	<adjacency id = "10" cost = "4" />
+	 </node>
+	 <node id = "10">
+	 	<adjacency id = "9" cost = "4" />
+	 	<adjacency id = "12" cost = "8" />
+	 	<adjacency id = "11" cost = "3" />
+	 </node>
+	 <node id = "11">
+	 	<adjacency id = "10" cost = "3" />
+	 	<adjacency id = "12" cost = "4" />
+	 	<adjacency id = "3" cost = "10" />
+	 </node>
+	 <node id = "12">
+	 	<adjacency id = "3" cost = "5" />
+	 	<adjacency id = "7" cost = "2" />
+	 	<adjacency id = "8" cost = "1" />
+	 	<adjacency id = "10" cost = "8" />
+	 	<adjacency id = "11" cost = "4" />
+	 </node>
+</graph> 
