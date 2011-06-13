@@ -1,6 +1,8 @@
 package a10;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 
@@ -150,13 +152,70 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 
 	@Override
 	public V remove(K key) {
-		// TODO Auto-generated method stub
+		int hash;
+		for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
+			hash = hash(key, i);
+			System.out.println("hash : " + hash + " -- i : " + i);
+			if (table[hash] != null && key.equals(table[hash].key)) {
+				table[hash].isDeleted = true;
+				System.out.println("EQUALS!");
+				if (table[hash].next != null) {
+					for (Entry<K, V> e = table[hash]; e != null; e = e.next) {
+						e.isDeleted = true;
+					}
+				}
+				return table[hash].value;
+			}
+		}
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+//	@Override
+	public V[] get2(K key) {
+		V[] valueArr;
+		int hash;
+		for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
+			hash = hash(key, i);
+			System.out.println("hash : " + hash + " -- i : " + i);
+			if(table[hash] != null && key.equals(table[hash].key)) {
+				System.out.println("EQUALS!");
+				int countOfEntries = 1;
+				valueArr = (V[])new Object[countOfEntries];
+				valueArr[countOfEntries-1] = table[hash].value;
+				if(table[hash].next != null) {
+					System.out.println("BUCKETS!");
+					for (Entry<K, V> e = table[hash]; e != null ; e = e.next, countOfEntries++);
+					valueArr = (V[])new Object[countOfEntries];
+					for (Entry<K, V> e = table[hash]; e != null ; e = e.next, countOfEntries--)  {
+						valueArr[countOfEntries-1] = e.value;
+					}
+				}
+				return (V[])valueArr;
+			}
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
 	@Override
-	public V get(K key) {
-		// TODO Auto-generated method stub
+	public V[] get(K key) {
+		List<V> valueList = new ArrayList<V>();
+		int hash;
+		for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
+			hash = hash(key, i);
+			System.out.println("hash : " + hash + " -- i : " + i);
+			if(table[hash] != null && key.equals(table[hash].key)) {
+				System.out.println("EQUALS!");
+				valueList.add(table[hash].value);
+				if(table[hash].next != null) {
+					System.out.println("BUCKETS!");
+					for (Entry<K, V> e = table[hash]; e != null ; e = e.next)  {
+						valueList.add(e.value);
+					}
+				}
+				return (V[]) valueList.toArray();
+			}
+		}
 		return null;
 	}
 
@@ -241,7 +300,8 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 			if (e != null) {
 				sb.append("key:" + e.key + "-> values: ");
 				for (Entry<K, V> entry = e; entry != null; entry = entry.next) {
-					sb.append(entry.value + " ");
+					sb.append("isDeleted: " + entry.isDeleted + " ");
+					sb.append(" " + entry.value + " ");
 				}
 			}
 			sb.append("]\n");
