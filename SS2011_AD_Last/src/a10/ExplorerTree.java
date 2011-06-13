@@ -2,15 +2,7 @@ package a10;
 
 /**
  * Original code done in WS2010 PR2 course:
- * 
- * In dieser Klasse befinden sich die Methoden, die ein FileExplorer 
- * Fenster öffnen. Der Frame setzt sich aus einer gesplitteten Oberfläche
- * für einen Verzeichnisbaum auf der Linken und Verzeichnis/Dateiinfos
- * auf der Rechten, sowie einem Menü zusammen.
- * 
- * @author Bernie und Ert
- * 
- * Refactored in SS2011 AD course:
+ * Reused in SS2011 AD course:
  * 
  * This class is used to create a simple IP-Browser. IPs are displayed on 
  * the left side as the hashTable key values. By clicking an IP on the right 
@@ -123,7 +115,7 @@ public class ExplorerTree<K, V> {
 		JMenu help = new JMenu("Hilfe");
 		final JMenuItem closeApp = new JMenuItem("Programm beenden");
 		final JMenuItem aboutApp = new JMenuItem(
-				"Über 1337-IP HashTable-Lister");
+				"ueber 1337-IP HashTable-Lister");
 
 		ActionListener menuListener = new ActionListener() {
 
@@ -153,7 +145,7 @@ public class ExplorerTree<K, V> {
 
 	private void buildAboutFrame() {
 		JTextArea aboutTxt = new JTextArea(
-				"Work done by:\nTell Müller-Pettenpohl\nMartin Slowikowski\n\n(c)1337-2011 Tugend & Laster");
+				"Work done by:\nTell Mueller-Pettenpohl\nMartin Slowikowski\n\n(c)1337-2011 Tugend & Laster");
 		final JFrame aboutFrame = new JFrame("About 1337-Ip HashTable-Lister");
 		JButton exitButton = new JButton("Bump me!!!11eins");
 		ActionListener exitListener = new ActionListener() {
@@ -186,7 +178,7 @@ public class ExplorerTree<K, V> {
 				sb.append(v + "\n");
 			}
 		} else {
-			// Falls man IP-Einträges holen will, zu denen es keine Entries gibt
+			// Falls man IP-Eintraege holen will, zu denen es keine Entries gibt
 			sb.append("Hier gibt's keine Hash-Entries zu sehen, weil es die IP nicht in der HashTable gibt! :)");
 		}
 
