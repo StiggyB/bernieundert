@@ -11,9 +11,9 @@ import java.util.List;
  * @param <K> the type of keys maintained by this table
  * @param <V> the type of the values in the table
  * 
- * @author 	Tugend und Laster
- * @see  	Object#hashCode()
- * @see		IHashTable
+ * @author Tugend und Laster
+ * @see Object#hashCode()
+ * @see IHashTable
  */
 public class HashTable<K, V> implements IHashTable<K, V> {
 
@@ -59,15 +59,18 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	 */
 	private int threshold;
 
-    /**
-     * Constructs an empty <tt>HashTable</tt> with the specified initial
-     * capacity and load factor.
-     *
-     * @param  initialCapacity the initial capacity
-     * @param  loadFactor      the load factor
-     * @throws IllegalArgumentException if the initial capacity is negative
-     *         or the load factor is non positive
-     */
+	/**
+	 * Constructs an empty <tt>HashTable</tt> with the specified initial
+	 * capacity and load factor.
+	 * 
+	 * @param initialCapacity
+	 *            the initial capacity
+	 * @param loadFactor
+	 *            the load factor
+	 * @throws IllegalArgumentException
+	 *             if the initial capacity is negative or the load factor is non
+	 *             positive
+	 */
 	@SuppressWarnings("unchecked")
 	public HashTable(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) {
@@ -87,21 +90,23 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		this.table = new Entry[initialCapacity];
 	}
 
-    /**
-     * Constructs an empty <tt>HashTable</tt> with the specified initial
-     * capacity and the default load factor (0.75).
-     *
-     * @param  initialCapacity the initial capacity.
-     * @throws IllegalArgumentException if the initial capacity is negative.
-     */
+	/**
+	 * Constructs an empty <tt>HashTable</tt> with the specified initial
+	 * capacity and the default load factor (0.75).
+	 * 
+	 * @param initialCapacity
+	 *            the initial capacity.
+	 * @throws IllegalArgumentException
+	 *             if the initial capacity is negative.
+	 */
 	public HashTable(int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
-    /**
-     * Constructs an empty <tt>HashTable</tt> with the default initial capacity
-     * (16) and the default load factor (0.75).
-     */
+	/**
+	 * Constructs an empty <tt>HashTable</tt> with the default initial capacity
+	 * (16) and the default load factor (0.75).
+	 */
 	@SuppressWarnings("unchecked")
 	public HashTable() {
 		this.size = 0;
@@ -119,10 +124,10 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	}
 
 	/**
-	 * This method fills a associated key and value in the table.
-	 * In case of collisions will calculate a new hash with 
-	 * double hashing. If the table contains the key the method 
-	 * chains the value at the same entry in the table.
+	 * This method fills a associated key and value in the table. In case of
+	 * collisions will calculate a new hash with double hashing. If the table
+	 * contains the key the method chains the value at the same entry in the
+	 * table.
 	 * 
 	 * @param key
 	 * @param value
@@ -160,9 +165,9 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	}
 
 	/**
-	 * This method add the value at the table index as the
-	 * separate chaining procedure.
-	 *
+	 * This method add the value at the table index as the separate chaining
+	 * procedure.
+	 * 
 	 * @param key
 	 * @param value
 	 * @param tableIdx
@@ -173,15 +178,14 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	}
 
 	/**
-	 * This method calculates the hash key for the 
-	 * Diese Methode berechnet den Index fuer einen Schluessel in der
-	 * Datenstruktur der HashTable.
+	 * This method calculates the hash key as the index for the table.
 	 * 
-	 * (key % table.length) + 1 + (key % (table.length -2)) % table.length
+	 * The calculation is realized with the following formula: |(key %
+	 * table.length) + (1 + (key % (table.length -2))) % table.length|
 	 * 
 	 * @param key
 	 * @param collCount
-	 * @return
+	 * @return the hash key for the table.
 	 */
 	private int hash(K key, int collCount) {
 		System.out.println("Kollision: " + collCount);
@@ -210,6 +214,10 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	}
 
 	/**
+	 * This method hashes all the existing entries in the table with the resized
+	 * new length. The method internalPut refills the new table in the
+	 * <tt>HashTable<tt>.
+	 * 
 	 * @param oldTable
 	 */
 	private void rehash(Entry<K, V>[] oldTable) {
