@@ -1,5 +1,7 @@
 package a10;
 
+import java.util.List;
+
 public interface IHashTable<K, V> {
 
 	/**
@@ -24,7 +26,7 @@ public interface IHashTable<K, V> {
 	 * @param key
 	 * @return Element vom Schluessel
 	 */
-	V[] get(K key);
+	List<V> get(K key);
 	
 	/**
 	 * Diese Methode prueft ob der Schluessel 
