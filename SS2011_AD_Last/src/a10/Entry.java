@@ -5,6 +5,7 @@ public class Entry<K ,V> {
 	K key;
 	V value;
 	Entry<K, V> next;
+	boolean isDeleted;
 	
 	/**
 	 * @param key
@@ -14,5 +15,6 @@ public class Entry<K ,V> {
 		this.key = key;
 		this.value = value;
 		this.next = next;
+		this.isDeleted = false;
 	}
 }

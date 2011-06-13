@@ -20,7 +20,7 @@ public class TestHashTable {
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
 		List<String> ips = new ArrayList<String>();
-		Scanner sc = new Scanner(new File("./src/a10/apache.log"));
+		Scanner sc = new Scanner(new File("./src/a10/apache.txt"));
 		
 		String[] nextLine = null;
 		String[] keyString = null;
@@ -62,7 +62,16 @@ public class TestHashTable {
 //		hTable.clear();
 		System.out.println(hTable.toString());
 		
-		new MainGUI(hTable, keys, ips).startGUI();
+		String s = hTable.remove(1947);
+		System.out.println("Removed: " + s);
+		System.out.println(hTable.toString());
+		
+		Object[] test = hTable.get(95251);
+		System.out.println(test.toString());
+		
+		
+		
+//		new MainGUI(hTable, keys, ips).startGUI();
 	}
 	
 }

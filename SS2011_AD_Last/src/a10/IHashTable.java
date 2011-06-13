@@ -24,7 +24,7 @@ public interface IHashTable<K extends Integer, V> {
 	 * @param key
 	 * @return Element vom Schluessel
 	 */
-	V get(K key);
+	V[] get(K key);
 	
 	/**
 	 * Diese Methode prueft ob der Schluessel 
