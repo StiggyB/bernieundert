@@ -9,7 +9,7 @@ public class TestAlgo {
 	 * 1 + 2 + ... + n
 	 * 
 	 * @param n
-	 * @return
+	 * 
 	 */
 	static int sumIter(int n) {
 		int res = 0;
@@ -37,7 +37,7 @@ public class TestAlgo {
 	 * Gauss-Summenformel iterative  
 	 * 
 	 * @param n
-	 * @return
+	 * 
 	 */
 	static int gaussSum(int n) {
 		int res = 0;

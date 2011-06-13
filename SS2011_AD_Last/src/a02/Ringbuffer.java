@@ -67,7 +67,7 @@ public class Ringbuffer<T> implements IQueue<T> {
 	}
 
 	/**
-	 * @return
+	 * 
 	 */
 	public boolean isFull() {
 		return tail == 0;

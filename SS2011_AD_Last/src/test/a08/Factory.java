@@ -30,7 +30,6 @@ public class Factory<T> {
      * 
      * @param clazz
      * @param capacity
-     * @return
      */
     @SuppressWarnings("unchecked")
 	public Node<T>[] create(Class<? extends Node<T>> clazz, int capacity) {

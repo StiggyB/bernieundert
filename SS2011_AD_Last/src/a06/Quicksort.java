@@ -126,7 +126,6 @@ public class Quicksort {
 	 * @param pivotNo
 	 * @param left
 	 * @param right
-	 * @return
 	 */
 	private static int selectPivot(int pivotNo, int left, int right) {
 		int pivot = 0;
@@ -143,7 +142,6 @@ public class Quicksort {
 	
 	/**
 	 * @param right
-	 * @return
 	 */
 	private static int selectPivotLast(int right) {
 		return a[right].key;
@@ -151,16 +149,14 @@ public class Quicksort {
 	
 	/**
 	 * @param right
-	 * @return
 	 */
 	private static int selectPivotRandom(int left, int right) {
 		return rnd.nextInt(right - left) + left;
 	}
-	
+
 	/**
-	 * @param off
-	 * @param len
-	 * @return
+	 * @param left
+	 * @param right
 	 */
 	private static int selectPivotMiddle(int left, int right) {
 		int median = 0;

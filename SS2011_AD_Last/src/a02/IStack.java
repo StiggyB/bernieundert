@@ -20,13 +20,13 @@ public interface IStack<T> {
 	
 	
 	/**
-	 * @return
+	 * 
 	 */
 	T top();
 	
 	
 	/**
-	 * @return
+	 * 
 	 */
 	boolean isEmpty();
 	
