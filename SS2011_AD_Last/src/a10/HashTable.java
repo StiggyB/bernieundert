@@ -121,14 +121,19 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 					table[hash] = entry;
 					size++;
 					return table[hash].value;
-				} else if (i == DEFAULT_COUNT_OF_HASHES) {
+				} else if (i == DEFAULT_COUNT_OF_HASHES-1) {
+					System.out.println(key + "MÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖP!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 					resize(2 * table.length);
+					return internalPut(key, value);
 				}
 			}
 		}
 		Entry<K, V> entry = new Entry<K, V>(key, value, null);
+//		System.out.println(entry);
 		table[hash] = entry;
 		size++;
+		System.out.println(this.toString());
+		System.out.println("####################################");
 		return table[hash].value;
 	}
 
@@ -151,7 +156,7 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	int hash(K key, int collCount) {
 		System.out.println("Kollision: " + collCount);
 		System.out.println(("Key: " + key.hashCode() + "Hash: " + key.hashCode() % table.length));
-		return Math.abs(((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 3)))
+		return Math.abs(((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 2)))
 				* (collCount * collCount))
 				% table.length);
 	}
@@ -161,7 +166,8 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	 * wachsen bzw. schrumpfen.
 	 */
 	void resize(int newCapacity) {
-		
+		System.out.println("RESIZE!*************************************");
+		System.out.println(this.toString());
 		Entry<K, V>[] oldTable = table;
 		@SuppressWarnings("unchecked")
 		Entry[] newTable = new Entry[newCapacity];

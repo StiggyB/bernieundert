@@ -41,7 +41,7 @@ public class TestHashTable {
 		 **/
 		for (int i = 0; i < values.size(); i++) {
 			hTable.put(ips.get(i), values.get(i));
-//			System.out.println("SizehTable.size());
+			System.out.println("Size: " + hTable.size());
 		}
 
 		// System.out.println(hTable.containsKey(3));

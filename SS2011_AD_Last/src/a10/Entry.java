@@ -17,4 +17,12 @@ public class Entry<K ,V> {
 		this.next = next;
 		this.isDeleted = false;
 	}
+
+	@Override
+	public String toString() {
+		return "Entry [key=" + key + ", value=" + value + ", next=" + next
+				+ ", isDeleted=" + isDeleted + "]";
+	}
+	
+	
 }
