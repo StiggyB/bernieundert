@@ -2,12 +2,12 @@ package a03;
 
 public class Main {
 
-	private static final int MAX = 100;
+//	private static final int MAX = 100;
 
 	public static void main(String[] args) {
 		SlowPrimzahl slow = new SlowPrimzahl();
 		FastPrimzahl fast = new FastPrimzahl();
-		EratosthenesPrimzahl eratosthenes = new EratosthenesPrimzahl();
+//		EratosthenesPrimzahl eratosthenes = new EratosthenesPrimzahl();
 
 		System.out.println("Problemgroesse:");
 		
@@ -40,6 +40,6 @@ public class Main {
 }
 
 /*
- * plot(c,d) ylabel('Anzahl der Operationen: T(N)') xlabel('Problemgröße: N')
+ * plot(c,d) ylabel('Anzahl der Operationen: T(N)') xlabel('Problemgrï¿½ï¿½e: N')
  * title('Einzelabfrage, ob N eine Primzahl ist') grid on
  */
