@@ -20,6 +20,6 @@ public class TestHashTableWithGUI extends AbstractTestHashTable{
 		ipsGUI.add("127.0.0.1");
 		ipsGUI.add("192.168.0.1");
 	
-		new ExplorerTree<String, String>(hTable, ipsGUI, ips).buildFrame();
+		new ExplorerTree<String, String>(hTable, ipsGUI).buildFrame();
 	}
 }

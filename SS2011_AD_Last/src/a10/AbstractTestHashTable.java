@@ -8,9 +8,15 @@ import java.util.Scanner;
 
 abstract class AbstractTestHashTable {
 
-	protected List<String> ipsGUI = new ArrayList<String>();
-	protected List<String> values = new ArrayList<String>();
-	protected List<String> ips = new ArrayList<String>();
+	protected List<String> ipsGUI;
+	protected List<String> values;
+	protected List<String> ips;
+
+	public AbstractTestHashTable() {
+		ipsGUI = new ArrayList<String>();
+		values = new ArrayList<String>();
+		ips = new ArrayList<String>();
+	}
 
 	public void readAndStoreDataFromLog() throws IOException {
 		Scanner sc = new Scanner(new File("./src/a10/apache.txt"));

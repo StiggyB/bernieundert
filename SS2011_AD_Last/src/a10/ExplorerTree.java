@@ -42,8 +42,7 @@ public class ExplorerTree<K, V> {
 	private HashTable<K, V> hashTable;
 	private List<String> ips;
 
-	public ExplorerTree(HashTable<K, V> hashTable, List<String> keys,
-			List<String> ips) {
+	public ExplorerTree(HashTable<K, V> hashTable, List<String> ips) {
 		this.hashTable = hashTable;
 		this.ips = ips;
 	}
@@ -56,10 +55,10 @@ public class ExplorerTree<K, V> {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Log-Entries:\n\n\n");
 		sb.append("Dies ist eine minimale Applikation, die die Values zu einem angeklickten Key anzeigen kann.\n");
-		sb.append("Die Keys sind dabei IP-Adresse und die Values Log-Einträge von einem Apache Webserver\n\n");
-		sb.append("Die IP-Adress-Liste und das HashTable-Objekt werden bei der Objekterstellung der GUI an dessen Konstruktor übergeben;\n");
-		sb.append("anschließed werden mittels der get()-Methode unserer hashTable unter Angabe der übergebenen IP_Adressen\n");
-		sb.append("die zugehörigen Log-Einträge (Values) wieder aus der HashTable geholt.");
+		sb.append("Die Keys sind dabei IP-Adresse und die Values Log-Eintraege von einem Apache Webserver\n\n");
+		sb.append("Die IP-Adress-Liste und das HashTable-Objekt werden bei der Objekterstellung der GUI an dessen Konstruktor uebergeben;\n");
+		sb.append("anschliessend werden mittels der get()-Methode unserer hashTable unter Angabe der uebergebenen IP_Adressen\n");
+		sb.append("die zugehoerigen Log-Eintraege (Values) wieder aus der HashTable geholt.");
 
 		fileInfoTextArea = new JTextArea(sb.toString());
 
