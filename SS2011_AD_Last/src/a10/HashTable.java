@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
+public class HashTable<K, V> implements IHashTable<K, V> {
 
 	/**
 	 * The default initial capacity - MUST be a power of two.
@@ -90,13 +90,22 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 		this.table = new Entry[DEFAULT_INITIAL_CAPACITY];
 	}
 
+	
+	
 	@Override
 	public V put(K key, V value) {
+		if(size++ >= threshold) {
+			resize(2 * table.length);
+		}
+		return internalPut(key, value);
+	}
+	
+	private V internalPut(K key, V value) {
 		int hash = hash(key, 0);
 		System.out.println(hash);
 		if (table[hash] != null && key.equals(table[hash].key)) {
 			addEntry(key, value, hash);
-			return null;
+			return table[hash].value;
 		}
 		if (!(table[hash] == null)) {
 			for (int i = 1; i < DEFAULT_COUNT_OF_HASHES; i++) {
@@ -104,12 +113,12 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 				System.out.println(hash);
 				if (table[hash] != null && key.equals(table[hash].key)) {
 					addEntry(key, value, hash);
-					return null;
+					return table[hash].value;
 				}
 				if (table[hash] == null) {
 					Entry<K, V> entry = new Entry<K, V>(key, value, null);
 					table[hash] = entry;
-					return null;
+					return table[hash].value;
 				} else if (i == DEFAULT_COUNT_OF_HASHES) {
 					resize(2 * table.length);
 				}
@@ -117,7 +126,7 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 		}
 		Entry<K, V> entry = new Entry<K, V>(key, value, null);
 		table[hash] = entry;
-		return null;
+		return table[hash].value;
 	}
 
 	void addEntry(K key, V value, int bucketIndex) {
@@ -137,7 +146,7 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 	 */
 	int hash(K key, int collCount) {
 		System.out.println("Kollision: " + collCount);
-		return ((key % table.length) + (1 + (key % (table.length - 3)))
+		return ((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 3)))
 				* (collCount * collCount))
 				% table.length;
 	}
@@ -147,7 +156,19 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 	 * wachsen bzw. schrumpfen.
 	 */
 	void resize(int newCapacity) {
-		// rehash();
+		
+		Entry<K, V>[] oldTable = table;
+		@SuppressWarnings("unchecked")
+		Entry<K, V>[] newTable = (Entry<K, V>[])new Object[newCapacity];
+		table = newTable;
+        threshold = (int)(newCapacity * loadFactor);
+        rehash(oldTable);
+	}
+	
+	void rehash(Entry<K, V>[] oldTable) {
+		for (int i = 0; i < oldTable.length; i++) {
+			internalPut(oldTable[i].key, oldTable[i].value);
+		}
 	}
 
 	@Override
@@ -270,13 +291,13 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 	 */
 	int hash(K key) {
 		int hash = 0;
-		hash = key % table.length;
+		hash = key.hashCode() % table.length;
 		if (key.equals(table[hash].key)) {
 			return hash;
 		}
 		if (!(table[hash] == null)) {
 			for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
-				hash = ((key % table.length) + (1 + (key % (table.length - 2))
+				hash = ((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 2))
 						* (i * i)));
 				if (key.equals(table[hash].key)) {
 					return hash;

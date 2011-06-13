@@ -1,6 +1,6 @@
 package a10;
 
-public interface IHashTable<K extends Integer, V> {
+public interface IHashTable<K, V> {
 
 	/**
 	 * Diese Methode fuegt ein neues Element in die HashTable ein.
