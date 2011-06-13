@@ -16,9 +16,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -35,34 +33,27 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 public class ExplorerTree<K, V> {
 	
 	JFrame frame = new JFrame();
 	private JTextArea fileInfoTextArea;
 	private JTree tree;
-	private HashTable<Integer, V> hashTable;
-	private List<Integer> keys;
+	private HashTable<K, V> hashTable;
 	private List<String> ips;
-	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
-	public ExplorerTree(HashTable<Integer, V> hashTable, List<Integer> keys, List<String> ips) {
-//		this.explorerIO = explorerIO;
+	public ExplorerTree(HashTable<K, V> hashTable, List<String> keys, List<String> ips) {
 		this.hashTable = hashTable;
-		this.keys = keys;
 		this.ips = ips;
 	}
 
 	public void buildFrame() throws IOException {
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setTitle("1337 FileLister (c) Bernie & Ert");
+		frame.setTitle("1337 IP HashTable Lister (c) Tugend & Laster");
 		frame.setLayout(new BorderLayout());
 
-		fileInfoTextArea = new JTextArea("Fileinfo:");
-//		frame.add(fileInfoTextArea);
-//		frame.add(fileInfoTextArea); //jetzt überflüssig wg. Zeile 64
+		fileInfoTextArea = new JTextArea("Logentries:");
 
 		JSplitPane splitPane = new JSplitPane();
 		JScrollPane scrollPane = new JScrollPane(buildExplorerTree());
@@ -72,13 +63,10 @@ public class ExplorerTree<K, V> {
 
 		frame.getContentPane().add(buildMenuBar(), BorderLayout.NORTH);
 		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
-//		frame.setSize(splitPane.getWidth(), splitPane.getHeight());
-//		frame.setSize(splitPane.getWidth(), splitPane.getHeight()); //überflüssig wg. Zeile 71
 
 		frame.setVisible(true);
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setMinimumSize(new Dimension(640, 480));
-		// frame.pack(); // macht nur wieder das maximieren kaputt
 	}
 	
 	private JTree buildExplorerTree() throws IOException {
@@ -90,7 +78,6 @@ public class ExplorerTree<K, V> {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(ips.get(i));
 			rootDirNode.add(node);
 		}
-//		addNodes(rootDirNode);
 
 		tree = new JTree(rootDirNode);
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -99,11 +86,8 @@ public class ExplorerTree<K, V> {
 				if (e.getNewLeadSelectionPath() != null) {
 					DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) e.getNewLeadSelectionPath().getLastPathComponent();
 					
-//					hashTable.get(Integer.valueOf((String)selectedNode.getUserObject()));
-					
-					String selectedIp = (String) selectedNode.getUserObject();
-//					File selectedFile = (File) selectedNode.getUserObject();
-//					fillTextAreaWithFileInfos(selectedFile);
+					@SuppressWarnings("unchecked")
+					K selectedIp = (K) selectedNode.getUserObject();
 					fillTextAreaWithFileInfos(selectedIp);
 				}
 			}
@@ -116,28 +100,13 @@ public class ExplorerTree<K, V> {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu data = new JMenu("Datei");
 		JMenu help = new JMenu("Hilfe");
-		final JMenuItem newDir = new JMenuItem("Verzeichnis wählen");
 		final JMenuItem closeApp = new JMenuItem("Programm beenden");
-		final JMenuItem aboutApp = new JMenuItem("Über 1337-FileLister");
+		final JMenuItem aboutApp = new JMenuItem("Über 1337-IP HashTable-Lister");
 
 		ActionListener menuListener = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-
-				if (newDir == event.getSource()) {
-//					try {
-//						File rootDir = explorerIO.loadDir();
-						File rootDir = null;
-						DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(rootDir);
-						addNodes(rootDirNode);
-						tree.setModel(new DefaultTreeModel(rootDirNode));
-//					} 
-//					catch (IOException e) {
-//						e.printStackTrace();
-//					}
-				}
-
 				if (closeApp == event.getSource()) {
 					System.exit(0);
 
@@ -150,12 +119,10 @@ public class ExplorerTree<K, V> {
 			}
 		};
 
-		newDir.addActionListener(menuListener);
 		closeApp.addActionListener(menuListener);
 		aboutApp.addActionListener(menuListener);
 		menuBar.add(data);
 		menuBar.add(help);
-		data.add(newDir);
 		data.add(closeApp);
 		help.add(aboutApp);
 
@@ -163,8 +130,8 @@ public class ExplorerTree<K, V> {
 	}
 
 	private void buildAboutFrame() {
-		JTextArea aboutTxt = new JTextArea("Work done by:\nJan-Tristan Rudat\nMartin Slowikowski\n\n(c)1337-2010 Bernie und Ert");
-		final JFrame aboutFrame = new JFrame("About 1337-FileLister");
+		JTextArea aboutTxt = new JTextArea("Work done by:\nTell Müller-Pettenpohl\nMartin Slowikowski\n\n(c)1337-2011 tugend & Laster");
+		final JFrame aboutFrame = new JFrame("About 1337-Ip HashTable-Lister");
 		JButton exitButton = new JButton("Bump me!!!11eins");
 		ActionListener exitListener = new ActionListener() {
 
@@ -186,27 +153,17 @@ public class ExplorerTree<K, V> {
 		aboutFrame.setVisible(true);
 	}
 
-	private void fillTextAreaWithFileInfos(String file) {
+	private void fillTextAreaWithFileInfos(K ip) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(file);
-//		b.append("Fileinfo:\n").append("- Name: ").append(file.getName())
-//				.append("\n").append("- Größe: ")
-////				.append(ExplorerUtils.byteCountToDisplaySize(file.length()))
-//				.append("\n").append("- Ausführbar: ")
-//				.append(file.canExecute() ? "ja" : "nein").append("\n")
-//				.append("- Schreibrechte: ")
-//				.append(file.canWrite() ? "ja" : "nein").append("\n")
-//				.append("- Zuletzt geändert: ")
-//				.append(sdf.format(file.lastModified()))
-//				.append("\n\n- vollständiger Dateipfad: ")
-//				.append(file.getAbsolutePath())
-//				.append("\n- zugehöriges Oberverzeichnis: ")
-//				.append(file.getParent());
+		List<V> values = hashTable.get(ip);
+		if (values != null) {
+			for (V v : values) {
+				sb.append(v + "\n");
+			}
+		}else {
+			sb.append("Hier gibt's keine Hash-Entries zu sehen, weil es keine gibt :)");
+		}
 
 		fileInfoTextArea.setText(sb.toString());
 	}
-
-	private void addNodes(DefaultMutableTreeNode parentNode) {
-	}
-
 }

@@ -5,11 +5,11 @@ import java.util.List;
 
 public class MainGUI<K, V> {
 
-	private HashTable<Integer, V> hashTable;
-	private List<Integer> keys;
+	private HashTable<K, V> hashTable;
+	private List<String> keys;
 	private List<String> ips;
 
-	public MainGUI(HashTable<Integer, V> hashTable, List<Integer> keys, List<String> ips) {
+	public MainGUI(HashTable<K, V> hashTable, List<String> keys, List<String> ips) {
 		this.hashTable = hashTable;
 		this.keys = keys;
 		this.ips = ips;
