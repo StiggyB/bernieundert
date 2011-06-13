@@ -14,6 +14,7 @@ public class MainApp {
 		
 		TestHashTableWithGUI testGui = new TestHashTableWithGUI();
 		testGui.startGUI();
+		
 	}
 	
 }
