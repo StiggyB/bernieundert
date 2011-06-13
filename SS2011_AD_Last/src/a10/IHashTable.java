@@ -2,6 +2,14 @@ package a10;
 
 import java.util.List;
 
+/**
+ * Translate this shit!
+ * 
+ * @author Tugend und Laster
+ *
+ * @param <K>
+ * @param <V>
+ */
 public interface IHashTable<K, V> {
 
 	/**
