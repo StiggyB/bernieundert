@@ -4,7 +4,7 @@ public interface IQueue<T> {
 
 	
 	/**
-	 * @return
+	 * 
 	 */
 	T front();
 	
@@ -22,13 +22,13 @@ public interface IQueue<T> {
 	
 	
 	/**
-	 * @return
+	 *
 	 */
 	boolean isEmpty();
 	
 	
 	/**
-	 * @return
+	 * 
 	 */
 	int size();
 }
