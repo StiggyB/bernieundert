@@ -3,12 +3,11 @@ package a10;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * JavaDoc this shit!
  * 
  * @author Tugend und Laster
- *
+ * 
  * @param <K>
  * @param <V>
  */
@@ -98,16 +97,14 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		this.table = new Entry[DEFAULT_INITIAL_CAPACITY];
 	}
 
-	
-	
 	@Override
 	public V put(K key, V value) {
-		if(size >= threshold) {
+		if (size >= threshold) {
 			resize(2 * table.length);
 		}
 		return internalPut(key, value);
 	}
-	
+
 	/**
 	 * @param key
 	 * @param value
@@ -131,7 +128,7 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 					table[hash] = entry;
 					size++;
 					return table[hash].value;
-				} else if (i == DEFAULT_COUNT_OF_HASHES-1) {
+				} else if (i == DEFAULT_COUNT_OF_HASHES - 1) {
 					resize(2 * table.length);
 					size++;
 					return internalPut(key, value);
@@ -157,7 +154,7 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	/**
 	 * Diese Methode berechnet den Index fuer einen Schluessel in der
 	 * Datenstruktur der HashTable.
-	 *
+	 * 
 	 * (key % table.length) + 1 + (key % (table.length -2)) % table.length
 	 * 
 	 * @param key
@@ -166,16 +163,18 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	 */
 	private int hash(K key, int collCount) {
 		System.out.println("Kollision: " + collCount);
-		System.out.println(("Key: " + key.hashCode() + "Hash: " + key.hashCode() % table.length));
-		return Math.abs(((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 2)))
-				* (collCount * collCount))
-				% table.length);
+		System.out.println(("Key: " + key.hashCode() + "Hash: " + key
+				.hashCode() % table.length));
+		return Math
+				.abs(((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 2)))
+						* (collCount * collCount))
+						% table.length);
 	}
 
 	/**
-	 * This Method increases or decreases the 
-	 * data structure depending on the load factor.
-	 *
+	 * This Method increases or decreases the data structure depending on the
+	 * load factor.
+	 * 
 	 * @param newCapacity
 	 */
 	@SuppressWarnings("unchecked")
@@ -184,10 +183,10 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		Entry<K, V>[] newTable = new Entry[newCapacity];
 		table = newTable;
 		size = 0;
-        threshold = (int)(newCapacity * loadFactor);
-        rehash(oldTable);
+		threshold = (int) (newCapacity * loadFactor);
+		rehash(oldTable);
 	}
-	
+
 	/**
 	 * @param oldTable
 	 */
@@ -224,10 +223,10 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 		int hash;
 		for (int i = 0; i < DEFAULT_COUNT_OF_HASHES; i++) {
 			hash = hash(key, i);
-			if(table[hash] != null && key.equals(table[hash].key)) {
+			if (table[hash] != null && key.equals(table[hash].key)) {
 				valueList.add(table[hash].value);
-				if(table[hash].next != null) {
-					for (Entry<K, V> e = table[hash]; e != null ; e = e.next)  {
+				if (table[hash].next != null) {
+					for (Entry<K, V> e = table[hash]; e != null; e = e.next) {
 						valueList.add(e.value);
 					}
 				}
@@ -240,8 +239,8 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	@Override
 	public boolean containsKey(K key) {
 		for (int i = 0; i < table.length; i++) {
-			//One if-statement is enough (no separate chaining).
-			if(table[i] != null) {
+			// One if-statement is enough (no separate chaining).
+			if (table[i] != null) {
 				if (key.equals(table[i].key)) {
 					return true;
 				}
@@ -253,7 +252,7 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	@Override
 	public boolean containsValue(V value) {
 		for (int i = 0; i < table.length; i++) {
-			//Iteration for every element with the same key.
+			// Iteration for every element with the same key.
 			for (Entry<K, V> entry = table[i]; entry != null; entry = entry.next) {
 				if (value.equals(entry.value)) {
 					return true;
