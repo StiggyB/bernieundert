@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * This class extends the abstract class "AbstractTestHashTable.java" for
  * testing the implementation with a GUI. The class ExplorerTree.java was
- * refactored from the PR2 course in WS2010.
+ * reused from the PR2 course in WS2010.
  * 
  * @author Tugend und Laster
  * @see IHashTable
