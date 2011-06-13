@@ -53,6 +53,7 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 	 * @param size
 	 * @param loadFactor
 	 */
+	@SuppressWarnings("unchecked")
 	public HashTable(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) {
 			throw new IllegalArgumentException("Illegal initial capacity: "
@@ -120,7 +121,6 @@ public class HashTable<K extends Integer, V> implements IHashTable<K, V> {
 	}
 
 	void addEntry(K key, V value, int bucketIndex) {
-		@SuppressWarnings("unchecked")
 		Entry<K, V> e = table[bucketIndex];
 		table[bucketIndex] = new Entry<K, V>(key, value, e);
 		if (size++ >= threshold) {
