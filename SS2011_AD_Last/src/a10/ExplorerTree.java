@@ -35,14 +35,15 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ExplorerTree<K, V> {
-	
+
 	JFrame frame = new JFrame();
 	private JTextArea fileInfoTextArea;
 	private JTree tree;
 	private HashTable<K, V> hashTable;
 	private List<String> ips;
 
-	public ExplorerTree(HashTable<K, V> hashTable, List<String> keys, List<String> ips) {
+	public ExplorerTree(HashTable<K, V> hashTable, List<String> keys,
+			List<String> ips) {
 		this.hashTable = hashTable;
 		this.ips = ips;
 	}
@@ -52,8 +53,15 @@ public class ExplorerTree<K, V> {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("1337 IP HashTable Lister (c) Tugend & Laster");
 		frame.setLayout(new BorderLayout());
+		StringBuilder sb = new StringBuilder();
+		sb.append("Log-Entries:\n\n\n");
+		sb.append("Dies ist eine minimale Applikation, die die Values zu einem angeklickten Key anzeigen kann.\n");
+		sb.append("Die Keys sind dabei IP-Adresse und die Values Log-Einträge von einem Apache Webserver\n\n");
+		sb.append("Die IP-Adress-Liste und das HashTable-Objekt werden bei der Objekterstellung der GUI an dessen Konstruktor übergeben;\n");
+		sb.append("anschließed werden mittels der get()-Methode unserer hashTable unter Angabe der übergebenen IP_Adressen\n");
+		sb.append("die zugehörigen Log-Einträge (Values) wieder aus der HashTable geholt.");
 
-		fileInfoTextArea = new JTextArea("Logentries:");
+		fileInfoTextArea = new JTextArea(sb.toString());
 
 		JSplitPane splitPane = new JSplitPane();
 		JScrollPane scrollPane = new JScrollPane(buildExplorerTree());
@@ -68,12 +76,12 @@ public class ExplorerTree<K, V> {
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setMinimumSize(new Dimension(640, 480));
 	}
-	
+
 	private JTree buildExplorerTree() throws IOException {
 		String rootDir = "IPs";
 
 		DefaultMutableTreeNode rootDirNode = new DefaultMutableTreeNode(rootDir);
-		
+
 		for (int i = 0; i < ips.size(); i++) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(ips.get(i));
 			rootDirNode.add(node);
@@ -84,8 +92,9 @@ public class ExplorerTree<K, V> {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 				if (e.getNewLeadSelectionPath() != null) {
-					DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) e.getNewLeadSelectionPath().getLastPathComponent();
-					
+					DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) e
+							.getNewLeadSelectionPath().getLastPathComponent();
+
 					@SuppressWarnings("unchecked")
 					K selectedIp = (K) selectedNode.getUserObject();
 					fillTextAreaWithFileInfos(selectedIp);
@@ -101,7 +110,8 @@ public class ExplorerTree<K, V> {
 		JMenu data = new JMenu("Datei");
 		JMenu help = new JMenu("Hilfe");
 		final JMenuItem closeApp = new JMenuItem("Programm beenden");
-		final JMenuItem aboutApp = new JMenuItem("Über 1337-IP HashTable-Lister");
+		final JMenuItem aboutApp = new JMenuItem(
+				"Über 1337-IP HashTable-Lister");
 
 		ActionListener menuListener = new ActionListener() {
 
@@ -130,7 +140,8 @@ public class ExplorerTree<K, V> {
 	}
 
 	private void buildAboutFrame() {
-		JTextArea aboutTxt = new JTextArea("Work done by:\nTell Müller-Pettenpohl\nMartin Slowikowski\n\n(c)1337-2011 tugend & Laster");
+		JTextArea aboutTxt = new JTextArea(
+				"Work done by:\nTell Müller-Pettenpohl\nMartin Slowikowski\n\n(c)1337-2011 Tugend & Laster");
 		final JFrame aboutFrame = new JFrame("About 1337-Ip HashTable-Lister");
 		JButton exitButton = new JButton("Bump me!!!11eins");
 		ActionListener exitListener = new ActionListener() {
@@ -146,9 +157,11 @@ public class ExplorerTree<K, V> {
 		aboutFrame.setSize(800, 300);
 		aboutFrame.setResizable(false);
 		aboutFrame.setLayout(new BorderLayout());
-		aboutFrame.getContentPane().add(new JLabel(new ImageIcon("1337.gif")), BorderLayout.WEST);
+		aboutFrame.getContentPane().add(new JLabel(new ImageIcon("1337.gif")),
+				BorderLayout.WEST);
 		aboutFrame.getContentPane().add(aboutTxt, BorderLayout.CENTER);
-		aboutFrame.getContentPane().add(new JLabel(new ImageIcon("bernieert.jpg")), BorderLayout.EAST);
+		aboutFrame.getContentPane().add(
+				new JLabel(new ImageIcon("bernieert.jpg")), BorderLayout.EAST);
 		aboutFrame.getContentPane().add(exitButton, BorderLayout.SOUTH);
 		aboutFrame.setVisible(true);
 	}
@@ -160,8 +173,9 @@ public class ExplorerTree<K, V> {
 			for (V v : values) {
 				sb.append(v + "\n");
 			}
-		}else {
-			sb.append("Hier gibt's keine Hash-Entries zu sehen, weil es keine gibt :)");
+		} else {
+			// Falls man IP-Einträges holen will, zu denen es keine Entries gibt
+			sb.append("Hier gibt's keine Hash-Entries zu sehen, weil es die IP nicht in der HashTable gibt! :)");
 		}
 
 		fileInfoTextArea.setText(sb.toString());
