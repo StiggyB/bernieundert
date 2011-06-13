@@ -1,5 +1,14 @@
 package a10;
 
+/**
+ * This class represents an entry in the HashTable implementation.
+ * 
+ * @param <K> the type of keys maintained by the table
+ * @param <V> the type of the values in the table
+ * 
+ * @author Tugend und Laster
+ * @see IHashTable
+ */
 public class Entry<K ,V> {
 
 	K key;

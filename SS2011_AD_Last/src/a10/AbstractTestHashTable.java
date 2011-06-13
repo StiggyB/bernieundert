@@ -6,6 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Because the method readAndStoreDataFromLog() is needed by both extending test
+ * classes, it was pulled up to an abstract class.
+ * 
+ * @author Tugend und Laster
+ * @see IHashTable
+ */
 abstract class AbstractTestHashTable {
 
 	protected List<String> ipsGUI;
