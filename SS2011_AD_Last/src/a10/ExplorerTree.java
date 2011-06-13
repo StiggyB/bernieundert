@@ -1,13 +1,26 @@
 package a10;
 
 /**
+ * Original code done in WS2010 PR2 course:
+ * 
+ * In dieser Klasse befinden sich die Methoden, die ein FileExplorer 
+ * Fenster öffnen. Der Frame setzt sich aus einer gesplitteten Oberfläche
+ * für einen Verzeichnisbaum auf der Linken und Verzeichnis/Dateiinfos
+ * auf der Rechten, sowie einem Menü zusammen.
  * 
  * @author Bernie und Ert
  * 
- *         In dieser Klasse befinden sich die Methoden, die ein FileExplorer 
- *         Fenster öffnen. Der Frame setzt sich aus einer gesplitteten Oberfläche
- *         für einen Verzeichnisbaum auf der Linken und Verzeichnis/Dateiinfos
- *         auf der Rechten, sowie einem Menü zusammen.
+ * Refactored in SS2011 AD course:
+ * 
+ * This class is used to create a simple IP-Browser. IPs are displayed on 
+ * the left side as the hashTable key values. By clicking an IP on the right 
+ * side the corresponding values to the clicked key are displayed.
+ *        
+ * @author Tugend und Laster
+ * @see IHashTable
+ * 
+ * @param <K> the type of keys maintained by the table
+ * @param <V> the type of the values in the table
  * 
  */
 
