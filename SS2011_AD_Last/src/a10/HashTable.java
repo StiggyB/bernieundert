@@ -274,9 +274,6 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 					return true;
 				}
 			}
-			if (value.equals(table[i].value)) {
-				return true;
-			}
 		}
 		return false;
 	}
