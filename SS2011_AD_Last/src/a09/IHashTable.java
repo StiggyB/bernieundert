@@ -1,70 +1,78 @@
 package a09;
 
+import java.util.Hashtable;
+import java.util.List;
+
 /**
- * Translate this shit!
+ * This interface provides elemental operations for a <tt>HashTable<tt>.
+ * 
+ * @param <K> the type of keys maintained by this table
+ * @param <V> the type of the values in the table
  * 
  * @author Tugend und Laster
- * 
- * @param <K>
- * @param <V>
+ * @see Hashtable
  */
 public interface IHashTable<K, V> {
 
 	/**
-	 * Diese Methode fuegt ein neues Element in die HashTable ein.
+	 * This method fills a new Element in the <tt>HashTable<tt>.
 	 * 
 	 * @param key
 	 * @param value
+	 * 
+	 * @return the filled value.
 	 */
 	V put(K key, V value);
 
 	/**
-	 * Diese Methode loescht ein Element aus der HashTable.
+	 * This method sets a delete-flag in the data structure.
 	 * 
 	 * @param key
+	 * 
+	 * @return the value with delete-flag
 	 */
 	V remove(K key);
 
 	/**
-	 * Diese Methode gibt ein Element zu einem bestimmten Schluessel zurueck.
+	 * This method returns a element with a specific key.
 	 * 
 	 * @param key
-	 * @return Element vom Schluessel
+	 * @return element from associated key
 	 */
-	V get(K key);
+	List<V> get(K key);
 
 	/**
-	 * Diese Methode prueft ob der Schluessel in der HashTable vorhanden ist.
+	 * This method searches the specific key in the <tt>HashTable<tt>.
 	 * 
 	 * @param key
-	 * @return true wenn Schluessel vorhanden
+	 * @return <tt>true<tt> if key in table, otherwise false
 	 */
 	boolean containsKey(K key);
 
 	/**
-	 * Diese Methode prueft ob das Element in der HashTable vorhanden ist.
+	 * This method searches the specific value in the <tt>HashTable<tt>.
 	 * 
-	 * @param vaule
-	 * @return true wenn Element vorhanden
+	 * @param value
+	 * @return <tt>true<tt> if value in table, otherwise false
 	 */
 	boolean containsValue(V value);
 
 	/**
-	 * Diese Methode leert die HashTable.
+	 * This method deletes all entries in the table.
 	 */
 	void clear();
 
 	/**
-	 * Diese Methode prueft ob die HashTable leer ist.
+	 * Returns <tt>true</tt> if this table contains no key-values.
 	 * 
-	 * @return true wenn HashTable leer ist
+	 * @return <tt>true</tt> if this table contains no key-values
 	 */
 	boolean isEmpty();
 
 	/**
-	 * Diese Mathode gibt die Groesse der HashTable zurueck.
+	 * Returns the number of key-values in this table.
 	 * 
-	 * @return groesse der HashTable
+	 * @return the number of key-values in this table
 	 */
 	int size();
 
