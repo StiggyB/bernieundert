@@ -106,7 +106,7 @@ public class TestHashTableWithJUnit extends AbstractTestHashTable {
 		// Wir geben auf der Konsole das Arrays aus, man kann bei den
 		// geloeschten Eintraegen
 		// dann das "isDeleted: true" erkennen.
-
+		
 		for (int i = 0; i < values.size(); i++) {
 			hTable.put(ips.get(i), values.get(i));
 		}
@@ -114,7 +114,10 @@ public class TestHashTableWithJUnit extends AbstractTestHashTable {
 		for (int j = 0; j < values.size(); j += 3) {
 			hTable.remove(ips.get(j));
 		}
-
+		
+		System.out.println("Diese Ausgabe zeigt die Funktion von remove:\n");
+		System.out.println("============================================");
 		System.out.println(hTable.toString());
+		System.out.println("============================================");
 	}
 }

@@ -188,9 +188,6 @@ public class HashTable<K, V> implements IHashTable<K, V> {
 	 * @return the hash key for the table.
 	 */
 	private int hash(K key, int collCount) {
-		System.out.println("Kollision: " + collCount);
-		System.out.println(("Key: " + key.hashCode() + "Hash: " + key
-				.hashCode() % table.length));
 		return Math
 				.abs(((key.hashCode() % table.length) + (1 + (key.hashCode() % (table.length - 2)))
 						* (collCount * collCount))
