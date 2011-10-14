@@ -19,23 +19,19 @@ import client.ClientData;
 public class ChatServerImpl extends UnicastRemoteObject implements MessageServerIF {
 	
 	private static final long serialVersionUID = -4917373673314532190L;
-    private int nom;
-
 	public static final int PORT = Registry.REGISTRY_PORT;
-	private static final long REMEM_TIME = 5000;
+	private static final long MAX_REMEM_TIME = 10000;
     
-//	private HashMap<String, ArrayDeque<Message>> clientList;
-//	private ArrayList<ClientData> clientDataList;
-	private Map<String, ClientData> clientDataMap;
-	private Queue<Message> msgs = new ArrayDeque<Message>();
 	private static AtomicInteger idCnt = new AtomicInteger(0);
 	
+	private Map<String, ClientData> clientDataMap;
+	private Queue<Message> msgs;
+	private int nom;
+	
 	public ChatServerImpl(int nom) throws RemoteException {
-        this.nom = nom;
         this.clientDataMap = new HashMap<String, ClientData>();
-        msgs = new ArrayDeque<Message>();
-//        clientDataList = new ArrayList<ClientData>();
-//        clientList = new HashMap<String, ArrayDeque<Message>>();
+        this.msgs = new ArrayDeque<Message>();
+        this.nom = nom;
 	}
 	
 	public ChatServerImpl() throws RemoteException {
@@ -43,70 +39,54 @@ public class ChatServerImpl extends UnicastRemoteObject implements MessageServer
 	}
 
 	public void setUp() {
-			try {
-				LocateRegistry.createRegistry(PORT);
-				System.out.println("Created Registry: " + PORT);
-				InetAddress addr;
-				addr = InetAddress.getLocalHost();
-				Naming.rebind("//"+addr.getHostAddress()+":"+PORT+"/MessageServer", this);
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
+		try {
+			LocateRegistry.createRegistry(PORT);
+			System.out.println("Created Registry: " + PORT);
+			InetAddress addr;
+			addr = InetAddress.getLocalHost();
+			Naming.rebind("//"+addr.getHostAddress()+":"+PORT+"/MessageServer", this);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean existsClient(String clientID) {
+		return clientDataMap.isEmpty() ? false : clientDataMap.containsKey(clientID);
 	}
 	
 	@Override
 	public String getMessage(String clientID) throws RemoteException {
 		ClientData tmpClData;
-		if(clientDataMap.isEmpty()) {
-			tmpClData = new ClientData(clientID, REMEM_TIME);
+		checkClientTime();
+		if(!(existsClient(clientID))) {
+			System.out.println("cID:" + clientID);
+			tmpClData = new ClientData(clientID, MAX_REMEM_TIME);
 			clientDataMap.put(clientID, tmpClData);
 		}
 		if (msgs.isEmpty()) throw new RemoteException("no more messages");
 		tmpClData = clientDataMap.get(clientID);
-		//maybe no older timestamp
 		for (Message msgIt : msgs) {
 			if(!(tmpClData.getClientMsgs().contains(msgIt))) {
 				System.out.println("recv: " + msgIt.getMsg());
 				tmpClData.addMsg(msgIt);
+				tmpClData.setRememTime(System.currentTimeMillis());
 				return msgIt.toString();
 			}
 		}
-		return null;					
+		tmpClData.setRememTime(System.currentTimeMillis());
+		throw new RemoteException("no more messages");					
 	}
 	
-//	@Override
-//	public String getMessage(String clientID) throws RemoteException {
-//		if (clientDataList.isEmpty()) {					// wenn noch kein client da,
-//			ClientData tmp = new ClientData(clientID, REMEM_TIME);
-//			clientDataList.add(tmp);					// fuege neuen hinzu
-//		}
-//		
-//		if (msgs.isEmpty()) throw new RemoteException("no more messages");
-//		for (ClientData cd : clientDataList) {			// wenn in clientdata
-//			System.out.println(cd.toString());
-//			if (cd.getClientID().equals(clientID)) {	// die client id's �bereinstimmen
-//				for (Message msgIt : msgs) {			// dann iteriere �ber die clientspezifischen messages
-//					System.out.println(msgIt.toString());
-//					if (!(cd.containsMsg(msgIt.getMsg()))) {	// falls ein client die message schon gelesen hat
-//						System.out.println("recv: " + msgIt.getMsg());
-//						cd.addMsg(msgIt.getMsg());
-//						return msgIt.toString();
-//					}
-//				}
-//			}
-//		}
-//		return null;					// gib keine message aus
-//	}
-
 	@Override
 	public void dropMessage(String clientID, String msg) throws RemoteException {
 		ClientData tmpClData;
-		if(clientDataMap.isEmpty()) {
-			tmpClData = new ClientData(clientID, REMEM_TIME);
+		if(!(existsClient(clientID))) {
+			System.out.println("cID:" + clientID);
+			tmpClData = new ClientData(clientID, MAX_REMEM_TIME);
 			clientDataMap.put(clientID, tmpClData);
 		}
 		if (msgs.size() >= nom) {
@@ -114,39 +94,13 @@ public class ChatServerImpl extends UnicastRemoteObject implements MessageServer
 		}
 		System.out.println("MSG: " + msg);
 		msgs.add(new Message(idCnt.getAndIncrement(), clientID, msg));
-		//--
-		for (Message msgIt : msgs) {
-			System.out.println(msgIt.getMsg());
+	}
+	
+	public void checkClientTime() {
+		for (String client : clientDataMap.keySet()) {
+			if (Math.abs((clientDataMap.get(client).getRememTime() - System.currentTimeMillis())) > MAX_REMEM_TIME) {
+				clientDataMap.remove(client);
+			}
 		}
-		//--
 	}
-	
-//	@Override
-//	public void dropMessage(String clientID, String msg) throws RemoteException {
-//		if (clientDataList.isEmpty()) {						// wenn noch kein client da,
-//			ClientData tmp = new ClientData(clientID, REMEM_TIME);
-//			clientDataList.add(tmp);						// und adde den client zur liste
-//		} else {
-////			for (ClientData cd : clientDataList) {
-////				if (cd.getClientID().equals(clientID)) {
-////					cd.addMsg(msg);
-////				}
-////			}
-//		}
-//		if (msgs.size() >= nom) {
-//			msgs.poll();
-//		}
-//		System.out.println("MSG: " + msg);
-//		msgs.add(new Message(idCnt.getAndIncrement(), clientID, msg));
-//		//--
-//		for (Message msgIt : msgs) {
-//			System.out.println(msgIt.getMsg());
-//		}
-//		//--
-//	}
-	
-	public void setNom(int nom) {
-		this.nom = nom;
-	}
-
 }
