@@ -51,7 +51,6 @@ public class ChatClientImpl {
 	
     public String receiveMSG() {
     	try {
-//    		System.out.println(server.getMessage(ID));
 			return server.getMessage(ID);
 		} catch (RemoteException e) {
 			if (e.getCause().toString().equals(NO_MORE_MSG)) {
