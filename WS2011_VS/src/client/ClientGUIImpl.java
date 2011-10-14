@@ -38,6 +38,8 @@ public class ClientGUIImpl {
                 System.err.println("Message receive failed");
             } else if (!msg.equals(ChatClientImpl.NO_MORE_MSG)) {
                 gui.appendRcvAreaText(msg);
+            } else {
+            	System.err.println(msg);
             }
         }
     }
