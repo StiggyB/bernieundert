@@ -9,7 +9,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,14 +25,16 @@ public class ChatServerImpl extends UnicastRemoteObject implements MessageServer
 	private static final long REMEM_TIME = 5000;
     
 //	private HashMap<String, ArrayDeque<Message>> clientList;
-	private ArrayList<ClientData> clientDataList;
+//	private ArrayList<ClientData> clientDataList;
+	private Map<String, ClientData> clientDataMap;
 	private Queue<Message> msgs = new ArrayDeque<Message>();
 	private static AtomicInteger idCnt = new AtomicInteger(0);
 	
 	public ChatServerImpl(int nom) throws RemoteException {
         this.nom = nom;
+        this.clientDataMap = new HashMap<String, ClientData>();
         msgs = new ArrayDeque<Message>();
-        clientDataList = new ArrayList<ClientData>();
+//        clientDataList = new ArrayList<ClientData>();
 //        clientList = new HashMap<String, ArrayDeque<Message>>();
 	}
 	
@@ -57,40 +60,54 @@ public class ChatServerImpl extends UnicastRemoteObject implements MessageServer
 	
 	@Override
 	public String getMessage(String clientID) throws RemoteException {
-		if (clientDataList.isEmpty()) {					// wenn noch kein client da,
-			ClientData tmp = new ClientData(clientID, REMEM_TIME);
-			clientDataList.add(tmp);					// fuege neuen hinzu
+		ClientData tmpClData;
+		if(clientDataMap.isEmpty()) {
+			tmpClData = new ClientData(clientID, REMEM_TIME);
+			clientDataMap.put(clientID, tmpClData);
 		}
-		
 		if (msgs.isEmpty()) throw new RemoteException("no more messages");
-		for (ClientData cd : clientDataList) {			// wenn in clientdata
-			System.out.println(cd.toString());
-			if (cd.getClientID().equals(clientID)) {	// die client id's �bereinstimmen
-				for (Message msgIt : msgs) {			// dann iteriere �ber die clientspezifischen messages
-					System.out.println(msgIt.toString());
-					if (!(cd.containsMsg(msgIt.getMsg()))) {	// falls ein client die message schon gelesen hat
-						System.out.println("recv: " + msgIt.getMsg());
-						cd.addMsg(msgIt.getMsg());
-						return msgIt.getMsg();
-					}
-				}
+		tmpClData = clientDataMap.get(clientID);
+		//maybe no older timestamp
+		for (Message msgIt : msgs) {
+			if(!(tmpClData.getClientMsgs().contains(msgIt))) {
+				System.out.println("recv: " + msgIt.getMsg());
+				tmpClData.addMsg(msgIt);
+				return msgIt.toString();
 			}
 		}
-		return null;					// gib keine message aus
+		return null;					
 	}
 	
+//	@Override
+//	public String getMessage(String clientID) throws RemoteException {
+//		if (clientDataList.isEmpty()) {					// wenn noch kein client da,
+//			ClientData tmp = new ClientData(clientID, REMEM_TIME);
+//			clientDataList.add(tmp);					// fuege neuen hinzu
+//		}
+//		
+//		if (msgs.isEmpty()) throw new RemoteException("no more messages");
+//		for (ClientData cd : clientDataList) {			// wenn in clientdata
+//			System.out.println(cd.toString());
+//			if (cd.getClientID().equals(clientID)) {	// die client id's �bereinstimmen
+//				for (Message msgIt : msgs) {			// dann iteriere �ber die clientspezifischen messages
+//					System.out.println(msgIt.toString());
+//					if (!(cd.containsMsg(msgIt.getMsg()))) {	// falls ein client die message schon gelesen hat
+//						System.out.println("recv: " + msgIt.getMsg());
+//						cd.addMsg(msgIt.getMsg());
+//						return msgIt.toString();
+//					}
+//				}
+//			}
+//		}
+//		return null;					// gib keine message aus
+//	}
+
 	@Override
 	public void dropMessage(String clientID, String msg) throws RemoteException {
-		if (clientDataList.isEmpty()) {						// wenn noch kein client da,
-			ClientData tmp = new ClientData(clientID, REMEM_TIME);
-//			tmp.addMsg(msg);								// fuege zum tmpclient die msg hinzu
-			clientDataList.add(tmp);						// und adde den client zur liste
-		} else {
-			for (ClientData cd : clientDataList) {
-				if (cd.getClientID().equals(clientID)) {
-//					cd.addMsg(msg);
-				}
-			}
+		ClientData tmpClData;
+		if(clientDataMap.isEmpty()) {
+			tmpClData = new ClientData(clientID, REMEM_TIME);
+			clientDataMap.put(clientID, tmpClData);
 		}
 		if (msgs.size() >= nom) {
 			msgs.poll();
@@ -103,6 +120,30 @@ public class ChatServerImpl extends UnicastRemoteObject implements MessageServer
 		}
 		//--
 	}
+	
+//	@Override
+//	public void dropMessage(String clientID, String msg) throws RemoteException {
+//		if (clientDataList.isEmpty()) {						// wenn noch kein client da,
+//			ClientData tmp = new ClientData(clientID, REMEM_TIME);
+//			clientDataList.add(tmp);						// und adde den client zur liste
+//		} else {
+////			for (ClientData cd : clientDataList) {
+////				if (cd.getClientID().equals(clientID)) {
+////					cd.addMsg(msg);
+////				}
+////			}
+//		}
+//		if (msgs.size() >= nom) {
+//			msgs.poll();
+//		}
+//		System.out.println("MSG: " + msg);
+//		msgs.add(new Message(idCnt.getAndIncrement(), clientID, msg));
+//		//--
+//		for (Message msgIt : msgs) {
+//			System.out.println(msgIt.getMsg());
+//		}
+//		//--
+//	}
 	
 	public void setNom(int nom) {
 		this.nom = nom;

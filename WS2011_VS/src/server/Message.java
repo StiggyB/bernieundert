@@ -9,7 +9,8 @@ public class Message {
     private int id;
     private String clientId;
     private DateFormat dateFormat;
-    private  Calendar cal;
+    private Calendar cal;
+    private String timestamp;
     private String msg;
     
     public Message(int id, String clientId, String msg) {
@@ -18,9 +19,14 @@ public class Message {
         this.msg = msg;
         this.dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         this.cal = Calendar.getInstance();
+        this.timestamp = dateFormat.format(cal.getTime());
     }
     
-    public int getId() {
+    public String getTimestamp() {
+		return timestamp;
+	}
+
+	public int getId() {
         return id;
     }
     
@@ -31,10 +37,15 @@ public class Message {
     public String getMsg() {
         return msg;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+		return ((Message)o).id == (this.id) ? true : false;
+    }
 
 	@Override
 	public String toString() {
-		return id + " " + clientId + ":" + msg + " "+ dateFormat.format(cal.getTime());
+		return "<" + id + ">" + "<" + clientId + ">" + ": " + "<" + msg + ">" + "<" + timestamp + ">";
 	}
     
 }
