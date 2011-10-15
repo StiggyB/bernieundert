@@ -1,131 +1,104 @@
 package client;
-
-import java.awt.BorderLayout;
+/**
+ * Praktikum: VSP<br>
+ * Semester: WS11<br>
+ * Aufgaben-Nr.: 01<br>
+ * 
+ * Version: V0.1<br>
+ * Aenderungen:
+ * 
+ * Quellen: API, Swing, VS Folien
+ * 
+ * @author Mueller-Pettenpohl, Tell #1989982, Benjamin, Burchart #1863248<br>
+ */
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-
-import org.jdesktop.application.SingleFrameApplication;
-
+import javax.swing.border.EmptyBorder;
 
 /**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
-/**
- * 
+ * This class provides the GUI functionality and
+ * extends a JFrame with the <i>ChatClient</i> features.
+ *
  */
-public class ClientGUI extends SingleFrameApplication {
-    private JButton receiveBtn;
-    private JToggleButton receiveAllTimeTBtn;
-    private JLabel fifoInfoLabel;
-    private JTextField setFifoTxtFld;
-    private JButton setFifoBtn;
-	private JButton clearBtn;
-    private JButton receiveAllBtn;
-    private JTextArea receiveArea;
-    private JButton sendBtn;
-    private JTextField sendField;
-    private JPanel topPanel;
-    private JPanel contentPanel;
+public class ClientGUI extends JFrame {
 
-    @Override
-    protected void startup() {
-    	{
-	    	getMainFrame().setSize(616, 257);
-    	}
-        {
-            topPanel = new JPanel();
-            BorderLayout panelLayout = new BorderLayout();
-            topPanel.setLayout(panelLayout);
-            topPanel.setPreferredSize(new java.awt.Dimension(500, 300));
-            {
-            	contentPanel = new JPanel();
-            	topPanel.add(contentPanel, BorderLayout.CENTER);
-            	contentPanel.setLayout(null);
-            	contentPanel.setPreferredSize(new java.awt.Dimension(591, 223));
-            	{
-            		sendField = new JTextField();
-            		contentPanel.add(sendField);
-            		sendField.setName("SendField");
-            		sendField.setBounds(126, 182, 465, 31);
-            	}
-            	{
-            		sendBtn = new JButton("Send");
-            		contentPanel.add(sendBtn);
-            		sendBtn.setBounds(0, 186, 103, 23);
-            		sendBtn.setName("SendBtn");
-            	}
-            	{
-            		receiveArea = new JTextArea();
-//            		receiveArea.setLineWrap(true);
-//            		receiveArea.setWrapStyleWord(true);
-            		contentPanel.add(receiveArea);
-            		receiveArea.setBounds(126, 3, 465, 173);
-            		receiveArea.setName("receiveArea");
-            	}
-            	{
-            		receiveBtn = new JButton("Receive");
-            		contentPanel.add(receiveBtn);
-            		receiveBtn.setBounds(0, 10, 103, 23);
-            		receiveBtn.setName("receiveBtn");
-            	}
-            	{
-            		receiveAllBtn = new JButton("Receive All");
-            		contentPanel.add(receiveAllBtn);
-            		receiveAllBtn.setBounds(0, 33, 103, 23);
-            		receiveAllBtn.setName("receiveAllBtn");
-            	}
-            	{
-            		clearBtn = new JButton("Clear");
-            		contentPanel.add(clearBtn);
-            		clearBtn.setBounds(0, 77, 103, 23);
-            		clearBtn.setName("clearBtn");
-            	}
-            	{
-            		receiveAllTimeTBtn = new JToggleButton("Receive All Time");
-            		contentPanel.add(receiveAllTimeTBtn);
-            		receiveAllTimeTBtn.setBounds(0, 56, 103, 21);
-            		receiveAllTimeTBtn.setName("jToggleButton");
-            	}
-            	{
-            		setFifoBtn = new JButton("Submit");
-            		contentPanel.add(setFifoBtn);
-            		setFifoBtn.setBounds(0, 150, 103, 21);
-            		setFifoBtn.setName("setFifoBtn");
-            	}
-            	{
-            		setFifoTxtFld = new JTextField("enter en sek...");
-            		contentPanel.add(setFifoTxtFld);
-            		setFifoTxtFld.setBounds(0, 123, 103, 21);
-            		setFifoTxtFld.setName("setFifoTxtFld");
-            	}
-            	{
-            		fifoInfoLabel = new JLabel("Duration of retries");
-            		contentPanel.add(fifoInfoLabel);
-            		fifoInfoLabel.setBounds(0, 107, 119, 14);
-            		fifoInfoLabel.setName("fifoInfoLabel");
-            	}
-            }
-        }
-        show(topPanel);
-    }
+	private static final long serialVersionUID = -7873545878974332668L;
+	private JPanel contentPane;
+	private JTextField sendField;
+	private JTextField txtRetry;
+	private JButton btnReceive;
+	private JButton btnReceiveAll;
+	private JToggleButton tglbtnReceiveFrequently;
+	private JButton btnClear;
+	private JButton btnSend;
+	private JTextArea receiveArea;
+	private JScrollPane scrollPane;
 
+	/**
+	 * Create the frame.
+	 */
+	public ClientGUI() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 267);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		btnReceive = new JButton("Receive");
+		btnReceive.setBounds(20, 11, 89, 23);
+		contentPane.add(btnReceive);
+		
+		btnReceiveAll = new JButton("Receive all");
+		btnReceiveAll.setBounds(20, 34, 89, 23);
+		contentPane.add(btnReceiveAll);
+		
+		tglbtnReceiveFrequently = new JToggleButton("Receive frequently");
+		tglbtnReceiveFrequently.setBounds(10, 57, 123, 23);
+		contentPane.add(tglbtnReceiveFrequently);
+		
+		btnClear = new JButton("Clear");
+		btnClear.setBounds(20, 81, 89, 23);
+		contentPane.add(btnClear);
+		
+		btnSend = new JButton("Send");
+		btnSend.setBounds(20, 196, 89, 23);
+		contentPane.add(btnSend);
+		
+		sendField = new JTextField();
+		sendField.setBounds(136, 197, 288, 20);
+		contentPane.add(sendField);
+		sendField.setColumns(10);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(136, 10, 288, 183);
+		contentPane.add(scrollPane);
+		
+		receiveArea = new JTextArea();
+		scrollPane.setViewportView(receiveArea);
+		receiveArea.setEditable(false);
+		
+		JLabel lblDurationOfRetries = new JLabel("Duration of retries");
+		lblDurationOfRetries.setBounds(20, 121, 89, 14);
+		contentPane.add(lblDurationOfRetries);
+		
+		txtRetry = new JTextField();
+		txtRetry.setText("Enter in sec");
+		txtRetry.setBounds(20, 134, 86, 20);
+		contentPane.add(txtRetry);
+		txtRetry.setColumns(10);
+	}
+	
     public JToggleButton getjToggleButton() {
-		return receiveAllTimeTBtn;
+		return tglbtnReceiveFrequently;
 	}
     
     public String getSendFieldText() {
@@ -146,22 +119,22 @@ public class ClientGUI extends SingleFrameApplication {
     
     // Action Listeners
     public void setSendBtnListener(ActionListener l) {
-        sendBtn.addActionListener(l);
+        btnSend.addActionListener(l);
     }
     
     public void setRcvBtnListener(ActionListener l) {
-        receiveBtn.addActionListener(l);
+        btnReceive.addActionListener(l);
     }
     
     public void setRcvAllBtnListener(ActionListener l) {
-        receiveAllBtn.addActionListener(l);
+        btnReceiveAll.addActionListener(l);
     }
 
 	public void setClearBtnListener(ActionListener l) {
-		clearBtn.addActionListener(l);
+		btnClear.addActionListener(l);
 	}
 	
 	public void setjToggleButtonListener(ActionListener l) {
-		receiveAllTimeTBtn.addActionListener(l);
+		tglbtnReceiveFrequently.addActionListener(l);
 	}
 }

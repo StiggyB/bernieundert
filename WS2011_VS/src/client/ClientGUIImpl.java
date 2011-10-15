@@ -1,10 +1,25 @@
 package client;
-
+/**
+ * Praktikum: VSP<br>
+ * Semester: WS11<br>
+ * Aufgaben-Nr.: 01<br>
+ * 
+ * Version: V0.1<br>
+ * Aenderungen:
+ * 
+ * Quellen: API, Swing, VS Folien
+ * 
+ * @author Mueller-Pettenpohl, Tell #1989982, Benjamin, Burchart #1863248<br>
+ */
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
-// Client Controller
+/**
+ * This class implements the controller part of
+ * the MVC-Pattern and react to some actions
+ * with various listeners.
+ *
+ */
 public class ClientGUIImpl {
 
 	private ChatClientImpl client;
@@ -17,7 +32,6 @@ public class ClientGUIImpl {
     }
     
     public void start() {
-    	gui.startup();
         gui.setSendBtnListener(new SendBtnActionListener());
         gui.setRcvBtnListener(new RcvBtnActionListener());
         gui.setRcvAllBtnListener(new RcvAllBtnActionListener());
@@ -29,7 +43,6 @@ public class ClientGUIImpl {
         public void actionPerformed(ActionEvent e) {
             client.sendMSG(gui.getSendFieldText());
             gui.clearSendText();
-            System.out.println("send");
         }
     }
     
@@ -63,7 +76,6 @@ public class ClientGUIImpl {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (gui.getjToggleButton().getModel().isSelected()) {
-				System.out.println("reading!");
 				rec = new Receiver(client, gui);
 				Thread rcvThread = new Thread(rec, "ClientController");
 				rcvThread.start();
