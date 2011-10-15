@@ -19,7 +19,8 @@ import client.ClientData;
 public class ChatServerImpl extends UnicastRemoteObject implements
 		MessageServerIF {
 
-	// TODO Error reaction to implement!
+	//TODO Error reaction to implement - maybe more ;)!
+	//TODO Log-file creation to implement!
 
 	private static final long serialVersionUID = -4917373673314532190L;
 	public static final int PORT = Registry.REGISTRY_PORT;
@@ -29,7 +30,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements
 
 	private Map<String, ClientData> clientDataMap;
 	private Queue<Message> msgs;
-	private int nom;
+	private int nom;		//TODO Should be possbl to set over the gui
 
 	public ChatServerImpl(int nom) throws RemoteException {
 		this.clientDataMap = new HashMap<String, ClientData>();
@@ -58,11 +59,6 @@ public class ChatServerImpl extends UnicastRemoteObject implements
 		}
 	}
 
-	private boolean existsClient(String clientID) {
-		return clientDataMap.isEmpty() ? false : clientDataMap
-				.containsKey(clientID);
-	}
-
 	@Override
 	public String getMessage(String clientID) throws RemoteException {
 		ClientData tmpClData;
@@ -88,8 +84,12 @@ public class ChatServerImpl extends UnicastRemoteObject implements
 	}
 
     /**
-     * This method implements a <i>at most once</i>
-     * error handling
+     * This method implements the function to send
+     * messages to the server. That works over the
+     * java.rmi as a call method.
+     * The <i>at most once</i> error handling
+     * implements the java.rmi over the RemoteExceptions
+     * @see http://download.oracle.com/javase/1.4.2/docs/api/index.html 
      */
 	@Override
 	public void dropMessage(String clientID, String msg) throws RemoteException {
@@ -106,6 +106,11 @@ public class ChatServerImpl extends UnicastRemoteObject implements
 		msgs.add(new Message(idCnt.getAndIncrement(), clientID, msg));
 	}
 
+	private boolean existsClient(String clientID) {
+		return clientDataMap.isEmpty() ? false : clientDataMap
+				.containsKey(clientID);
+	}
+	
 	private void checkClientTime() {
 		if (!(clientDataMap.isEmpty())) {
 			for (String client : clientDataMap.keySet()) {
@@ -118,8 +123,4 @@ public class ChatServerImpl extends UnicastRemoteObject implements
 			}
 		}
 	}
-	
-//	private void checkMsgTimeout() {
-//		
-//	}
 }

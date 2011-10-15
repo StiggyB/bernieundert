@@ -7,7 +7,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.awt.event.ActionEvent;
 
 public class ClientGUI2 {
 
