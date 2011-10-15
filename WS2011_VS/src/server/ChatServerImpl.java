@@ -9,9 +9,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import client.ClientData;
@@ -20,7 +22,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements
 		MessageServerIF {
 
 	//TODO Error reaction to implement - maybe more ;)!
-	//TODO Log-file creation to implement!
+	//TODO Hashmap accesses synchronized impl
 
 	private static final long serialVersionUID = -4917373673314532190L;
 	public static final int PORT = Registry.REGISTRY_PORT;
@@ -33,7 +35,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements
 	private int nom;		//TODO Should be possbl to set over the gui
 
 	public ChatServerImpl(int nom) throws RemoteException {
-		this.clientDataMap = new HashMap<String, ClientData>();
+		this.clientDataMap = Collections.synchronizedMap(new HashMap<String, ClientData>());
 		this.msgs = new ArrayDeque<Message>();
 		this.nom = nom;
 	}
@@ -60,17 +62,21 @@ public class ChatServerImpl extends UnicastRemoteObject implements
 	}
 
 	@Override
-	public String getMessage(String clientID) throws RemoteException {
+	public synchronized String getMessage(String clientID) throws RemoteException {
 		ClientData tmpClData;
 		checkClientTime();
 		if (!(existsClient(clientID))) {
 			System.out.println("cID:" + clientID);
 			tmpClData = new ClientData(clientID, MAX_REMEM_TIME);
-			clientDataMap.put(clientID, tmpClData);
+			synchronized(clientDataMap) {
+				clientDataMap.put(clientID, tmpClData);
+			}
 		}
 		if (msgs.isEmpty())
 			throw new RemoteException("no more messages");
+		synchronized(clientDataMap) {
 		tmpClData = clientDataMap.get(clientID);
+		}
 		for (Message msgIt : msgs) {
 			if (!(tmpClData.getClientMsgs().contains(msgIt))) {
 				System.out.println("recv: " + msgIt.getMsg());
@@ -92,12 +98,14 @@ public class ChatServerImpl extends UnicastRemoteObject implements
      * @see http://download.oracle.com/javase/1.4.2/docs/api/index.html 
      */
 	@Override
-	public void dropMessage(String clientID, String msg) throws RemoteException {
+	public synchronized void dropMessage(String clientID, String msg) throws RemoteException {
 		ClientData tmpClData;
 		if (!(existsClient(clientID))) {
 			System.out.println("cID:" + clientID);
 			tmpClData = new ClientData(clientID, MAX_REMEM_TIME);
-			clientDataMap.put(clientID, tmpClData);
+			synchronized(clientDataMap) {
+				clientDataMap.put(clientID, tmpClData);
+			}
 		}
 		if (msgs.size() >= nom) {
 			msgs.poll();
@@ -106,17 +114,26 @@ public class ChatServerImpl extends UnicastRemoteObject implements
 		msgs.add(new Message(idCnt.getAndIncrement(), clientID, msg));
 	}
 
-	private boolean existsClient(String clientID) {
+	private synchronized boolean existsClient(String clientID) {
 		return clientDataMap.isEmpty() ? false : clientDataMap
 				.containsKey(clientID);
 	}
 	
-	private void checkClientTime() {
+	private synchronized void checkClientTime() {
 		if (!(clientDataMap.isEmpty())) {
-			for (String client : clientDataMap.keySet()) {
-				if (Math.abs((clientDataMap.get(client).getRememTime() - System
-						.currentTimeMillis())) > MAX_REMEM_TIME) {
-					clientDataMap.remove(client);
+			Set<String> s = null;
+			synchronized(clientDataMap) {
+			s = clientDataMap.keySet();
+			}
+			for (String client : s) {
+				long time = 0;
+				synchronized(clientDataMap) {
+					time = clientDataMap.get(client).getRememTime();
+				}
+				if (Math.abs((time - System.currentTimeMillis())) > MAX_REMEM_TIME) {
+					synchronized(clientDataMap) {
+						clientDataMap.remove(client);
+					}
 					client = null; // -- be sure that all references are deleted
 									// ->ConcurrentModificationException!
 				}

@@ -9,7 +9,7 @@ public class ClientGUIImpl {
 
 	private ChatClientImpl client;
 	private ClientGUI gui;
-	private Thread rcvThread;
+	private Receiver rec;
 	
     public ClientGUIImpl(ChatClientImpl client, ClientGUI gui) {
         this.client = client;
@@ -63,29 +63,12 @@ public class ClientGUIImpl {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (gui.getjToggleButton().getModel().isSelected()) {
-				long ms = System.currentTimeMillis();
-				rcvThread = new Thread(new Receiver(client, gui), "ClientController");
+				System.out.println("reading!");
+				rec = new Receiver(client, gui);
+				Thread rcvThread = new Thread(rec, "ClientController");
 				rcvThread.start();
-				ThreadController.printAllThreads(ThreadController.getAllThreads());
-				for (int i = 0; i < 1000; i++) { //While the for is running - gui is freeze
-					if (rcvThread.isInterrupted()) {
-						rcvThread.start();
-					} else if(isTimeout(ms)) {
-						ms = System.currentTimeMillis();
-						try {
-							rcvThread.join();	//does not work!
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						} 
-					}
-					if(gui.getjToggleButton().getModel().isEnabled()) {
-						try {
-							rcvThread.join();
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
+			}else{
+				rec.setStopped();
 			}
 		}
 	}
@@ -94,9 +77,5 @@ public class ClientGUIImpl {
         public void actionPerformed(ActionEvent e) {
         	gui.clearRcvText();
         }
-    }
-    
-    private boolean isTimeout(long ms) {
-    	return (Math.abs(ms - System.currentTimeMillis()) > 500) ? true : false;
     }
 }
