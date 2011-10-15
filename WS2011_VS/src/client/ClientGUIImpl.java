@@ -66,8 +66,12 @@ public class ClientGUIImpl {
 				String msg = client.receiveMSG();
 	            for (;;) {
 	            	setRcvMode(msg);
-	            	if(!(gui.getjToggleButton().getModel().isEnabled())) {
-	            		break;
+	            	if(gui.getjToggleButton().getModel().isEnabled()) {
+	            		try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 	        		}
 				}
 			}
