@@ -66,7 +66,7 @@ public class ClientGUI extends SingleFrameApplication {
             	{
             		sendBtn = new JButton("Send");
             		contentPanel.add(sendBtn);
-            		sendBtn.setBounds(0, 186, 99, 23);
+            		sendBtn.setBounds(0, 186, 103, 23);
             		sendBtn.setName("SendBtn");
             	}
             	{
@@ -102,19 +102,19 @@ public class ClientGUI extends SingleFrameApplication {
             		receiveAllTimeTBtn.setName("jToggleButton");
             	}
             	{
-            		setFifoBtn = new JButton("Accept");
+            		setFifoBtn = new JButton("Submit");
             		contentPanel.add(setFifoBtn);
             		setFifoBtn.setBounds(0, 150, 103, 21);
             		setFifoBtn.setName("setFifoBtn");
             	}
             	{
-            		setFifoTxtFld = new JTextField("enter length...");
+            		setFifoTxtFld = new JTextField("enter en sek...");
             		contentPanel.add(setFifoTxtFld);
             		setFifoTxtFld.setBounds(0, 123, 103, 21);
             		setFifoTxtFld.setName("setFifoTxtFld");
             	}
             	{
-            		fifoInfoLabel = new JLabel("Delivery-Queue length");
+            		fifoInfoLabel = new JLabel("Duration of retries");
             		contentPanel.add(fifoInfoLabel);
             		fifoInfoLabel.setBounds(0, 107, 119, 14);
             		fifoInfoLabel.setName("fifoInfoLabel");
