@@ -1,15 +1,15 @@
 package client;
 
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 // Client Controller
 public class ClientGUIImpl {
 
-	private static final int MAX_ITERATIONS = 5;
 	private ChatClientImpl client;
 	private ClientGUI gui;
+	private Thread rcvThread;
 	
     public ClientGUIImpl(ChatClientImpl client, ClientGUI gui) {
         this.client = client;
@@ -63,33 +63,40 @@ public class ClientGUIImpl {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (gui.getjToggleButton().getModel().isSelected()) {
-				String msg = client.receiveMSG();
-	            for (;;) {
-	            	setRcvMode(msg);
-	            	if(gui.getjToggleButton().getModel().isEnabled()) {
-	            		try {
-							Thread.sleep(1000);
+				long ms = System.currentTimeMillis();
+				rcvThread = new Thread(new Receiver(client, gui), "ClientController");
+				rcvThread.start();
+				ThreadController.printAllThreads(ThreadController.getAllThreads());
+				for (int i = 0; i < 1000; i++) { //While the for is running - gui is freeze
+					if (rcvThread.isInterrupted()) {
+						rcvThread.start();
+					} else if(isTimeout(ms)) {
+						ms = System.currentTimeMillis();
+						try {
+							rcvThread.join();	//does not work!
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						} 
+					}
+					if(gui.getjToggleButton().getModel().isEnabled()) {
+						try {
+							rcvThread.join();
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
-	        		}
+					}
 				}
 			}
 		}
 	}
-    
-	private void setRcvMode(String msg) {
-		for (int i = 0; i < MAX_ITERATIONS; i++) {
-			gui.appendRcvAreaText(msg);
-            msg = client.receiveMSG();
-		}
-		
-	}
-	
+   
     private class ClearBtnActionListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
         	gui.clearRcvText();
         }
     }
     
+    private boolean isTimeout(long ms) {
+    	return (Math.abs(ms - System.currentTimeMillis()) > 500) ? true : false;
+    }
 }
