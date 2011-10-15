@@ -157,7 +157,8 @@ public class ChatClientImpl {
     /**
      * This method calls over the java.rmi <i>dropMessage</i> 
 	 * on the <i>ChatServer</i> that receives a message from the server.
-	 * Additional it implements a <i>maybe</i> error handling.
+	 * Additional it implements a <i>maybe</i> error handling in case
+	 * of the receive frequently.
      * 
      * @return the message from the Delivery-Queue.
      */
