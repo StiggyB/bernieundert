@@ -1,5 +1,16 @@
 package client;
-
+/**
+ * Praktikum: VSP<br>
+ * Semester: WS11<br>
+ * Aufgaben-Nr.: 01<br>
+ * 
+ * Version: V0.1<br>
+ * Aenderungen:
+ * 
+ * Quellen: API, Swing, VS Folien
+ * 
+ * @author Mueller-Pettenpohl, Tell #1989982, Benjamin, Burchart #1863248<br>
+ */
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -10,22 +21,70 @@ import java.util.Queue;
 
 import server.MessageServerIF;
 
-//Client
+/**
+ * This class provides the implementation of the functionality 
+ * of the <i>ChatClient</i>. It contains the stubs of the methods
+ * <i>sendMessage</i> and <i>dropMessage</i> they realize the real
+ * functionality over the java.rmi.
+ *
+ */
 public class ChatClientImpl {
 
+	/**
+	 * SERVER_NAME is the name from the <i>ChatServer</i>.
+	 */
 	public static final String SERVER_NAME = "MessageServer";
+	
+	/**
+	 * NO_MORE_MSG is the exception to show that no more messages in the queue.
+	 */
 	public static final String NO_MORE_MSG = "java.rmi.RemoteException: no more messages";
-	public static final int MAX_RECONNECTIONS = 10; //--
-
+	
+	
+	/**
+	 * Unique ID from the <i>ChatClient</i>.
+	 */
 	public 	String ID;
-	private String server_ip;	// = "localhost";
-	private int server_port; 	//= Registry.REGISTRY_PORT;
+	
+	/**
+	 * IP address from the <i>ChatServer</i>.
+	 */
+	private String server_ip;
+	
+	/**
+	 * Port from the <i>ChatServer</i>.
+	 */
+	private int server_port;
+   
+	/**
+     * Reference on the RMI Interface <i>MessageServerIF</i>.
+     */
     private MessageServerIF server;
+    
+    /**
+     * List with messages they should be receive on the <i>ChatServer</i>.
+     */
     private Queue<String> msgList;
+    
+    /**
+     * Specific URL from the <i>ChatServer</i>.
+     */
     private String url;
+    
+    /**
+     * Time in seconds that give a limit of connection tries.
+     */
     private long s; 
 
 
+	/**
+	 * This Constructor initializes the class <i>ChatClientIml</i>
+	 * with the method <i>bind</i> that connect the Client with 
+	 * the Server.
+	 * 
+	 * @param ID - unique ID from the <i>ChatClient</i>.
+	 * @param s - Time in seconds that give a limit of connection tries.
+	 */
 	public ChatClientImpl(String ID, long s) {
 		this.server_ip = "localhost";
         this.server_port = Registry.REGISTRY_PORT;
@@ -59,6 +118,14 @@ public class ChatClientImpl {
 		this.server_ip = server_ip;
 	}
 	
+	/**
+	 * This method connects the <i>ChatClient</i> with <i>ChatServer</i>
+	 * and uses the class Naming to find the specific Server.
+	 * 
+	 * @throws MalformedURLException
+	 * @throws RemoteException
+	 * @throws NotBoundException
+	 */
 	private void bind() throws MalformedURLException, RemoteException, NotBoundException {
     	url = "//" + server_ip + ":" + server_port + "/" + SERVER_NAME;
 		server = (MessageServerIF) Naming.lookup(url);
@@ -66,10 +133,11 @@ public class ChatClientImpl {
 	}
 
 	/**
-	 * This method implements a <i>at least once</i>
-	 * error handling
+	 * This method calls over the java.rmi <i>dropMessage</i> 
+	 * on the <i>ChatServer</i> that sends a message to the server.
+	 * Additional it implements a <i>at least once</i> error handling.
 	 * 
-	 * @param msg
+	 * @param msg - message that is sending to <i>ChatServer</i>.
 	 */
 	public void sendMSG(String msg) {
 		msgList.add(msg);
@@ -87,10 +155,11 @@ public class ChatClientImpl {
 	}
 	
     /**
-     * This method implements a <i>maybe</i>
-     * error handling
+     * This method calls over the java.rmi <i>dropMessage</i> 
+	 * on the <i>ChatServer</i> that receives a message from the server.
+	 * Additional it implements a <i>maybe</i> error handling.
      * 
-     * @return
+     * @return the message from the Delivery-Queue.
      */
     public String receiveMSG() {
     	try {
@@ -106,6 +175,13 @@ public class ChatClientImpl {
 		return null;
     }
     
+    /**
+     * This method checks the connection <i>ChatServer</i> over a
+     * specific time <i>s</i>.
+     * 
+     * @param timestamp - actual system time  
+     * @return true - if the connection is established otherwise false.
+     */
     private boolean checkServerTimeout(long timestamp) {
     	boolean success = false;
     	while(Math.abs(timestamp - System.currentTimeMillis()) < s) {

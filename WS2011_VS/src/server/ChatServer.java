@@ -1,14 +1,31 @@
 package server;
-
+/**
+ * Praktikum: VSP<br>
+ * Semester: WS11<br>
+ * Aufgaben-Nr.: 01<br>
+ * 
+ * Version: V0.1<br>
+ * Aenderungen:
+ * 
+ * Quellen: API, Swing, VS Folien
+ * 
+ * @author Mueller-Pettenpohl, Tell #1989982, Benjamin, Burchart #1863248<br>
+ */
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.rmi.server.RemoteServer;
 
 
+/**
+ * This class starts the <i>ChatServer</i> and creates
+ * a log file of the RMI data transfer.
+ */
 public class ChatServer {
 
 	/**
+	 * This method starts the <i>ChatServer</i>.
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
