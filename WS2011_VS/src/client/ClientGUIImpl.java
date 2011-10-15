@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 // Client Controller
 public class ClientGUIImpl {
 
+	private static final int MAX_ITERATIONS = 5;
 	private ChatClientImpl client;
 	private ClientGUI gui;
 	
@@ -21,6 +22,7 @@ public class ClientGUIImpl {
         gui.setRcvBtnListener(new RcvBtnActionListener());
         gui.setRcvAllBtnListener(new RcvAllBtnActionListener());
         gui.setClearBtnListener(new ClearBtnActionListener());
+        gui.setjToggleButtonListener(new RcvAllTimeActionListener());
     }
     
     private class SendBtnActionListener implements ActionListener{
@@ -46,7 +48,7 @@ public class ClientGUIImpl {
     
     private class RcvAllBtnActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            String msg = client.receiveMSG();
+        	String msg = client.receiveMSG();
             while (msg != null && !msg.equals(ChatClientImpl.NO_MORE_MSG)) {
                 gui.appendRcvAreaText(msg);
                 msg = client.receiveMSG();
@@ -57,6 +59,29 @@ public class ClientGUIImpl {
         }
     }
     
+	private class RcvAllTimeActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (gui.getjToggleButton().getModel().isSelected()) {
+				String msg = client.receiveMSG();
+	            for (;;) {
+	            	setRcvMode(msg);
+	            	if(!(gui.getjToggleButton().getModel().isEnabled())) {
+	            		break;
+	        		}
+				}
+			}
+		}
+	}
+    
+	private void setRcvMode(String msg) {
+		for (int i = 0; i < MAX_ITERATIONS; i++) {
+			gui.appendRcvAreaText(msg);
+            msg = client.receiveMSG();
+		}
+		
+	}
+	
     private class ClearBtnActionListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
         	gui.clearRcvText();
