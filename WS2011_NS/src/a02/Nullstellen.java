@@ -7,6 +7,10 @@ class Function1 implements Function {
 		return (Math.pow(x, 5) + 3 * Math.pow(x, 4) - 5 * Math.pow(x, 3) - 15
 				* Math.pow(x, 2) + 4 * x + 12);
 	}
+	
+	public String toString(){
+		return "x⁵ + 3x⁴ - 5x³ - 15x² + 4x + 12";
+	}
 }
 
 class Function2 implements Function {
@@ -14,6 +18,9 @@ class Function2 implements Function {
 		return (Math.sin(2*x) * Math.cos(x/2.));
 	}
 	
+	public String toString(){
+		return "sin(2x) * cos(x/2)\t";
+	}	
 }
 
 class Function3 implements Function {
@@ -21,6 +28,9 @@ class Function3 implements Function {
 		return (((1/3) * Math.pow(x, 2)) - 2 * x + 1.5);
 	}
 	
+	public String toString(){
+		return "1/3x² - 2x + 1.5\t";
+	}	
 }
 
 class Function4 implements Function {
@@ -28,6 +38,9 @@ class Function4 implements Function {
 		return (-0.3 * Math.pow(x, 2) + 0.5);
 	}
 	
+	public String toString(){
+		return "-0.3x² + 0.5\t\t";
+	}	
 }
 
 public class Nullstellen {
@@ -43,13 +56,19 @@ public class Nullstellen {
 		f[3] = new Function4();
 		
 		String funcs[][] = new String[4][2];
-		funcs[0][0] = "x^5 + 3x^4 - 5x^3 - 15x^2 + 4x +12";
+		funcs[0][0] = f[0].toString();
 		funcs[0][1] = "[-3;1.5]";
+		funcs[1][0] = f[1].toString();
+		funcs[1][1] = "[-3;1.5]";
+		funcs[2][0] = f[2].toString();
+		funcs[2][1] = "[-3;1.5]";
+		funcs[3][0] = f[3].toString();
+		funcs[3][1] = "[-3;1.5]";
 		
 		DecimalFormat df = new DecimalFormat("#0.0000000000");
 		//TODO FINISH IT!
 		System.out.println("Bisektion:\n");
-		System.out.print("Funktion\t\t\t\t\tIntervall\tNullstelle\t\tIterationen:\n");
+		System.out.print("Funktion\t\t\t\tIntervall\tNullstelle\t\tIterationen:\n");
 		for (int i = 0; i < f.length; i++) {
 			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(bisektion(3.0, 3.5, 0.0000000001, f[i])));
 		}
