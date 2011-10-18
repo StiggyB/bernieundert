@@ -101,11 +101,11 @@ public class SolutionProcedure {
 		return xn3;
 	}
 	
-    public static double fixpoint(double a, double b, Function f) {
+    public static double fixpoint(double a, double b, Function func) {
         double x = a;
         
-        for (int i = 0; Math.abs(f.f(x)) > calcEpsilon() * 2 && i < MAX_INTERV; i++) {
-            x = f.f(x) + x;
+        for (int i = 0; Math.abs(func.f(x)) > calcEpsilon() * 2 && i < MAX_INTERV; i++) {
+            x = func.f(x) + x;
             iterations++;
         }
         return x;
