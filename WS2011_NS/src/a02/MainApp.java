@@ -18,14 +18,14 @@ public class MainApp {
 		borders[0][0] = 0.5;
 		borders[0][1] = 1.5;
 		funcs[1] = f[1].toString();
-		borders[1][0] = (2*Math.PI + 1.0/4.0 * Math.PI) ;
+		borders[1][0] = (2*Math.PI + 1.0/4.0 * Math.PI);
 		borders[1][1] = (2*Math.PI - 1.0/4.0 * Math.PI);
 		funcs[2] = f[2].toString();
 		borders[2][0] = 0.2;
 		borders[2][1] = 1.5;
 		funcs[3] = f[3].toString();
-		borders[3][0] = 1.0;
-		borders[3][1] = 1.7;
+		borders[3][0] = (borders[1][0] - 1.0/2.0 * Math.PI);
+		borders[3][1] = (borders[1][1] - 1.0/2.0 * Math.PI);
 		
 		DecimalFormat df = new DecimalFormat("#0.0000000000");
 		DecimalFormat dfinter = new DecimalFormat("#0.00");
