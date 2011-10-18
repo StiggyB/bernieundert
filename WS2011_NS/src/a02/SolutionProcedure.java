@@ -61,7 +61,7 @@ public class SolutionProcedure {
 		double fValue = 1;
 		double mid = 0;
 		
-		for (int i = 0; Math.abs(a - b) > calcEpsilon() * 2 && i < MAX_INTERV; i++) {
+		for (int i = 0; Math.abs(b - a) > calcEpsilon() * 2 && i < MAX_INTERV; i++) {
 			mid = (a + b) / 2.0;
 			fValue = func.f(mid) * func.f(a);
 			if (fValue <= 0) {
@@ -77,7 +77,7 @@ public class SolutionProcedure {
 	public static double regulafalsi(double a, double b, Function func) {
 		double x = 0;
 		
-		for (int i = 0; Math.abs(a - b) >= calcEpsilon() && i < MAX_INTERV; i++) {
+		for (int i = 0; Math.abs(b - a) >= calcEpsilon() * 2 && i < MAX_INTERV; i++) {
 			x = a - ((b - a) * func.f(a)) / (func.f(b) - func.f(a));
 			if (func.f(x) < 0) {
 				a = x;
@@ -92,7 +92,7 @@ public class SolutionProcedure {
 	public static double secant(double xn2, double xn1, Function func) {
 		double xn3 = 0;
 		
-		for (int i = 0; Math.abs(xn1 - xn2) >= calcEpsilon() &&  i < MAX_INTERV; i++) {
+		for (int i = 0; Math.abs(xn1 - xn2) >= calcEpsilon() * 2 &&  i < MAX_INTERV; i++) {
 			xn3 = xn1 - ((xn1 - xn2) / (func.f(xn1) - func.f(xn2))) * func.f(xn1);
 			xn2 = xn1;
 			xn1 = xn3;
@@ -104,7 +104,7 @@ public class SolutionProcedure {
     public static double fixpoint(double a, double b, Function f) {
         double x = a;
         
-        for (int i = 0; Math.abs(f.f(x)) > 2 * calcEpsilon() && i < MAX_INTERV; i++) {
+        for (int i = 0; Math.abs(f.f(x)) > calcEpsilon() * 2 && i < MAX_INTERV; i++) {
             x = f.f(x) + x;
             iterations++;
         }
