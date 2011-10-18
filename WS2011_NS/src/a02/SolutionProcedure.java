@@ -61,7 +61,7 @@ public class SolutionProcedure {
 		double fValue = 1;
 		double mid = 0;
 		
-		while (Math.abs(a - b) >= calcEpsilon()) {
+		for (int i = 0; Math.abs(a - b) >= calcEpsilon() && i < MAX_INTERV; i++) {
 			mid = (a + b) / 2.0;
 			fValue = func.f(mid) * func.f(a);
 			if (fValue <= 0) {
