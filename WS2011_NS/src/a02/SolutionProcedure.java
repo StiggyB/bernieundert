@@ -10,7 +10,7 @@ class Function1 implements Function {
 	
 	@Override
 	public String toString(){
-		return "xâ�µ + 3xâ�´ - 5xÂ³ - 15xÂ² + 4x + 12";
+		return "x^5 + 3x^4 - 5x^3 - 15x^2 + 4x + 12";
 	}
 }
 
@@ -22,7 +22,7 @@ class Function2 implements Function {
 	
 	@Override
 	public String toString(){
-		return "sin(2x) * cos(x/2)\t";
+		return "sin(2x) * cos(x/2)\t\t";
 	}	
 }
 
@@ -34,7 +34,7 @@ class Function3 implements Function {
 	
 	@Override
 	public String toString(){
-		return "1/3xÂ² - 2x + 1.5\t";
+		return "1/3x^2 - 2x + 1.5\t\t";
 	}	
 }
 
@@ -46,7 +46,7 @@ class Function4 implements Function {
 	
 	@Override
 	public String toString(){
-		return "-0.3xÂ² + 0.5\t\t";
+		return "-0.3x + 0.5\t\t\t";
 	}	
 }
 
