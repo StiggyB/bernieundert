@@ -103,9 +103,8 @@ public class SolutionProcedure {
 	
     public static double fixpoint(double a, double b, Function f) {
         double x = a;
-        double eps = calcEpsilon();
         
-        for (int i = 0; Math.abs(f.f(x)) > 2 * eps && i < MAX_INTERV; i++) {
+        for (int i = 0; Math.abs(f.f(x)) > 2 * calcEpsilon() && i < MAX_INTERV; i++) {
             x = f.f(x) + x;
             iterations++;
         }
