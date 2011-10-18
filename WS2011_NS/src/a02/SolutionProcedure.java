@@ -8,7 +8,7 @@ class Function1 implements Function {
 	}
 	
 	public String toString(){
-		return "x⁵ + 3x⁴ - 5x³ - 15x² + 4x + 12";
+		return "xâ�µ + 3xâ�´ - 5xÂ³ - 15xÂ² + 4x + 12";
 	}
 }
 
@@ -28,7 +28,7 @@ class Function3 implements Function {
 	}
 	
 	public String toString(){
-		return "1/3x² - 2x + 1.5\t";
+		return "1/3xÂ² - 2x + 1.5\t";
 	}	
 }
 
@@ -38,13 +38,13 @@ class Function4 implements Function {
 	}
 	
 	public String toString(){
-		return "-0.3x² + 0.5\t\t";
+		return "-0.3xÂ² + 0.5\t\t";
 	}	
 }
 
 public class SolutionProcedure {
 
-	public final static int MAX_INTERV = 1000;
+	public final static int MAX_INTERV = 10;
 	
 	public static int iterations = 0;
 	
