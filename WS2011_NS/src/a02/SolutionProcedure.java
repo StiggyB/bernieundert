@@ -46,10 +46,13 @@ public class SolutionProcedure {
 
 	public final static int MAX_INTERV = 1000;
 	
+	public static int iterations = 0;
+	
 
 	public static double bisektion(double a, double b, double eps, Function func) {
 		double fValue = 1;
 		double mid = 0;
+		
 		while (Math.abs(a - b) >= eps) {
 			mid = (a + b) / 2.0;
 			fValue = func.f(mid) * func.f(a);
@@ -64,6 +67,7 @@ public class SolutionProcedure {
 
 	public static double regulafalsi(double a, double b, double eps, Function func) {
 		double x = 0;
+		
 		for (int i = 0; Math.abs(a - b) >= eps && MAX_INTERV > i; i++) {
 			x = a - ((b - a) * func.f(a)) / (func.f(b) - func.f(a));
 			if (func.f(x) < 0) {
@@ -77,6 +81,7 @@ public class SolutionProcedure {
 	
 	public static double sekanten(double xn2, double xn1, double eps, Function func) {
 		double xn3 = 0;
+		
 		while (Math.abs(xn1 - xn2) >= eps) {
 			xn3 = xn1 - ((xn1 - xn2) / (func.f(xn1) - func.f(xn2))) * func.f(xn1);
 			xn2 = xn1;
@@ -85,19 +90,14 @@ public class SolutionProcedure {
 		return xn3;
 	}
 	
-    public double fixpoint(double a, double b, int iterationen, Function f) {
-        
+    public static double fixpoint(double a, double b, int iterationen, Function f) {
         double x = a;
         double eps = calcEpsilon();
-        int i = 0;
         
-        while(Math.abs(f.f(x)) > 2 * eps && i < iterationen) {
-            x = f.f(x)+x;
-            i++;
+        for (Math.abs(f.f(x)) > 2 * eps && i < iterationen) {
+            x = f.f(x) + x;
+            iterations++;
         }
-        
-//        this.iterations = i;
-        
         return x;
     }
     
@@ -109,9 +109,7 @@ public class SolutionProcedure {
     		eps = val;
     		val = val / 2;
     	}
-    	
     	return eps;
     }
-	
 	
 }
