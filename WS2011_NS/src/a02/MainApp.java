@@ -27,8 +27,8 @@ public class MainApp {
 		System.out.println("Bisektion:\n");
 		System.out.print("Funktion\t\t\t\tIntervall\tNullstelle\t\tIterationen:\n");
 		for (int i = 0; i < f.length; i++) {
-			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.bisektion(3.0, 3.5, f[i])));
-			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.sekanten(3.0, 3.5, f[i])));
+			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.bisection(3.0, 3.5, f[i])));
+			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.secant(3.0, 3.5, f[i])));
 			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.regulafalsi(3.0, 3.5, f[i])));
 			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.fixpoint(1.5, 2.5, f[i])));
 		}
