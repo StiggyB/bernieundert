@@ -49,52 +49,55 @@ public class SolutionProcedure {
 	public static int iterations = 0;
 	
 
-	public static double bisektion(double a, double b, double eps, Function func) {
+	public static double bisektion(double a, double b, Function func) {
 		double fValue = 1;
 		double mid = 0;
 		
-		while (Math.abs(a - b) >= eps) {
+		while (Math.abs(a - b) >= calcEpsilon()) {
 			mid = (a + b) / 2.0;
 			fValue = func.f(mid) * func.f(a);
 			if (fValue <= 0) {
 				b = mid;
-			} else {
+			} else { 
 				a = mid;
 			}
+			iterations++;
 		}
 		return mid;
 	}
 
-	public static double regulafalsi(double a, double b, double eps, Function func) {
+	public static double regulafalsi(double a, double b, Function func) {
 		double x = 0;
 		
-		for (int i = 0; Math.abs(a - b) >= eps && MAX_INTERV > i; i++) {
+		for (int i = 0; Math.abs(a - b) >= calcEpsilon() && MAX_INTERV > i; i++) {
 			x = a - ((b - a) * func.f(a)) / (func.f(b) - func.f(a));
 			if (func.f(x) < 0) {
 				a = x;
 			} else {
 				b = x;
 			}
+			iterations++;
 		}
 		return x;
 	}
 	
-	public static double sekanten(double xn2, double xn1, double eps, Function func) {
+	public static double sekanten(double xn2, double xn1, Function func) {
 		double xn3 = 0;
 		
-		while (Math.abs(xn1 - xn2) >= eps) {
+		while (Math.abs(xn1 - xn2) >= calcEpsilon()) {
 			xn3 = xn1 - ((xn1 - xn2) / (func.f(xn1) - func.f(xn2))) * func.f(xn1);
 			xn2 = xn1;
 			xn1 = xn3;
+			iterations++;
 		}	
 		return xn3;
 	}
 	
-    public static double fixpoint(double a, double b, int iterationen, Function f) {
+    public static double fixpoint(double a, double b, Function f) {
         double x = a;
         double eps = calcEpsilon();
         
-        for (Math.abs(f.f(x)) > 2 * eps && i < iterationen) {
+        while (Math.abs(f.f(x)) > 2 * eps /*&& i < iterationen*/) {
             x = f.f(x) + x;
             iterations++;
         }
