@@ -1,6 +1,5 @@
 package a02;
 
-import java.text.DecimalFormat;
 
 class Function1 implements Function {
 	public double f(double x) {
@@ -43,39 +42,10 @@ class Function4 implements Function {
 	}	
 }
 
-public class Nullstellen {
+public class SolutionProcedure {
 
 	public final static int MAX_INTERV = 1000;
 	
-	public static void main(String[] args) {
-
-		Function[] f = new Function[4];
-		f[0] = new Function1();
-		f[1] = new Function2();
-		f[2] = new Function3();
-		f[3] = new Function4();
-		
-		String funcs[][] = new String[4][2];
-		funcs[0][0] = f[0].toString();
-		funcs[0][1] = "[-3;1.5]";
-		funcs[1][0] = f[1].toString();
-		funcs[1][1] = "[-3;1.5]";
-		funcs[2][0] = f[2].toString();
-		funcs[2][1] = "[-3;1.5]";
-		funcs[3][0] = f[3].toString();
-		funcs[3][1] = "[-3;1.5]";
-		
-		DecimalFormat df = new DecimalFormat("#0.0000000000");
-		//TODO FINISH IT!
-		System.out.println("Bisektion:\n");
-		System.out.print("Funktion\t\t\t\tIntervall\tNullstelle\t\tIterationen:\n");
-		for (int i = 0; i < f.length; i++) {
-			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(bisektion(3.0, 3.5, 0.0000000001, f[i])));
-		}
-//		System.out.println("\nregulafalsi: " + df.format(regulafalsi(1.5, 2.6, 0.0000000001, f2)));
-//		System.out.println("sekanten: " + df.format(sekanten(1.5, 2.7, 0.0000000001, f3)));
-//		System.out.println("sekanten: " + df.format(sekanten(0.5, 1.0, 0.0000000001, f4)));
-	}
 
 	public static double bisektion(double a, double b, double eps, Function func) {
 		double fValue = 1;
@@ -115,9 +85,33 @@ public class Nullstellen {
 		return xn3;
 	}
 	
-	public static double fixpoint(int bla){
-		return 0;
-	}
+    public double fixpoint(double a, double b, int iterationen, Function f) {
+        
+        double x = a;
+        double eps = calcEpsilon();
+        int i = 0;
+        
+        while(Math.abs(f.f(x)) > 2 * eps && i < iterationen) {
+            x = f.f(x)+x;
+            i++;
+        }
+        
+//        this.iterations = i;
+        
+        return x;
+    }
+    
+    private static double calcEpsilon() {
+    	double val = 1;
+    	double eps = 0;
+    	
+    	while(val + 1 != 1) {
+    		eps = val;
+    		val = val / 2;
+    	}
+    	
+    	return eps;
+    }
 	
 	
 }
