@@ -2,41 +2,49 @@ package a02;
 
 
 class Function1 implements Function {
+	@Override
 	public double f(double x) {
 		return (Math.pow(x, 5) + 3 * Math.pow(x, 4) - 5 * Math.pow(x, 3) - 15
 				* Math.pow(x, 2) + 4 * x + 12);
 	}
 	
+	@Override
 	public String toString(){
 		return "xâ�µ + 3xâ�´ - 5xÂ³ - 15xÂ² + 4x + 12";
 	}
 }
 
 class Function2 implements Function {
+	@Override
 	public double f(double x) {
 		return (Math.sin(2*x) * Math.cos(x/2.));
 	}
 	
+	@Override
 	public String toString(){
 		return "sin(2x) * cos(x/2)\t";
 	}	
 }
 
 class Function3 implements Function {
+	@Override
 	public double f(double x) {
 		return (((1/3) * Math.pow(x, 2)) - 2 * x + 1.5);
 	}
 	
+	@Override
 	public String toString(){
 		return "1/3xÂ² - 2x + 1.5\t";
 	}	
 }
 
 class Function4 implements Function {
+	@Override
 	public double f(double x) {
 		return (-0.3 * Math.pow(x, 2) + 0.5);
 	}
 	
+	@Override
 	public String toString(){
 		return "-0.3xÂ² + 0.5\t\t";
 	}	
@@ -49,7 +57,7 @@ public class SolutionProcedure {
 	public static int iterations = 0;
 	
 
-	public static double bisektion(double a, double b, Function func) {
+	public static double bisection(double a, double b, Function func) {
 		double fValue = 1;
 		double mid = 0;
 		
@@ -81,7 +89,7 @@ public class SolutionProcedure {
 		return x;
 	}
 	
-	public static double sekanten(double xn2, double xn1, Function func) {
+	public static double secant(double xn2, double xn1, Function func) {
 		double xn3 = 0;
 		
 		while (Math.abs(xn1 - xn2) >= calcEpsilon()) {
