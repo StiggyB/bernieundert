@@ -45,7 +45,7 @@ public class MainApp {
 		System.out.println("\n\nFixpunkt:\n");
 		System.out.print("Funktion\t\t\t\tIntervall\tNullstelle\t\tIterationen:\n");
 		for (int i = 0; i < f.length; i++) {
-			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.fix(3.0, 3.5, 0.0000000001, f[i])));
+			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.fixpoint(3.0, 3.5, 0.0000000001, f[i])));
 		}
 	}
 	
