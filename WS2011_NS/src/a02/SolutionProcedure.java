@@ -97,7 +97,7 @@ public class SolutionProcedure {
         double x = a;
         double eps = calcEpsilon();
         
-        while (Math.abs(f.f(x)) > 2 * eps /*&& i < iterationen*/) {
+        for (int i = 0; Math.abs(f.f(x)) > 2 * eps && i < MAX_INTERV; i++) {
             x = f.f(x) + x;
             iterations++;
         }
