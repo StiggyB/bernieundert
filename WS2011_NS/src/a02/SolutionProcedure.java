@@ -52,7 +52,7 @@ class Function4 implements Function {
 
 public class SolutionProcedure {
 
-	public final static int MAX_INTERV = 10;
+	public final static int MAX_INTERV = 100;
 	
 	public static int iterations = 0;
 	
@@ -77,7 +77,7 @@ public class SolutionProcedure {
 	public static double regulafalsi(double a, double b, Function func) {
 		double x = 0;
 		
-		for (int i = 0; Math.abs(a - b) >= calcEpsilon() && MAX_INTERV > i; i++) {
+		for (int i = 0; Math.abs(a - b) >= calcEpsilon() && i < MAX_INTERV; i++) {
 			x = a - ((b - a) * func.f(a)) / (func.f(b) - func.f(a));
 			if (func.f(x) < 0) {
 				a = x;
@@ -92,7 +92,7 @@ public class SolutionProcedure {
 	public static double secant(double xn2, double xn1, Function func) {
 		double xn3 = 0;
 		
-		while (Math.abs(xn1 - xn2) >= calcEpsilon()) {
+		for (int i = 0; Math.abs(xn1 - xn2) >= calcEpsilon() &&  i < MAX_INTERV; i++) {
 			xn3 = xn1 - ((xn1 - xn2) / (func.f(xn1) - func.f(xn2))) * func.f(xn1);
 			xn2 = xn1;
 			xn1 = xn3;
