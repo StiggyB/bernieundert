@@ -14,7 +14,7 @@ public class MainApp {
 		
 		String funcs[][] = new String[4][2];
 		funcs[0][0] = f[0].toString();
-		funcs[0][1] = "[-3;1.5]";
+		funcs[0][1] = "[1.5;2.5]";
 		funcs[1][0] = f[1].toString();
 		funcs[1][1] = "[-3;1.5]";
 		funcs[2][0] = f[2].toString();
@@ -45,7 +45,7 @@ public class MainApp {
 		System.out.println("\n\nFixpunkt:\n");
 		System.out.print("Funktion\t\t\t\tIntervall\tNullstelle\t\tIterationen:\n");
 		for (int i = 0; i < f.length; i++) {
-			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.fixpoint(3.0, 3.5, f[i])));
+			System.out.println(funcs[i][0] + "\t\t" + funcs[i][1] + "\t" + df.format(SolutionProcedure.fixpoint(1.5, 2.5, f[i])));
 		}
 	}
 	
