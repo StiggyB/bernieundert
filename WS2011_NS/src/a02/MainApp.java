@@ -21,8 +21,8 @@ public class MainApp {
 		borders[1][0] = (2*Math.PI + 1.0/4.0 * Math.PI);
 		borders[1][1] = (2*Math.PI - 1.0/4.0 * Math.PI);
 		funcs[2] = f[2].toString();
-		borders[2][0] = 2*Math.PI-1.0/4.0*Math.PI;
-		borders[2][1] = 2*Math.PI+1.0/4.0*Math.PI;
+		borders[2][0] = 5.;
+		borders[2][1] = 5.3;
 		funcs[3] = f[3].toString();
 		borders[3][0] = 1.;
 		borders[3][1] = 1.5;

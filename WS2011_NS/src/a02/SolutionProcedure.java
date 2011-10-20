@@ -29,12 +29,12 @@ class Function2 implements Function {
 class Function3 implements Function {
 	@Override
 	public double f(double x) {
-		return (((1/3) * Math.pow(x, 2)) - 2 * x + 2);
+		return (((1./3.) * Math.pow(x, 2)) - 2 * x + 1.5);
 	}
 	
 	@Override
 	public String toString(){
-		return "1/3x^2 - 2x + 2\t\t";
+		return "1/3x^2 - 2x + 1.5\t\t";
 	}	
 }
 
@@ -101,35 +101,16 @@ public class SolutionProcedure {
 		return x;
 	}
 	
-	public static double secant(double bIntervall, double aIntervall, Function func) {
-//		double xn3 = 0;
-//		
-//		for (int i = 0; Math.abs(xn1 - xn2) > calcEpsilon() * 2 &&  i < MAX_INTERV; i++) {
-//			xn3 = xn1 - ((xn1 - xn2) / (func.f(xn1) - func.f(xn2))) * func.f(xn1);
-//			xn2 = xn1;
-//			xn1 = xn3;
-//			iterations++;
-//		}	
-//		return xn1;
-        double[] x = new double[2];
-        double next;
-        double eps;
-        int i = 0;
-            
-        x[0] = aIntervall;
-        x[1] = bIntervall;
-        eps = calcEpsilon();
-        
-        while(Math.abs(x[1]-x[0]) > eps*2 && i < MAX_INTERV) {
-            next = x[1]-((x[1]-x[0])/(func.f(x[1])-func.f(x[0]))*func.f(x[1]));
-            
-            x[0] = x[1];
-            x[1] = next;
-            i++;
-        }
-        
-        
-        return x[1];
+	public static double secant(double xn2, double xn1, Function func) {
+		double xn3 = 0;
+		
+		for (int i = 0; Math.abs(xn1 - xn2) > calcEpsilon() * 2 &&  i < MAX_INTERV; i++) {
+			xn3 = xn1 - ((xn1 - xn2) / (func.f(xn1) - func.f(xn2))) * func.f(xn1);
+			xn2 = xn1;
+			xn1 = xn3;
+			iterations++;
+		}	
+		return xn1;
 	}
 	
     public static double fixpoint(double a, double b, Function func) {
