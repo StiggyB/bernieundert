@@ -88,7 +88,7 @@ public class SolutionProcedure {
 	}
 
 	public static double regulafalsi(double a, double b, Function func) {
-		double x = 0;
+		double x = Double.NaN;
 		double eps = calcEpsilon();
 		
 		for (int i = 0; Math.abs(b - a) > eps * 2 && i < MAX_INTERV; i++) {
