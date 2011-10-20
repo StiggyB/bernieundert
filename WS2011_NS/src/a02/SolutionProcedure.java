@@ -72,8 +72,9 @@ public class SolutionProcedure {
 	public static double bisection(double a, double b, Function func) {
 		double fValue = 1;
 		double mid = 0;
+		double eps = calcEpsilon();
 		
-		for (int i = 0; Math.abs(b - a) > calcEpsilon() * 2 && i < MAX_INTERV; i++) {
+		for (int i = 0; Math.abs(b - a) > eps * 2 && i < MAX_INTERV; i++) {
 			mid = (a + b) / 2.0;
 			fValue = func.f(mid) * func.f(a);
 			if (fValue <= 0) {
@@ -88,13 +89,17 @@ public class SolutionProcedure {
 
 	public static double regulafalsi(double a, double b, Function func) {
 		double x = 0;
+		double eps = calcEpsilon();
 		
-		for (int i = 0; Math.abs(b - a) >= calcEpsilon() * 2 && i < MAX_INTERV; i++) {
-			x = a - ((b - a) * func.f(a)) / (func.f(b) - func.f(a));
-			if (func.f(x) < 0) {
-				a = x;
-			} else {
+		for (int i = 0; Math.abs(b - a) > eps * 2 && i < MAX_INTERV; i++) {
+			//SCRIPT
+//			 x = a - ((b - a) * func.f(a)) / (func.f(b) - func.f(a));
+			//Quelle: Wikipedia - Verbessertes Verfahren
+			x = (a * func.f(b) - b * func.f(a)) / (func.f(b) - func.f(a));
+			if ((func.f(a) * func.f(b)) < 0) {
 				b = x;
+			} else {
+				a = x;
 			}
 			iterations++;
 		}
@@ -103,8 +108,9 @@ public class SolutionProcedure {
 	
 	public static double secant(double xn2, double xn1, Function func) {
 		double xn3 = 0;
+		double eps = calcEpsilon();
 		
-		for (int i = 0; Math.abs(xn1 - xn2) > calcEpsilon() * 2 &&  i < MAX_INTERV; i++) {
+		for (int i = 0; Math.abs(xn1 - xn2) > eps * 2 &&  i < MAX_INTERV; i++) {
 			xn3 = xn1 - ((xn1 - xn2) / (func.f(xn1) - func.f(xn2))) * func.f(xn1);
 			xn2 = xn1;
 			xn1 = xn3;
@@ -115,8 +121,9 @@ public class SolutionProcedure {
 	
     public static double fixpoint(double a, double b, Function func) {
         double x = a;
+        double eps = calcEpsilon();
         
-        for (int i = 0; Math.abs(func.f(x)) > calcEpsilon() * 2 && i < MAX_INTERV; i++) {
+        for (int i = 0; Math.abs(func.f(x)) > eps * 2 && i < MAX_INTERV; i++) {
             x = func.f(x) + x;
             iterations++;
         }

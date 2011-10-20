@@ -58,7 +58,7 @@ public class Test {
         System.out.printf("Funktion Intervall \t\t\t Nullstelle \t Iterationen\n");
         System.out.printf("%s \t [% f, % f] \t % f \t %d \t (% f \t %d)\n", f, aIntervall, bIntervall, verfahren.solve(f, aIntervall, bIntervall, iterationen), verfahren.getIterationen(), verfahren.solve(f, bIntervall, bIntervall, iterationen), verfahren.getIterationen());        
         
-        f = new F3Funktion();
+        f = new F2Funktion();
         System.out.printf("Funktion %s\n", f);
         verfahren = new BisektionsVerfahren();
         iterationen = 100;
