@@ -15,8 +15,8 @@ public class MainApp {
 		String funcs[] = new String[4];
 		double borders[][] = new double[4][2];
 		funcs[0] = f[0].toString();
-		borders[0][0] = -4.;
-		borders[0][1] = 3.;
+		borders[0][0] = -4;
+		borders[0][1] = 3;
 		funcs[1] = f[1].toString();
 		borders[1][0] = (2*Math.PI + 1.0/4.0 * Math.PI);
 		borders[1][1] = (2*Math.PI - 1.0/4.0 * Math.PI);
@@ -27,7 +27,7 @@ public class MainApp {
 		borders[3][0] = 1.;
 		borders[3][1] = 1.5;
 		
-		DecimalFormat df = new DecimalFormat("#0.0000000000");
+		DecimalFormat df = new DecimalFormat("0.0000000000");
 		DecimalFormat dfinter = new DecimalFormat("#0.00");
 		//TODO FINISH IT!
 		System.out.println("Bisektion:\n");
