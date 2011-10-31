@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/System JDK 1.6"/>
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/scala-library.jar"/>
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/activation-1.1.jar"/>
-	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/akka-actor-1.2.jar"/>
+	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/akka-actor-1.2.jar" sourcepath="/Library/Java/jdk1.6.0_18"/>
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/akka-actor-tests-1.2.jar"/>
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/akka-amqp-1.2.jar"/>
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/akka-beanstalk-mailbox-1.2.jar"/>
@@ -81,6 +81,6 @@
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/spring-expression-3.0.5.RELEASE.jar"/>
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/stax-api-1.0-2.jar"/>
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/stax-api-1.0.1.jar"/>
-	<classpathentry kind="src" path="/Worker"/>
+	<classpathentry kind="src" path="/WS2011_VS_Worker"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
