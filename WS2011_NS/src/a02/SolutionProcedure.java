@@ -50,6 +50,18 @@ class Function4 implements Function {
 	}	
 }
 
+class FunctionA03 implements Function {
+	@Override
+	public double f(double x) {
+		return (Math.pow(x, 3) - Math.pow(x, 2) + 0.5);
+	}
+	
+	@Override
+	public String toString(){
+		return "x^3 - x^2 + 0.5\t\t\t";
+	}	
+}
+
 class Function5 implements Function {
 	@Override
 	public double f(double x) {
