@@ -6,14 +6,15 @@ public class MainApp {
 
 	public static void main(String[] args) {
 
-		Function[] f = new Function[4];
+		Function[] f = new Function[5];
 		f[0] = new Function1();
 		f[1] = new Function2();
 		f[2] = new Function3();
 		f[3] = new Function4();
+		f[4] = new FunctionA03();
 		
-		String funcs[] = new String[4];
-		double borders[][] = new double[4][2];
+		String funcs[] = new String[5];
+		double borders[][] = new double[5][2];
 		funcs[0] = f[0].toString();
 		borders[0][0] = -4;
 		borders[0][1] = 3;
@@ -26,6 +27,9 @@ public class MainApp {
 		funcs[3] = f[3].toString();
 		borders[3][0] = 1.;
 		borders[3][1] = 1.5;
+		funcs[4] = f[4].toString();
+		borders[4][0] = -1.5;
+		borders[4][1] = 2.5;
 		
 		DecimalFormat df = new DecimalFormat("0.0000000000");
 		DecimalFormat dfinter = new DecimalFormat("#0.00");
