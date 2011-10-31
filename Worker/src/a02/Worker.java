@@ -9,23 +9,23 @@ import akka.actor.UntypedActor;
 public class Worker extends UntypedActor { 
 	private static int idGenerator = 0; 
 	private int actorId;
-
+	private ActorRef master;
+	
 	public Worker() {
 		// Wichtig: Wenn die ID nicht gesetzt wird, wird immer dieselbe In- 
 		// stanz des Aktors für alle Remote-Aufrufe eines Clients verwendet! getContext().setId(idGenerator + "");
-
 		actorId = idGenerator;
 		System.out.println("Aktor wurde erstellt: " + idGenerator); 
 		idGenerator++;
 	}
 	
-	private ActorRef master;
 	private Integer calculate(int a, int b) { 
 		return new Integer(a + b);
 	
 	}
 
 	// message handler
+	@Override
 	public void onReceive(Object message) {
 		if (message instanceof CalculateMessage) {
          // Beim ersten Aufruf wird der Sender ermittel
