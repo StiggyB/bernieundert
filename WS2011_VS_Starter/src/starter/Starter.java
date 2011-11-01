@@ -1,12 +1,15 @@
 package starter;
 
-import static akka.actor.Actors.remote;
+import a02.Master;
+import a02.Worker;
 
 public class Starter {
 
 	public static void main(String[] args) {
-		remote().start("localhost", 2554);
-//		remote().start("localhost", 2553);
+		Worker worker = new Worker();
+		Master master = new Master();
+		worker.start();
+		master.start();
 		
 	}
 }
