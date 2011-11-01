@@ -1,17 +1,18 @@
 package a02;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 public class ResultMessage implements Serializable {
 	
 	private static final long serialVersionUID = -6065578273626197783L;
-	private Integer result;
+	private BigInteger result;
 	
-	public ResultMessage(Integer result) {
+	public ResultMessage(BigInteger result) {
 		this.result = result; 
 	}
 	
-	public Integer getResult() {
+	public BigInteger getResult() {
 		return this.result; 
 	}
 

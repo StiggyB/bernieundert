@@ -3,6 +3,7 @@ package a02;
 import static akka.actor.Actors.poisonPill;
 import static akka.actor.Actors.remote;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,11 @@ public class Worker extends UntypedActor {
 	private static int idGenerator = 0;
 	private int actorId;
 	private ActorRef master;
-	private List<Integer> factorList = new ArrayList<Integer>();
+	private List<BigInteger> factorList = new ArrayList<BigInteger>();
+
+	public List<BigInteger> getFactorList() {
+		return factorList;
+	}
 
 	public Worker() {
 		// Wichtig: Wenn die ID nicht gesetzt wird, wird immer dieselbe In-
@@ -26,14 +31,20 @@ public class Worker extends UntypedActor {
 	
 	@Override
 	public void onReceive(Object message) {
-		Integer result = null;
+		BigInteger result = null;
 		if (message instanceof CalculateMessage) {
 			// Beim ersten Aufruf wird der Sender ermittel
 			this.master = getContext().getSender().get();
 			CalculateMessage calculateMessage = (CalculateMessage) message;
-			Calculator calc = new Calculator(calculateMessage.getA(),
+			Calculator calc = new Calculator(this, calculateMessage.getA(),
 					calculateMessage.getB());
 			calc.run();
+			result = calc.getResult();
+			if (result == null) {
+				// calculate one more time
+			} else if (factorList.contains(result))  {
+				// find next factor of this product
+			}
 //			result = calculate(calculateMessage.getA(),
 //					calculateMessage.getB());
 			if (WorkerInfo.getAcRefList().contains(result)) {
@@ -68,7 +79,11 @@ public class Worker extends UntypedActor {
 		super.postStop();
 	}
 
-	public static void main(String[] args) throws Exception {
+	public void start() {
+		remote().start("localhost", 2554);
+	}
+	
+	public static void main(String[] args) {
 		remote().start("localhost", 2554);
 	}
 }
