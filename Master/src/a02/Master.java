@@ -41,7 +41,7 @@ public class Master extends UntypedActor {
 		} 
 	}
 
-	public static void main(String[] args) throws Exception {
+	public void start() {
 		// Der "Client" muss auch als Remote-Aktor gestartet werden um 
 		// später Nachrichten vom Server empfangen zu können.
 		remoteSupport = remote().start("localhost", 2553);
@@ -50,5 +50,15 @@ public class Master extends UntypedActor {
 		CalculateMessage calculate = new CalculateMessage(new BigInteger("8806715679"), new BigInteger("10")); 
 		client.tell(calculate);
 	} 
+	
+	public static void main(String[] args) {
+			// Der "Client" muss auch als Remote-Aktor gestartet werden um 
+			// später Nachrichten vom Server empfangen zu können.
+			remoteSupport = remote().start("localhost", 2553);
+			ActorRef client = remote().actorFor(Master.class.getName(),
+					"localhost", 2553);
+			CalculateMessage calculate = new CalculateMessage(new BigInteger("8806715679"), new BigInteger("10")); 
+			client.tell(calculate);
+	}
 }
 
