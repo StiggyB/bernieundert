@@ -5,15 +5,34 @@ import java.util.Random;
 
 public class Calculator implements Runnable {
 	private boolean running = false;
+	private Worker worker;
 	private BigInteger n;
 	private BigInteger a;
+	private BigInteger result;
 	
-	public Calculator(BigInteger n, BigInteger a) {
-		this.n = n;
-		this.a = a;
+	public BigInteger getResult() {
+		return result;
 	}
 
-	private Integer calculate(BigInteger n, BigInteger a) {
+	public Calculator(Worker worker, BigInteger n, BigInteger a) {
+		this.worker = worker;
+		this.n = n;
+		this.a = a;
+		this.result = null;
+	}
+	
+	@Override
+	public void run() {
+		this.worker.getFactorList();
+		while(!running) {
+			result = pollard(n, a);
+			if(result == null) {
+				running = true;
+			}
+		}
+	}
+
+	private BigInteger pollard(BigInteger n, BigInteger a) {
 		BigInteger zero = new BigInteger("0");
 		BigInteger one = new BigInteger("1");
 		
@@ -36,7 +55,7 @@ public class Calculator implements Runnable {
 		} while (p.equals(one));
 
 		if (!(p.equals(n))) {
-			return p.intValue();
+			return p;
 		}
 		return null;
 	}
@@ -46,14 +65,4 @@ public class Calculator implements Runnable {
 		return bi.gcd(new BigInteger("" + n));
 	}
 
-	@Override
-	public void run() {
-
-		while(!running) {
-			if(calculate(n, a) == null) {
-				running = true;
-			}
-		}
-		
-	}
 }

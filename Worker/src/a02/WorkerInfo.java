@@ -7,9 +7,9 @@ import akka.actor.ActorRef;
 
 public class WorkerInfo {
 	
-	static private List<ActorRef> acRefList = new ArrayList<ActorRef>();
+	static private List<ActorRef> workerList = new ArrayList<ActorRef>();
 	
 	public static List<ActorRef> getAcRefList() {
-		return acRefList;
+		return workerList;
 	}
 }
