@@ -122,7 +122,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements
      * The <i>at most once</i> error handling
      * implements the java.rmi over the RemoteExceptions
      * 
-     * @see http://download.oracle.com/javase/1.4.2/docs/api/index.html 
+     * #see http://download.oracle.com/javase/1.4.2/docs/api/index.html 
      */
 	@Override
 	public synchronized String getMessage(String clientID) throws RemoteException {
@@ -156,7 +156,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements
      * The <i>at most once</i> error handling
      * implements the java.rmi over the RemoteExceptions
      * 
-     * @see http://download.oracle.com/javase/1.4.2/docs/api/index.html 
+     * #see http://download.oracle.com/javase/1.4.2/docs/api/index.html 
      */
 	@Override
 	public synchronized void dropMessage(String clientID, String msg) throws RemoteException {
