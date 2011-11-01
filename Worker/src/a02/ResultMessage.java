@@ -14,4 +14,10 @@ public class ResultMessage implements Serializable {
 	public Integer getResult() {
 		return this.result; 
 	}
+
+	@Override
+	public String toString() {
+		return "ResultMessage [result=" + result + "]";
+	}
+	
 }
