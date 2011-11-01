@@ -3,6 +3,7 @@
 	<name>WS2011_VS_Master</name>
 	<comment></comment>
 	<projects>
+		<project>WS2011_VS_Worker</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
