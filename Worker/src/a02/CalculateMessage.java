@@ -7,9 +7,15 @@ public class CalculateMessage implements Serializable {
 
 	private static final long serialVersionUID = 840244832287440949L; 
 	private BigInteger n;
+	private int nThreads;
 	
-	public CalculateMessage(BigInteger n) { 
+	public int getnThreads() {
+		return nThreads;
+	}
+
+	public CalculateMessage(BigInteger n, int nThreads) { 
 		this.n = n;
+		this.nThreads = nThreads;
 	}
 	
 	public BigInteger getN() { 

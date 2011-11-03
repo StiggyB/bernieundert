@@ -7,83 +7,70 @@ public class Calculator implements Runnable {
 	
 	public static final int MAX_ITERATIONS = 1000;
 	
-	private boolean found = false;
+	private boolean isRunning;
 	private Worker worker;
-	private BigInteger n;
 	private BigInteger a = new BigInteger(new Random().nextInt(1000), new Random());
 	private BigInteger prime;
-	private BigInteger factor;
 	private BigInteger result;
 
 	public Calculator(Worker worker, BigInteger n) {
+		this.isRunning = true;
 		this.worker = worker;
-		this.n = n;
 		this.prime = n;
-		this.factor = null;
 		this.result = BigInteger.ONE;
 	}
 	
 	@Override
 	public void run() {
-		
-//		 do{
-//			   b = b.divide(sl.factor);
-//			   sl = PollardMethod(b,BigInteger.valueOf(3));
-//			   System.out.println(sl.toString());
-//			   System.out.println(isPrime(sl.factor));
-//			  }while(b != sl.factor);
-		
-			do {
+		while (isRunning) {
+			while (prime != result && result != null) {
 				prime = prime.divide(result);
 				result = pollard(prime);
-				System.out.println(result);
-			} while (prime != result && result != null);
-			System.out.println(prime);
-		
-		
-//		for(int i = 0; i < MAX_ITERATIONS && !(found); i++) {
-//			factor = pollard(n);
-//			System.out.println("Factor: " + factor);
-//			if (factor == null) {
-//				found = true;
-//			} else {
-//				if(this.worker.getFactorList().contains(factor)) {
-//					if(isCompletePrim()) {
-//						found = true;
-//					} else {
-//						a = new BigInteger(new Random().nextInt(1000), new Random());
-//					}
-//				} else if (isPrime(factor)){ // TODO Without isPrime more efficient
-//					worker.add(factor);
-//				}
-//			}
-//		}
-//		this.worker.pollardFinished();
-	}
-
-	// TODO Accept duplicated factors! (e.i. 29 * 29)
-	// Maybe more than the searched factors in the factorList...
-	private boolean isCompletePrim() {
-		boolean bool = false;
-		
-		for (BigInteger factor : this.worker.getFactorList()) {
-			result = result.multiply(factor); 
-		}
-		if(result.equals(prime)) {
-			System.out.println("COMPLETE!");
-			bool = true;
-		}
-		return bool;
+				if (result != null) {
+					if(isPrime(result)) {
+						worker.add(result);
+					}
+				} else {
+					worker.add(prime);
+				}
+			}
+			for (BigInteger factor : worker.getFactorList()) {
+				System.out.println("LIST: " + factor);
+			}
+			isRunning = false;
+		}	
 	}
 	
-	private boolean isPrime(BigInteger factor) {
-		for (BigInteger i = new BigInteger("2"); factor.compareTo(i) > 0; i = i.add(BigInteger.ONE)) {
-			if(factor.mod(i).equals(BigInteger.ZERO)) {
-				return false;
-			}
-		}
-		return true;
-	}
+	public static boolean isPrime(BigInteger number) {
+        BigInteger two = new BigInteger("2");
+        if (number.compareTo(two) < 0) {
+            return false;
+        } else if (number.equals(two) ) {
+            return true;
+        } else {
+            if (number.mod(two).equals(BigInteger.ZERO)) {
+                return false;
+            }
+            BigInteger sqrt = sqrt(number);
+            for (BigInteger i = new BigInteger("3"); i.compareTo(sqrt) <= 0; i = i.add(two)) {
+                if (number.mod(i).equals(BigInteger.ZERO)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+	private static BigInteger sqrt(BigInteger n) {
+        BigInteger a = BigInteger.ONE;
+        BigInteger b = new BigInteger(n.shiftRight(5).add(new BigInteger("8")).toString());
+        while(b.compareTo(a) >= 0) {
+          BigInteger mid = new BigInteger(a.add(b).shiftRight(1).toString());
+          if(mid.multiply(mid).compareTo(n) > 0) b = mid.subtract(BigInteger.ONE);
+          else a = mid.add(BigInteger.ONE);
+        }
+        return a.subtract(BigInteger.ONE);
+      }
 
 	private BigInteger pollard(BigInteger n) {
 		

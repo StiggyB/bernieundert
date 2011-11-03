@@ -15,11 +15,10 @@ public class Worker extends UntypedActor {
 	private int actorId;
 	private ActorRef master;
 	private List<BigInteger> factorList = new ArrayList<BigInteger>();
+//	private List<Calculator> threadList = new ArrayList<Calculator>();
 
 
 	public Worker() {
-		// Wichtig: Wenn die ID nicht gesetzt wird, wird immer dieselbe In-
-		// stanz des Aktors für alle Remote-Aufrufe eines Clients verwendet!
 		getContext().setId(idGenerator + "");
 		actorId = idGenerator;
 		System.out.println("Aktor wurde erstellt: " + idGenerator);
@@ -34,17 +33,20 @@ public class Worker extends UntypedActor {
 	public void onReceive(Object message) {
 		List<BigInteger> result = null;
 		if (message instanceof CalculateMessage) {
-			// Beim ersten Aufruf wird der Sender ermittel
 			this.master = getContext().getSender().get();
 			CalculateMessage calculateMessage = (CalculateMessage) message;
-			Calculator calc = new Calculator(this, calculateMessage.getN());
-			calc.run();
+			for (int i = 0; i < calculateMessage.getnThreads(); i++) {
+				Calculator calc = new Calculator(this, calculateMessage.getN());
+				calc.run();
+			}
 		} else if (message instanceof ResultMessage) {
 			result = ((ResultMessage) message).getResults();
 			if(!(factorList.contains(result))) {
 				factorList.addAll(result);
 			}
+			this.master.tell(result);
 		} else {
+
 			throw new IllegalArgumentException("Unknown message [" + message
 					+ "]");
 		}
@@ -65,10 +67,6 @@ public class Worker extends UntypedActor {
 			ResultMessage resultMessage = new ResultMessage(factorList);
 			master.tell(resultMessage);
 		}
-		// Durch this.getContext().tell([Nachricht]) kann der Aktor
-		// sich selbst eine Nachricht schicken. In diesem Fall schickt
-		// sich der Aktor eine "poisonPill". Empfängt ein Aktor diese,
-		// beendet er sich und postStop() wird aufgerufen.
 		getContext().tell(poisonPill());
 	}
 
@@ -77,12 +75,8 @@ public class Worker extends UntypedActor {
 		System.out.println("Aktor wurde beendet: " + this.actorId);
 		super.postStop();
 	}
-
-	public static void start() {
-		remote().start("localhost", 2551);
-	}
 	
 	public static void main(String[] args) {
-		remote().start("localhost", 2552);
+		remote().start("localhost", 2500);
 	}
 }
