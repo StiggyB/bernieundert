@@ -10,31 +10,33 @@ import akka.actor.UntypedActor;
 import akka.remoteinterface.RemoteServerModule;
 
 
+
 public class Master extends UntypedActor { 
+	
+	public static final int DEFAULT_PORT = 2500;
+
 	static int resultsReceived = 0;
 	static int numberOfWorker;
-	static RemoteServerModule remoteSupport;
+	static RemoteServerModule remoteSupport;	
 
 	@Override
 	public void onReceive(Object message) throws Exception { 
 		System.out.println("RECEIVE");
 		if (message instanceof CalculateMessage) {
 	           CalculateMessage calculate = (CalculateMessage) message;
-	           // Worker auf dem Remote-Host erstellen
-	           ActorRef worker = remote().actorFor(Worker.class.getName(), "localhost", 2552);
-	           WorkerInfo.getAcRefList().add(worker);
-	           // getContext() gibt eine Referenz auf diesen Aktor zurück
+	           startNWorkers(1);
 	           ActorRef me = getContext();
-	           // tell verschickt eine Message an einen Aktor. Zusätzlich kann
-	           // man eine Referenz auf einen anderen Aktor übergeben 
-	           worker.tell(calculate, me);
+	           for (ActorRef worker : WorkerInfo.getWorkerRefs()) {
+	        	   System.out.println("TELL");
+	        	   worker.tell(calculate, me);
+	           }
 		} else if (message instanceof ResultMessage) { 
 			if (((ResultMessage) message).getResults().isEmpty()) {
 				System.out.println("NO PRIME!");
 			} else {
-//				for (BigInteger factor : ((ResultMessage) message).getResult()) {
-//					System.out.println("PRIME(S): " + factor);
-//				}
+				for (BigInteger factor : ((ResultMessage) message).getResults()) {
+					System.out.println("PRIME(S): " + factor);
+				}
 				System.out.println("PRIME(S): " + ((ResultMessage) message).getResults());
 			}
 			getContext().tell(poisonPill());
@@ -43,27 +45,21 @@ public class Master extends UntypedActor {
 	                             message + "]");
 		} 
 	}
-
-	public static void start() {
-		// Der "Client" muss auch als Remote-Aktor gestartet werden um 
-		// später Nachrichten vom Server empfangen zu können.
-		remoteSupport = remote().start("localhost", 2553);
-		System.out.println(remote().name());
-		System.out.println(remoteSupport.address());
-		ActorRef client = remote().actorFor(Master.class.getName(),
-				"localhost", 2553);
-		CalculateMessage calculate = new CalculateMessage(new BigInteger("8806715679")); 
-		client.tell(calculate);
-	} 
 	
+	public void startNWorkers(int nWorkers) {
+		for (int iPort = DEFAULT_PORT; iPort < (nWorkers + DEFAULT_PORT); iPort++) {
+			ActorRef worker = remote().actorFor(Worker.class.getName(), "localhost", iPort);
+			 WorkerInfo.getWorkerRefs().add(worker);
+		}
+	}
+
 	public static void main(String[] args) {
-			// Der "Client" muss auch als Remote-Aktor gestartet werden um 
-			// später Nachrichten vom Server empfangen zu können.
 			remoteSupport = remote().start("localhost", 2553);
 			ActorRef client = remote().actorFor(Master.class.getName(),
 					"localhost", 2553);
-			BigInteger n = new BigInteger("8806715679");
-			CalculateMessage calculate = new CalculateMessage(n); 
+			BigInteger n = new BigInteger("1137047281562824484226171575219374004320812483047");
+			int nThreads = 2;
+			CalculateMessage calculate = new CalculateMessage(n, nThreads); 
 			client.tell(calculate);
 	}
 }
