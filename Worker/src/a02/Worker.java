@@ -16,9 +16,6 @@ public class Worker extends UntypedActor {
 	private ActorRef master;
 	private List<BigInteger> factorList = new ArrayList<BigInteger>();
 
-	public List<BigInteger> getFactorList() {
-		return factorList;
-	}
 
 	public Worker() {
 		// Wichtig: Wenn die ID nicht gesetzt wird, wird immer dieselbe In-
@@ -29,48 +26,50 @@ public class Worker extends UntypedActor {
 		idGenerator++;
 	}
 	
+	public List<BigInteger> getFactorList() {
+		return factorList;
+	}
+	
 	@Override
 	public void onReceive(Object message) {
-		BigInteger result = null;
+		List<BigInteger> result = null;
 		if (message instanceof CalculateMessage) {
 			// Beim ersten Aufruf wird der Sender ermittel
 			this.master = getContext().getSender().get();
 			CalculateMessage calculateMessage = (CalculateMessage) message;
-			Calculator calc = new Calculator(this, calculateMessage.getA(),
-					calculateMessage.getB());
+			Calculator calc = new Calculator(this, calculateMessage.getN());
 			calc.run();
-			result = calc.getResult();
-			if (result == null) {
-				// calculate one more time
-			} else if (factorList.contains(result))  {
-				// find next factor of this product
-			}
-//			result = calculate(calculateMessage.getA(),
-//					calculateMessage.getB());
-			if (WorkerInfo.getAcRefList().contains(result)) {
-				
-			}
-			ResultMessage resultMessage = new ResultMessage(result);
-			System.out.println("TELL");
-			// Ergebnis an den Master senden
-			master.tell(resultMessage);
-			for (ActorRef ar : WorkerInfo.getAcRefList()) {
-				ar.tell(resultMessage);
-			}
-			// Durch this.getContext().tell([Nachricht]) kann der Aktor
-			// sich selbst eine Nachricht schicken. In diesem Fall schickt
-			// sich der Aktor eine "poisonPill". Empfängt ein Aktor diese,
-			// beendet er sich und postStop() wird aufgerufen.
-			getContext().tell(poisonPill());
 		} else if (message instanceof ResultMessage) {
-			result = ((ResultMessage) message).getResult();
+			result = ((ResultMessage) message).getResults();
 			if(!(factorList.contains(result))) {
-				factorList.add(result);
+				factorList.addAll(result);
 			}
 		} else {
 			throw new IllegalArgumentException("Unknown message [" + message
 					+ "]");
 		}
+	}
+	
+	public void add(BigInteger factor) {
+		if(factor != null) {
+			this.factorList.add(factor);
+		} else {
+			throw new NullPointerException();
+		}
+	}
+	
+	public void pollardFinished() {
+		if (factorList.isEmpty()) {
+			System.out.println("NUMBER IS NO PRIME!");
+		} else {
+			ResultMessage resultMessage = new ResultMessage(factorList);
+			master.tell(resultMessage);
+		}
+		// Durch this.getContext().tell([Nachricht]) kann der Aktor
+		// sich selbst eine Nachricht schicken. In diesem Fall schickt
+		// sich der Aktor eine "poisonPill". Empfängt ein Aktor diese,
+		// beendet er sich und postStop() wird aufgerufen.
+		getContext().tell(poisonPill());
 	}
 
 	@Override
@@ -79,11 +78,11 @@ public class Worker extends UntypedActor {
 		super.postStop();
 	}
 
-	public void start() {
-		remote().start("localhost", 2554);
+	public static void start() {
+		remote().start("localhost", 2551);
 	}
 	
 	public static void main(String[] args) {
-		remote().start("localhost", 2554);
+		remote().start("localhost", 2552);
 	}
 }
