@@ -5,11 +5,12 @@ import a02.Worker;
 
 public class Starter {
 
-	public static void main(String[] args) {
-		Worker worker = new Worker();
-		Master master = new Master();
-		worker.start();
-		master.start();
+	public static void main(String[] args) throws InterruptedException {
+//		Worker worker = new Worker();
+//		Master master = new Master();
+//		worker.start();
+//		Thread.currentThread().sleep(1000);
+//		Master.start();
 		
 	}
 }
