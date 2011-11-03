@@ -29,10 +29,13 @@ public class Master extends UntypedActor {
 	           // man eine Referenz auf einen anderen Aktor übergeben 
 	           worker.tell(calculate, me);
 		} else if (message instanceof ResultMessage) { 
-			if (((ResultMessage) message).getResult() == null) {
-				System.out.println("No prime!");
+			if (((ResultMessage) message).getResults().isEmpty()) {
+				System.out.println("NO PRIME!");
 			} else {
-				System.out.println(((ResultMessage) message).getResult());
+//				for (BigInteger factor : ((ResultMessage) message).getResult()) {
+//					System.out.println("PRIME(S): " + factor);
+//				}
+				System.out.println("PRIME(S): " + ((ResultMessage) message).getResults());
 			}
 			getContext().tell(poisonPill());
 		} else {
@@ -41,13 +44,15 @@ public class Master extends UntypedActor {
 		} 
 	}
 
-	public void start() {
+	public static void start() {
 		// Der "Client" muss auch als Remote-Aktor gestartet werden um 
 		// später Nachrichten vom Server empfangen zu können.
 		remoteSupport = remote().start("localhost", 2553);
+		System.out.println(remote().name());
+		System.out.println(remoteSupport.address());
 		ActorRef client = remote().actorFor(Master.class.getName(),
 				"localhost", 2553);
-		CalculateMessage calculate = new CalculateMessage(new BigInteger("8806715679"), new BigInteger("10")); 
+		CalculateMessage calculate = new CalculateMessage(new BigInteger("8806715679")); 
 		client.tell(calculate);
 	} 
 	
@@ -57,7 +62,8 @@ public class Master extends UntypedActor {
 			remoteSupport = remote().start("localhost", 2553);
 			ActorRef client = remote().actorFor(Master.class.getName(),
 					"localhost", 2553);
-			CalculateMessage calculate = new CalculateMessage(new BigInteger("8806715679"), new BigInteger("10")); 
+			BigInteger n = new BigInteger("8806715679");
+			CalculateMessage calculate = new CalculateMessage(n); 
 			client.tell(calculate);
 	}
 }
