@@ -5,12 +5,13 @@ import java.util.Random;
 
 public class Calculator implements Runnable {
 	
-	public static final int MAX_ITERATIONS = 1000;
+	public static final int MAX_ITERATIONS = 10;
 	
 	private boolean isRunning;
 	private Worker worker;
 	private BigInteger a = new BigInteger(new Random().nextInt(1000), new Random());
 	private BigInteger prime;
+
 	private BigInteger result;
 
 	public Calculator(Worker worker, BigInteger n) {
@@ -20,24 +21,29 @@ public class Calculator implements Runnable {
 		this.result = BigInteger.ONE;
 	}
 	
+	public boolean isRunning() {
+		return isRunning;
+	}
+	
+	public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+	
+	public BigInteger getPrime() {
+		return prime;
+	}
+	
 	@Override
 	public void run() {
-		while (isRunning) {
-			while (prime != result && result != null) {
-				prime = prime.divide(result);
-				result = pollard(prime);
-				if (result != null) {
-					if(isPrime(result)) {
-						worker.add(result);
-					}
-				} else {
-					worker.add(prime);
-				}
+		for (int i = 0; i < MAX_ITERATIONS && isRunning; i++) {
+			result = pollard(prime);
+			if(result != null) {
+				worker.pollardFinished(result);
+				isRunning = false;
+			} else if (!worker.getFactorList().isEmpty()) {
+				worker.pollardFinished(prime);
+				isRunning = false;
 			}
-			for (BigInteger factor : worker.getFactorList()) {
-				System.out.println("LIST: " + factor);
-			}
-			isRunning = false;
 		}	
 	}
 	
