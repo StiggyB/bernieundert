@@ -10,7 +10,6 @@ import akka.actor.UntypedActor;
 import akka.remoteinterface.RemoteServerModule;
 
 
-
 public class Master extends UntypedActor { 
 	
 	public static final int DEFAULT_PORT = 2500;
@@ -57,9 +56,9 @@ public class Master extends UntypedActor {
 			remoteSupport = remote().start("localhost", 2553);
 			ActorRef client = remote().actorFor(Master.class.getName(),
 					"localhost", 2553);
-			BigInteger n = new BigInteger("1137047281562824484226171575219374004320812483047");
-			int nThreads = 2;
-			CalculateMessage calculate = new CalculateMessage(n, nThreads); 
+			BigInteger n = new BigInteger("8806715679");
+//			int nThreads = 2;
+			CalculateMessage calculate = new CalculateMessage(n); 
 			client.tell(calculate);
 	}
 }
