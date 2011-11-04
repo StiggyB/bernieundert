@@ -14,8 +14,10 @@ public class Worker extends UntypedActor {
 	private static int idGenerator = 0;
 	private int actorId;
 	private ActorRef master;
+	private Calculator calc;
+	private BigInteger accPrime;
 	private List<BigInteger> factorList = new ArrayList<BigInteger>();
-//	private List<Calculator> threadList = new ArrayList<Calculator>();
+	private List<Calculator> threadList = new ArrayList<Calculator>();
 
 
 	public Worker() {
@@ -31,22 +33,29 @@ public class Worker extends UntypedActor {
 	
 	@Override
 	public void onReceive(Object message) {
-		List<BigInteger> result = null;
 		if (message instanceof CalculateMessage) {
-			this.master = getContext().getSender().get();
 			CalculateMessage calculateMessage = (CalculateMessage) message;
-			for (int i = 0; i < calculateMessage.getnThreads(); i++) {
-				Calculator calc = new Calculator(this, calculateMessage.getN());
-				calc.run();
+			if (this.accPrime == null) {
+				this.master = getContext().getSender().get();
+				this.accPrime = calculateMessage.getN();
 			}
+			calc = new Calculator(this, calculateMessage.getN());
+			System.out.println("START IT");
+			calc.run();
+			threadList.add(calc);
 		} else if (message instanceof ResultMessage) {
-			result = ((ResultMessage) message).getResults();
-			if(!(factorList.contains(result))) {
-				factorList.addAll(result);
+			System.out.println("FINISH");
+			ResultMessage resultMessage = new ResultMessage(factorList);
+			for (Calculator calc : threadList) {
+				calc.setRunning(false);
 			}
-			this.master.tell(result);
+			if (factorList.isEmpty()) {
+				resultMessage = null;
+			}
+			System.out.println("SENT");
+			master.tell(resultMessage);
+			getContext().tell(poisonPill());
 		} else {
-
 			throw new IllegalArgumentException("Unknown message [" + message
 					+ "]");
 		}
@@ -60,15 +69,39 @@ public class Worker extends UntypedActor {
 		}
 	}
 	
-	public void pollardFinished() {
-		if (factorList.isEmpty()) {
-			System.out.println("NUMBER IS NO PRIME!");
-		} else {
-			ResultMessage resultMessage = new ResultMessage(factorList);
-			master.tell(resultMessage);
+	public void pollardFinished(BigInteger result) {
+		System.out.println("RESULT: " + result);
+		BigInteger prime = calc.getPrime();
+		prime = prime.divide(result);
+		if (prime != result && result != null) {
+			if(Calculator.isPrime(result)) {
+				add(result);
+				 if (!(factorList.isEmpty()) && isCompletePrime()) {
+						System.out.println("RESULT");
+						ResultMessage resultMessage = new ResultMessage(factorList);
+						getContext().tell(resultMessage);
+				 } else {
+					 CalculateMessage calculateMessage = new CalculateMessage(prime);
+					 System.out.println("NEW MSG: " + calculateMessage);
+					 getContext().tell(calculateMessage);
+				 }
+			}
 		}
-		getContext().tell(poisonPill());
 	}
+	
+	private boolean isCompletePrime() {
+        boolean bool = false;
+        BigInteger result = BigInteger.ONE;
+        for (BigInteger factor : factorList) {
+                result = result.multiply(factor); 
+        }
+        System.out.println(result + " EQUALS " + accPrime);
+        if(result.equals(accPrime)) {
+                bool = true;
+        }
+        return bool;
+}
+
 
 	@Override
 	public void postStop() {
