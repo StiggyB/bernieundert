@@ -8,12 +8,18 @@ import java.util.List;
 public class ResultMessage implements Serializable {
 	
 	private static final long serialVersionUID = -6065578273626197783L;
+	private long completeCpuTime;
 	private List<BigInteger> results = new ArrayList<BigInteger>();
 	
-	public ResultMessage(List<BigInteger> result) {
+	public ResultMessage(List<BigInteger> result, long completeCpuTime) {
 		this.results = result;
+		this.completeCpuTime = completeCpuTime;
 	}
 	
+	public long getCompleteCpuTime() {
+		return completeCpuTime;
+	}
+
 	public List<BigInteger> getResults() {
 		return this.results; 
 	}
