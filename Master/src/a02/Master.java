@@ -30,7 +30,7 @@ public class Master extends UntypedActor {
 	        	   worker.tell(calculate, me);
 	           }
 		} else if (message instanceof ResultMessage) { 
-			if (((ResultMessage) message).getResults().isEmpty()) {
+			if (((ResultMessage) message).getResults() == null) {
 				System.out.println("NO PRIME!");
 			} else {
 				for (BigInteger factor : ((ResultMessage) message).getResults()) {
@@ -57,8 +57,8 @@ public class Master extends UntypedActor {
 			ActorRef client = remote().actorFor(Master.class.getName(),
 					"localhost", 2553);
 			BigInteger n = new BigInteger("8806715679");
-//			int nThreads = 2;
-			CalculateMessage calculate = new CalculateMessage(n); 
+			int nThreads = 2;
+			CalculateMessage calculate = new CalculateMessage(n, nThreads);
 			client.tell(calculate);
 	}
 }
