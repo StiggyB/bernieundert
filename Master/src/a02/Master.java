@@ -17,20 +17,25 @@ public class Master extends UntypedActor {
 
 	static int resultsReceived = 0;
 	static int numberOfWorker;
-	static RemoteServerModule remoteSupport;	
+	static RemoteServerModule remoteSupport;
+	
+	private Timer timer;
 
 	@Override
 	public void onReceive(Object message) throws Exception { 
 		System.out.println("RECEIVE");
 		if (message instanceof CalculateMessage) {
-	           CalculateMessage calculate = (CalculateMessage) message;
-	           startNWorkers(4);
-	           ActorRef me = getContext();
-	           for (ActorRef worker : WorkerInfo.getWorkerRefs()) {
-	        	   System.out.println("TELL");
-	        	   worker.tell(calculate, me);
-	           }
+           CalculateMessage calculate = (CalculateMessage) message;
+           startNWorkers(2);
+           ActorRef me = getContext();
+           for (ActorRef worker : WorkerInfo.getWorkerRefs()) {
+        	   worker.tell(calculate, me);
+           }
+           timer = new Timer(0);
+           timer.startTimer();
 		} else if (message instanceof ResultMessage) {
+			System.out.println("Duration: " + timer.stopTimer());
+			System.out.println("CPU-Time: " + new Timer(((ResultMessage) message).getCompleteCpuTime()));
 			for (ActorRef actor : WorkerInfo.getWorkerRefs()) {
 				actor.stop();
 			}
@@ -55,12 +60,13 @@ public class Master extends UntypedActor {
 		}
 	}
 
+
 	public static void main(String[] args) {
 			remoteSupport = remote().start("localhost", 2553);
 			ActorRef client = remote().actorFor(Master.class.getName(),
 					"localhost", 2553);
-			BigInteger n = new BigInteger("9398726230209357241");
-			CalculateMessage calculate = new CalculateMessage(n);
+			BigInteger n = new BigInteger("1137047281562824484226171575219374004320812483047");
+			CalculateMessage calculate = new CalculateMessage(n, 0);
 			client.tell(calculate);
 	}
 }
