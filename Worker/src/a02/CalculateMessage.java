@@ -13,9 +13,9 @@ public class CalculateMessage implements Serializable {
 		return nThreads;
 	}
 
-	public CalculateMessage(BigInteger n) {// int nThreads) { 
+	public CalculateMessage(BigInteger n, int nThreads) { 
 		this.n = n;
-//		this.nThreads = nThreads;
+		this.nThreads = nThreads;
 	}
 	
 	public BigInteger getN() { 
