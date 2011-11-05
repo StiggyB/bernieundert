@@ -5,7 +5,10 @@ import static akka.actor.Actors.remote;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
@@ -17,8 +20,9 @@ public class Worker extends UntypedActor {
 	private Calculator calc;
 	private BigInteger accPrime;
 	private int numCalculators;
+	private boolean workerBusy = false;
 	private List<BigInteger> factorList = new ArrayList<BigInteger>();
-	private List<Calculator> threadList = new ArrayList<Calculator>();
+	private Map<Thread, Calculator> threadList = new HashMap<Thread, Calculator>();
 
 
 	public Worker() {
@@ -28,11 +32,12 @@ public class Worker extends UntypedActor {
 		idGenerator++;
 	}
 	
-	public List<BigInteger> getFactorList() {
-		return factorList;
+	synchronized public List<BigInteger> getFactorList() {
+		synchronized (factorList) {
+			return factorList;
+		}
 	}
 	
-	// TODO Case Calc not finished -> handling (e.i. with null to master)
 	// TODO Thread control and start some Threads impl
 	// TODO Timer CPU WallTime & GUI representation
 	@Override
@@ -44,53 +49,91 @@ public class Worker extends UntypedActor {
 				accPrime = calculateMessage.getN();
 				numCalculators = calculateMessage.getnThreads();
 			}
-			for (Calculator calc : threadList) {
-				calc.setRunning(false);
-			}
-			calc = new Calculator(this, calculateMessage.getN());
-			System.out.println("START IT");
-			calc.run();
-			threadList.add(calc);
+			BigInteger newPrime = calculateMessage.getN();
+			startAndStopCalculators(newPrime);
 		} else if (message instanceof ResultMessage) {
-			System.out.println("SENT");
 			master.tell(message);
 			getContext().tell(poisonPill());
+		}else if (message instanceof CheckMessage) {
+			checkPrime(((CheckMessage)message).getN());
 		} else {
 			throw new IllegalArgumentException("Unknown message [" + message
 					+ "]");
 		}
 	}
+
+	synchronized private void startAndStopCalculators(BigInteger newPrime) {
+		for (Thread calcThread : threadList.keySet()) {
+			System.out.println("STOP: " + calcThread.getName());
+			threadList.get(calcThread).setRunning(false);
+			calcThread.interrupt();
+//			calcThread.stop();
+		}
+		threadList.clear();
+		for (int i = 0; i < numCalculators; i++) {
+			calc = new Calculator(this, newPrime);
+			Thread calcThread = new Thread(calc, "Calcularor" + i);
+			calcThread.start();
+			System.out.println("START: " + calcThread.getName());
+			threadList.put(calcThread, calc);
+			calcThread = null;
+		}
+	}
 	
-	public void add(BigInteger factor) {
+	synchronized public void add(BigInteger factor) {
 		if(factor != null) {
-			this.factorList.add(factor);
+			synchronized (factorList) {
+				this.factorList.add(factor);
+			}
 		} else {
 			throw new NullPointerException();
 		}
 	}
 	
-	public void pollardFinished(BigInteger result) {
+	synchronized public void pollardFinished(BigInteger result) {
+		if (!workerBusy) {
+			workerBusy = true;
+			for (Thread calcThread : threadList.keySet()) {
+				System.out.println("STOP: " + calcThread.getName());
+				threadList.get(calcThread).setRunning(false);
+				calcThread.interrupt();
+//			calcThread.stop();
+			}
+			threadList.clear();
+			CheckMessage checkMessage = new CheckMessage(result);
+			System.out.println("NEW MSG: " + checkMessage);
+			getContext().tell(checkMessage);
+		}
+		workerBusy = false;
+	}
+
+	private void checkPrime(BigInteger result) {
 		System.out.println("RESULT: " + result);
-		ResultMessage resultMessage = new ResultMessage(null);
 		BigInteger prime = null;
 		if (prime != result) {
 			prime = calc.getPrime();
 			prime = prime.divide(result);
 			if(Calculator.isPrime(result)) {
 				add(result);
-				 if (!(factorList.isEmpty()) && isCompletePrime()) {
-					System.out.println("RESULT");
-					resultMessage = new ResultMessage(factorList);
-					getContext().tell(resultMessage);
-				 } else {
-					 CalculateMessage calculateMessage = new CalculateMessage(prime, numCalculators);
-					 System.out.println("NEW MSG: " + calculateMessage);
-					 getContext().tell(calculateMessage);
-				 }
+				buildMessage(prime);
 			}
 		} else {
+			ResultMessage resultMessage = new ResultMessage(null);
 			getContext().tell(resultMessage);
 		}
+	}
+
+	private void buildMessage(BigInteger prime) {
+		ResultMessage resultMessage;
+		if (!(factorList.isEmpty()) && isCompletePrime()) {
+			System.out.println("RESULT");
+			resultMessage = new ResultMessage(factorList);
+			getContext().tell(resultMessage);
+		 } else {
+			 CalculateMessage calculateMessage = new CalculateMessage(prime, numCalculators);
+			 System.out.println("NEW MSG: " + calculateMessage);
+			 getContext().tell(calculateMessage);
+		 }
 	}
 	
 	private boolean isCompletePrime() {
@@ -105,7 +148,6 @@ public class Worker extends UntypedActor {
         }
         return bool;
 }
-
 
 	@Override
 	public void postStop() {
