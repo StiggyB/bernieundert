@@ -1,0 +1,165 @@
+JAVA PROFILE 1.0.1, created Sat Nov  5 22:01:35 2011
+
+Header for -agentlib:hprof (or -Xrunhprof) ASCII Output (JDK 5.0 JVMTI based)
+
+%W% %E%
+
+ Copyright (c) 2006 Sun Microsystems, Inc. All  Rights Reserved.
+
+WARNING!  This file format is under development, and is subject to
+change without notice.
+
+This file contains the following types of records:
+
+THREAD START
+THREAD END      mark the lifetime of Java threads
+
+TRACE           represents a Java stack trace.  Each trace consists
+                of a series of stack frames.  Other records refer to
+                TRACEs to identify (1) where object allocations have
+                taken place, (2) the frames in which GC roots were
+                found, and (3) frequently executed methods.
+
+HEAP DUMP       is a complete snapshot of all live objects in the Java
+                heap.  Following distinctions are made:
+
+                ROOT    root set as determined by GC
+                CLS     classes 
+                OBJ     instances
+                ARR     arrays
+
+SITES           is a sorted list of allocation sites.  This identifies
+                the most heavily allocated object types, and the TRACE
+                at which those allocations occurred.
+
+CPU SAMPLES     is a statistical profile of program execution.  The VM
+                periodically samples all running threads, and assigns
+                a quantum to active TRACEs in those threads.  Entries
+                in this record are TRACEs ranked by the percentage of
+                total quanta they consumed; top-ranked TRACEs are
+                typically hot spots in the program.
+
+CPU TIME        is a profile of program execution obtained by measuring
+                the time spent in individual methods (excluding the time
+                spent in callees), as well as by counting the number of
+                times each method is called. Entries in this record are
+                TRACEs ranked by the percentage of total CPU time. The
+                "count" field indicates the number of times each TRACE 
+                is invoked.
+
+MONITOR TIME    is a profile of monitor contention obtained by measuring
+                the time spent by a thread waiting to enter a monitor.
+                Entries in this record are TRACEs ranked by the percentage
+                of total monitor contention time and a brief description
+                of the monitor.  The "count" field indicates the number of 
+                times the monitor was contended at that TRACE.
+
+MONITOR DUMP    is a complete snapshot of all the monitors and threads in 
+                the System.
+
+HEAP DUMP, SITES, CPU SAMPLES|TIME and MONITOR DUMP|TIME records are generated 
+at program exit.  They can also be obtained during program execution by typing 
+Ctrl-\ (on Solaris) or by typing Ctrl-Break (on Win32).
+
+--------
+
+THREAD START (obj=5000014f, id = 200001, name="main", group="main")
+THREAD END (id = 200001)
+THREAD START (obj=50000250, id = 200004, name="DestroyJavaVM", group="main")
+THREAD START (obj=50000254, id = 200005, name="Thread-0", group="main")
+THREAD END (id = 200005)
+THREAD END (id = 200004)
+THREAD END (id = 200002)
+TRACE 300023:
+	java.util.zip.ZipFile.open(ZipFile.java:Unknown line)
+	java.util.zip.ZipFile.<init>(ZipFile.java:127)
+	java.util.jar.JarFile.<init>(JarFile.java:135)
+	java.util.jar.JarFile.<init>(JarFile.java:72)
+TRACE 300179:
+	java.util.AbstractList.subList(AbstractList.java:468)
+	java.util.regex.Pattern.split(Pattern.java:1027)
+	java.lang.String.split(String.java:2292)
+	java.lang.String.split(String.java:2334)
+TRACE 300204:
+	java.lang.String.<init>(String.java:203)
+	java.lang.StringBuilder.toString(StringBuilder.java:430)
+	sun.net.www.ParseUtil.decode(ParseUtil.java:196)
+	sun.misc.FileURLMapper.getPath(FileURLMapper.java:47)
+TRACE 300027:
+	java.util.zip.Inflater.init(Inflater.java:Unknown line)
+	java.util.zip.Inflater.<init>(Inflater.java:83)
+	java.util.zip.ZipFile.getInflater(ZipFile.java:279)
+	java.util.zip.ZipFile.getInputStream(ZipFile.java:225)
+TRACE 300191:
+	java.math.BigInteger.squareToLen(BigInteger.java:1283)
+	java.math.BigInteger.oddModPow(BigInteger.java:1821)
+	java.math.BigInteger.modPow(BigInteger.java:1571)
+	sun.security.provider.DSA.generateV(DSA.java:374)
+TRACE 300192:
+	java.math.BigInteger.multiplyToLen(BigInteger.java:1194)
+	java.math.BigInteger.oddModPow(BigInteger.java:1808)
+	java.math.BigInteger.modPow(BigInteger.java:1571)
+	sun.security.provider.DSA.generateV(DSA.java:374)
+TRACE 300193:
+	java.math.BigInteger.squareToLen(BigInteger.java:1274)
+	java.math.BigInteger.oddModPow(BigInteger.java:1821)
+	java.math.BigInteger.modPow(BigInteger.java:1571)
+	sun.security.provider.DSA.generateV(DSA.java:374)
+TRACE 300194:
+	java.math.BigInteger.squareToLen(BigInteger.java:1274)
+	java.math.BigInteger.oddModPow(BigInteger.java:1821)
+	java.math.BigInteger.modPow(BigInteger.java:1571)
+	sun.security.provider.DSA.generateV(DSA.java:375)
+TRACE 300076:
+	sun.security.pkcs.PKCS7.parseSignedData(PKCS7.java:225)
+	sun.security.pkcs.PKCS7.parse(PKCS7.java:141)
+	sun.security.pkcs.PKCS7.parse(PKCS7.java:110)
+	sun.security.pkcs.PKCS7.<init>(PKCS7.java:92)
+TRACE 300102:
+	sun.security.provider.X509Factory.engineGenerateCertificate(X509Factory.java:90)
+	java.security.cert.CertificateFactory.generateCertificate(CertificateFactory.java:305)
+	sun.security.pkcs.PKCS7.parseSignedData(PKCS7.java:267)
+	sun.security.pkcs.PKCS7.parse(PKCS7.java:141)
+TRACE 300020:
+	java.io.BufferedReader.<init>(BufferedReader.java:76)
+	java.io.BufferedReader.<init>(BufferedReader.java:91)
+	sun.misc.JarIndex.read(JarIndex.java:287)
+	sun.misc.JarIndex.<init>(JarIndex.java:75)
+TRACE 300166:
+	sun.text.normalizer.NormalizerBase.<clinit>(NormalizerBase.java:521)
+	java.text.Normalizer.normalize(Normalizer.java:146)
+	sun.security.x509.AVA.toRFC2253CanonicalString(AVA.java:986)
+	sun.security.x509.RDN.toRFC2253StringInternal(RDN.java:430)
+TRACE 300054:
+	java.security.Provider.addEngine(Provider.java:925)
+	java.security.Provider.<clinit>(Provider.java:934)
+	sun.security.jca.ProviderList.<clinit>(ProviderList.java:53)
+	sun.security.jca.Providers.<clinit>(Providers.java:44)
+TRACE 300130:
+	sun.security.x509.X509Key.buildX509Key(X509Key.java:203)
+	sun.security.x509.X509Key.parse(X509Key.java:153)
+	sun.security.x509.CertificateX509Key.<init>(CertificateX509Key.java:58)
+	sun.security.x509.X509CertInfo.parse(X509CertInfo.java:688)
+TRACE 300151:
+	java.util.HashMap.addEntry(HashMap.java:754)
+	java.util.HashMap.put(HashMap.java:385)
+	java.util.jar.Attributes.put(Attributes.java:131)
+	java.util.jar.Attributes.putValue(Attributes.java:151)
+CPU SAMPLES BEGIN (total = 25) Sat Nov  5 22:01:35 2011
+rank   self  accum   count trace method
+   1 44,00% 44,00%      11 300023 java.util.zip.ZipFile.open
+   2  4,00% 48,00%       1 300179 java.util.AbstractList.subList
+   3  4,00% 52,00%       1 300204 java.lang.String.<init>
+   4  4,00% 56,00%       1 300027 java.util.zip.Inflater.init
+   5  4,00% 60,00%       1 300191 java.math.BigInteger.squareToLen
+   6  4,00% 64,00%       1 300192 java.math.BigInteger.multiplyToLen
+   7  4,00% 68,00%       1 300193 java.math.BigInteger.squareToLen
+   8  4,00% 72,00%       1 300194 java.math.BigInteger.squareToLen
+   9  4,00% 76,00%       1 300076 sun.security.pkcs.PKCS7.parseSignedData
+  10  4,00% 80,00%       1 300102 sun.security.provider.X509Factory.engineGenerateCertificate
+  11  4,00% 84,00%       1 300020 java.io.BufferedReader.<init>
+  12  4,00% 88,00%       1 300166 sun.text.normalizer.NormalizerBase.<clinit>
+  13  4,00% 92,00%       1 300054 java.security.Provider.addEngine
+  14  4,00% 96,00%       1 300130 sun.security.x509.X509Key.buildX509Key
+  15  4,00% 100,00%       1 300151 java.util.HashMap.addEntry
+CPU SAMPLES END
