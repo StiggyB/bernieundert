@@ -1,14 +1,10 @@
 package a02;
 
-import static akka.actor.Actors.poisonPill;
 import static akka.actor.Actors.remote;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
@@ -18,12 +14,9 @@ public class Worker extends UntypedActor {
 	private int actorId;
 	private ActorRef master;
 	private Calculator calc;
+	private Thread calcThread;
 	private BigInteger accPrime;
-	private int numCalculators;
-	private boolean workerBusy = false;
 	private List<BigInteger> factorList = new ArrayList<BigInteger>();
-	private Map<Thread, Calculator> threadList = new HashMap<Thread, Calculator>();
-
 
 	public Worker() {
 		getContext().setId(idGenerator + "");
@@ -38,7 +31,6 @@ public class Worker extends UntypedActor {
 		}
 	}
 	
-	// TODO Thread control and start some Threads impl
 	// TODO Timer CPU WallTime & GUI representation
 	@Override
 	public void onReceive(Object message) {
@@ -47,36 +39,17 @@ public class Worker extends UntypedActor {
 			if (accPrime == null) {
 				this.master = getContext().getSender().get();
 				accPrime = calculateMessage.getN();
-				numCalculators = calculateMessage.getnThreads();
 			}
 			BigInteger newPrime = calculateMessage.getN();
-			startAndStopCalculators(newPrime);
+			calc = new Calculator(this, newPrime);
+			calcThread = new Thread(calc);
+			calcThread.start();
+			System.out.println("START: " + calcThread.getName());
 		} else if (message instanceof ResultMessage) {
 			master.tell(message);
-			getContext().tell(poisonPill());
-		}else if (message instanceof CheckMessage) {
-			checkPrime(((CheckMessage)message).getN());
 		} else {
 			throw new IllegalArgumentException("Unknown message [" + message
 					+ "]");
-		}
-	}
-
-	synchronized private void startAndStopCalculators(BigInteger newPrime) {
-		for (Thread calcThread : threadList.keySet()) {
-			System.out.println("STOP: " + calcThread.getName());
-			threadList.get(calcThread).setRunning(false);
-			calcThread.interrupt();
-//			calcThread.stop();
-		}
-		threadList.clear();
-		for (int i = 0; i < numCalculators; i++) {
-			calc = new Calculator(this, newPrime);
-			Thread calcThread = new Thread(calc, "Calcularor" + i);
-			calcThread.start();
-			System.out.println("START: " + calcThread.getName());
-			threadList.put(calcThread, calc);
-			calcThread = null;
 		}
 	}
 	
@@ -91,23 +64,6 @@ public class Worker extends UntypedActor {
 	}
 	
 	synchronized public void pollardFinished(BigInteger result) {
-		if (!workerBusy) {
-			workerBusy = true;
-			for (Thread calcThread : threadList.keySet()) {
-				System.out.println("STOP: " + calcThread.getName());
-				threadList.get(calcThread).setRunning(false);
-				calcThread.interrupt();
-//			calcThread.stop();
-			}
-			threadList.clear();
-			CheckMessage checkMessage = new CheckMessage(result);
-			System.out.println("NEW MSG: " + checkMessage);
-			getContext().tell(checkMessage);
-		}
-		workerBusy = false;
-	}
-
-	private void checkPrime(BigInteger result) {
 		System.out.println("RESULT: " + result);
 		BigInteger prime = null;
 		if (prime != result) {
@@ -130,7 +86,7 @@ public class Worker extends UntypedActor {
 			resultMessage = new ResultMessage(factorList);
 			getContext().tell(resultMessage);
 		 } else {
-			 CalculateMessage calculateMessage = new CalculateMessage(prime, numCalculators);
+			 CalculateMessage calculateMessage = new CalculateMessage(prime);
 			 System.out.println("NEW MSG: " + calculateMessage);
 			 getContext().tell(calculateMessage);
 		 }
@@ -151,6 +107,12 @@ public class Worker extends UntypedActor {
 
 	@Override
 	public void postStop() {
+		if(calc != null) {
+			calc.setRunning(false);
+		}
+		if (calcThread != null) {
+			calcThread.interrupt();
+		}
 		System.out.println("Aktor wurde beendet: " + this.actorId);
 		super.postStop();
 	}
