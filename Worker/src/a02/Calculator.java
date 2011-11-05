@@ -35,20 +35,21 @@ public class Calculator implements Runnable {
 	
 	@Override
 	public void run() {
+		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < MAX_ITERATIONS && isRunning; i++) {
 			System.out.println("CALC!");
 			result = pollard(prime);
 			if (result == null) {
 				isRunning = false;
 				if (!worker.getFactorList().isEmpty()) {
-					worker.pollardFinished(prime);
+					worker.pollardFinished(prime, System.currentTimeMillis() - startTime);
 				} else {
-					worker.pollardFinished(result);
+					worker.pollardFinished(result, System.currentTimeMillis() - startTime);
 				}
 			}
 			else if(isPrime(result)) {
 				isRunning = false;
-				worker.pollardFinished(result);
+				worker.pollardFinished(result, System.currentTimeMillis() - startTime);
 			}
 		}	
 		System.out.println("JOIN IT!");

@@ -16,6 +16,7 @@ public class Worker extends UntypedActor {
 	private Calculator calc;
 	private Thread calcThread;
 	private BigInteger accPrime;
+	private long completeCpuTime;
 	private List<BigInteger> factorList = new ArrayList<BigInteger>();
 
 	public Worker() {
@@ -36,6 +37,7 @@ public class Worker extends UntypedActor {
 	public void onReceive(Object message) {
 		if (message instanceof CalculateMessage) {
 			CalculateMessage calculateMessage = (CalculateMessage) message;
+			this.completeCpuTime += calculateMessage.getCPUTime();
 			if (accPrime == null) {
 				this.master = getContext().getSender().get();
 				accPrime = calculateMessage.getN();
@@ -63,7 +65,7 @@ public class Worker extends UntypedActor {
 		}
 	}
 	
-	synchronized public void pollardFinished(BigInteger result) {
+	synchronized public void pollardFinished(BigInteger result, long cpuTime) {
 		System.out.println("RESULT: " + result);
 		BigInteger prime = null;
 		if (prime != result) {
@@ -71,22 +73,24 @@ public class Worker extends UntypedActor {
 			prime = prime.divide(result);
 			if(Calculator.isPrime(result)) {
 				add(result);
-				buildMessage(prime);
+				buildMessage(prime, cpuTime);
 			}
 		} else {
-			ResultMessage resultMessage = new ResultMessage(null);
+			ResultMessage resultMessage = new ResultMessage(null, this.completeCpuTime);
 			getContext().tell(resultMessage);
 		}
 	}
 
-	private void buildMessage(BigInteger prime) {
+	private void buildMessage(BigInteger prime, long cpuTime) {
 		ResultMessage resultMessage;
 		if (!(factorList.isEmpty()) && isCompletePrime()) {
 			System.out.println("RESULT");
-			resultMessage = new ResultMessage(factorList);
-			getContext().tell(resultMessage);
+			resultMessage = new ResultMessage(factorList, this.completeCpuTime);
+			if(getContext() != null) {
+				getContext().tell(resultMessage);
+			}
 		 } else {
-			 CalculateMessage calculateMessage = new CalculateMessage(prime);
+			 CalculateMessage calculateMessage = new CalculateMessage(prime, cpuTime);
 			 System.out.println("NEW MSG: " + calculateMessage);
 			 getContext().tell(calculateMessage);
 		 }
