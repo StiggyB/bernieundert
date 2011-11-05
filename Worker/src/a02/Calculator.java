@@ -43,6 +43,9 @@ public class Calculator implements Runnable {
 			} else if (!worker.getFactorList().isEmpty()) {
 				worker.pollardFinished(prime);
 				isRunning = false;
+			} else {
+				worker.pollardFinished(result);
+				isRunning = false;
 			}
 		}	
 	}
@@ -79,7 +82,6 @@ public class Calculator implements Runnable {
       }
 
 	private BigInteger pollard(BigInteger n) {
-		
 		if (n.mod(new BigInteger("2")).equals(BigInteger.ZERO)) {
 			return null;
 		}

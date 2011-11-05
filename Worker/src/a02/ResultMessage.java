@@ -11,7 +11,7 @@ public class ResultMessage implements Serializable {
 	private List<BigInteger> results = new ArrayList<BigInteger>();
 	
 	public ResultMessage(List<BigInteger> result) {
-		this.results.addAll(result); 
+		this.results = result;
 	}
 	
 	public List<BigInteger> getResults() {
