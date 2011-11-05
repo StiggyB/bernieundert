@@ -36,21 +36,25 @@ public class Calculator implements Runnable {
 	@Override
 	public void run() {
 		for (int i = 0; i < MAX_ITERATIONS && isRunning; i++) {
+			System.out.println("CALC!");
 			result = pollard(prime);
-			if(result != null) {
+			if (result == null) {
+				isRunning = false;
+				if (!worker.getFactorList().isEmpty()) {
+					worker.pollardFinished(prime);
+				} else {
+					worker.pollardFinished(result);
+				}
+			}
+			else if(isPrime(result)) {
+				isRunning = false;
 				worker.pollardFinished(result);
-				isRunning = false;
-			} else if (!worker.getFactorList().isEmpty()) {
-				worker.pollardFinished(prime);
-				isRunning = false;
-			} else {
-				worker.pollardFinished(result);
-				isRunning = false;
 			}
 		}	
+		System.out.println("JOIN IT!");
 	}
 	
-	public static boolean isPrime(BigInteger number) {
+	synchronized public static boolean isPrime(BigInteger number) {
         BigInteger two = new BigInteger("2");
         if (number.compareTo(two) < 0) {
             return false;
@@ -70,7 +74,7 @@ public class Calculator implements Runnable {
         }
     }
 
-	private static BigInteger sqrt(BigInteger n) {
+	synchronized private static BigInteger sqrt(BigInteger n) {
         BigInteger a = BigInteger.ONE;
         BigInteger b = new BigInteger(n.shiftRight(5).add(new BigInteger("8")).toString());
         while(b.compareTo(a) >= 0) {
@@ -81,7 +85,7 @@ public class Calculator implements Runnable {
         return a.subtract(BigInteger.ONE);
       }
 
-	private BigInteger pollard(BigInteger n) {
+	synchronized private BigInteger pollard(BigInteger n) {
 		if (n.mod(new BigInteger("2")).equals(BigInteger.ZERO)) {
 			return null;
 		}
