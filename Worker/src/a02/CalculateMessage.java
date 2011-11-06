@@ -5,26 +5,31 @@ import java.math.BigInteger;
 
 public class CalculateMessage implements Serializable {
 
-	private static final long serialVersionUID = 840244832287440949L; 
+	private static final long serialVersionUID = 840244832287440949L;
 	private BigInteger n;
+	private int maxIterations;
 	private long cpuTime;
-	
 
-	public CalculateMessage(BigInteger n, long CPUTime) { 
+	public CalculateMessage(BigInteger n, int maxIterations, long cpuTime) {
 		this.n = n;
-		this.cpuTime = CPUTime;
+		this.maxIterations = maxIterations;
+		this.cpuTime = cpuTime;
 	}
-	
-	public BigInteger getN() { 
+
+	public int getMaxIterations() {
+		return maxIterations;
+	}
+
+	public BigInteger getN() {
 		return this.n;
+	}
+
+	public long getCpuTime() {
+		return this.cpuTime;
 	}
 	
 	@Override
 	public String toString() {
 		return "CalculateMessage [n = " + n + "]";
-	}
-
-	public long getCPUTime() {
-		return this.cpuTime;
 	}
 }

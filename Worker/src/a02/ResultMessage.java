@@ -6,27 +6,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResultMessage implements Serializable {
-	
+
 	private static final long serialVersionUID = -6065578273626197783L;
-	private long completeCpuTime;
 	private List<BigInteger> results = new ArrayList<BigInteger>();
-	
-	public ResultMessage(List<BigInteger> result, long completeCpuTime) {
+	private List<Long> cpuTimes = new ArrayList<Long>();
+
+	public ResultMessage(List<BigInteger> result, List<Long> cpuTimes) {
 		this.results = result;
-		this.completeCpuTime = completeCpuTime;
+		this.cpuTimes = cpuTimes;
 	}
 	
-	public long getCompleteCpuTime() {
-		return completeCpuTime;
+	public List<Long> getCpuTimes() {
+		return cpuTimes;
 	}
 
 	public List<BigInteger> getResults() {
-		return this.results; 
+		return this.results;
 	}
 
 	@Override
 	public String toString() {
 		return "ResultMessage [result=" + results + "]";
 	}
-	
+
 }

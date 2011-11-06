@@ -10,14 +10,16 @@ import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
 
 public class Worker extends UntypedActor {
+
 	private static int idGenerator = 0;
 	private int actorId;
+	private int maxIterations;
 	private ActorRef master;
 	private Calculator calc;
 	private Thread calcThread;
 	private BigInteger accPrime;
-	private long completeCpuTime;
 	private List<BigInteger> factorList = new ArrayList<BigInteger>();
+	private List<Long> cpuTimes = new ArrayList<Long>();
 
 	public Worker() {
 		getContext().setId(idGenerator + "");
@@ -25,28 +27,29 @@ public class Worker extends UntypedActor {
 		System.out.println("Aktor wurde erstellt: " + idGenerator);
 		idGenerator++;
 	}
-	
-	synchronized public List<BigInteger> getFactorList() {
-		synchronized (factorList) {
-			return factorList;
-		}
+
+	public int getMaxIterations() {
+		return maxIterations;
 	}
-	
-	// TODO Timer CPU WallTime & GUI representation
+
+	public List<BigInteger> getFactorList() {
+		return factorList;
+	}
+
 	@Override
 	public void onReceive(Object message) {
 		if (message instanceof CalculateMessage) {
 			CalculateMessage calculateMessage = (CalculateMessage) message;
-			this.completeCpuTime += calculateMessage.getCPUTime();
+			cpuTimes.add(calculateMessage.getCpuTime());
 			if (accPrime == null) {
 				this.master = getContext().getSender().get();
-				accPrime = calculateMessage.getN();
+				this.accPrime = calculateMessage.getN();
+				this.maxIterations = calculateMessage.getMaxIterations();
 			}
 			BigInteger newPrime = calculateMessage.getN();
 			calc = new Calculator(this, newPrime);
 			calcThread = new Thread(calc);
 			calcThread.start();
-			System.out.println("START: " + calcThread.getName());
 		} else if (message instanceof ResultMessage) {
 			master.tell(message);
 		} else {
@@ -54,9 +57,9 @@ public class Worker extends UntypedActor {
 					+ "]");
 		}
 	}
-	
+
 	synchronized public void add(BigInteger factor) {
-		if(factor != null) {
+		if (factor != null) {
 			synchronized (factorList) {
 				this.factorList.add(factor);
 			}
@@ -64,19 +67,18 @@ public class Worker extends UntypedActor {
 			throw new NullPointerException();
 		}
 	}
-	
+
 	synchronized public void pollardFinished(BigInteger result, long cpuTime) {
-		System.out.println("RESULT: " + result);
 		BigInteger prime = null;
 		if (prime != result) {
 			prime = calc.getPrime();
 			prime = prime.divide(result);
-			if(Calculator.isPrime(result)) {
+			if (Calculator.isPrime(result)) {
 				add(result);
 				buildMessage(prime, cpuTime);
 			}
 		} else {
-			ResultMessage resultMessage = new ResultMessage(null, this.completeCpuTime);
+			ResultMessage resultMessage = new ResultMessage(null, null);
 			getContext().tell(resultMessage);
 		}
 	}
@@ -84,34 +86,32 @@ public class Worker extends UntypedActor {
 	private void buildMessage(BigInteger prime, long cpuTime) {
 		ResultMessage resultMessage;
 		if (!(factorList.isEmpty()) && isCompletePrime()) {
-			System.out.println("RESULT");
-			resultMessage = new ResultMessage(factorList, this.completeCpuTime);
-			if(getContext() != null) {
+			resultMessage = new ResultMessage(factorList, cpuTimes);
+			if (getContext() != null) {
 				getContext().tell(resultMessage);
 			}
-		 } else {
-			 CalculateMessage calculateMessage = new CalculateMessage(prime, cpuTime);
-			 System.out.println("NEW MSG: " + calculateMessage);
-			 getContext().tell(calculateMessage);
-		 }
+		} else {
+			CalculateMessage calculateMessage = new CalculateMessage(prime,
+					maxIterations, cpuTime);
+			getContext().tell(calculateMessage);
+		}
 	}
-	
+
 	private boolean isCompletePrime() {
-        boolean bool = false;
-        BigInteger result = BigInteger.ONE;
-        for (BigInteger factor : factorList) {
-                result = result.multiply(factor); 
-        }
-        System.out.println(result + " EQUALS " + accPrime);
-        if(result.equals(accPrime)) {
-                bool = true;
-        }
-        return bool;
-}
+		boolean bool = false;
+		BigInteger result = BigInteger.ONE;
+		for (BigInteger factor : factorList) {
+			result = result.multiply(factor);
+		}
+		if (result.equals(accPrime)) {
+			bool = true;
+		}
+		return bool;
+	}
 
 	@Override
 	public void postStop() {
-		if(calc != null) {
+		if (calc != null) {
 			calc.setRunning(false);
 		}
 		if (calcThread != null) {
@@ -120,7 +120,7 @@ public class Worker extends UntypedActor {
 		System.out.println("Aktor wurde beendet: " + this.actorId);
 		super.postStop();
 	}
-	
+
 	public static void main(String[] args) {
 		remote().start("localhost", 2500);
 	}
