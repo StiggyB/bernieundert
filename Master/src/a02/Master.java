@@ -3,71 +3,83 @@ package a02;
 import static akka.actor.Actors.remote;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import akka.actor.ActorRef;
 import akka.actor.Actors;
 import akka.actor.UntypedActor;
-import akka.remoteinterface.RemoteServerModule;
 
+//TODO GUI representation
+//GUI: To set max_iter, host, port, numberOfWorker
 
-public class Master extends UntypedActor { 
-	
-	public static final int DEFAULT_PORT = 2500;
+public class Master extends UntypedActor {
 
-	static int resultsReceived = 0;
-	static int numberOfWorker;
-	static RemoteServerModule remoteSupport;
-	
 	private Timer timer;
-
+	private List<WorkerInfo> wInfoList = new ArrayList<WorkerInfo>();
+	
 	@Override
-	public void onReceive(Object message) throws Exception { 
-		System.out.println("RECEIVE");
+	public void onReceive(Object message) throws Exception {
+		if (message instanceof RequestMessage) {
+			this.wInfoList = ((RequestMessage) message).getwInfoList();
+		}
 		if (message instanceof CalculateMessage) {
-           CalculateMessage calculate = (CalculateMessage) message;
-           startNWorkers(2);
-           ActorRef me = getContext();
-           for (ActorRef worker : WorkerInfo.getWorkerRefs()) {
-        	   worker.tell(calculate, me);
-           }
-           timer = new Timer(0);
-           timer.startTimer();
-		} else if (message instanceof ResultMessage) {
-			System.out.println("Duration: " + timer.stopTimer());
-			System.out.println("CPU-Time: " + new Timer(((ResultMessage) message).getCompleteCpuTime()));
-			for (ActorRef actor : WorkerInfo.getWorkerRefs()) {
-				actor.stop();
+			timer = new Timer(0);
+			timer.startTimer();
+			CalculateMessage calculate = (CalculateMessage) message;
+			// If GUI implemented comment next 2 line!
+			WorkerInfo wInfo = new WorkerInfo("localhost", 2500, 2);
+			startNWorkers(wInfo);
+			// --
+			/*
+			for (WorkerInfo workerInfo : wInfoList) {
+				startNWorkers(workerInfo);
 			}
-			Actors.registry().shutdownAll();
+			 */
+			ActorRef me = getContext();
+			for (ActorRef worker : WorkerInfo.getWorkerRefs()) {
+				worker.tell(calculate, me);
+			}
+		} else if (message instanceof ResultMessage) {
+			timer.stopTimer();
+			timer.setCpuTimes(((ResultMessage) message).getCpuTimes());
+			timer.printTimes();
+			stopNWorkers();
 			List<BigInteger> results = ((ResultMessage) message).getResults();
 			if (results == null) {
 				System.out.println("NO PRIME!");
 			} else {
-				System.out.println("PRIME(S): " + results);
+				System.out.println("PRIME(S): \t\t" + results);
 			}
 		} else {
-			throw new IllegalArgumentException("Unknown message [" +
-	                             message + "]");
-		} 
+			throw new IllegalArgumentException("Unknown message [" + message
+					+ "]");
+		}
 	}
-	
-	public void startNWorkers(int nWorkers) {
-		for (int iPort = DEFAULT_PORT; iPort < (nWorkers + DEFAULT_PORT); iPort++) {
-			System.out.println("WORKER: " + iPort);
-			ActorRef worker = remote().actorFor(Worker.class.getName(), "localhost", DEFAULT_PORT);
+
+	private void startNWorkers(WorkerInfo wInfo) {
+		for (int i = 0; i < wInfo.getAmountWorkers(); i++) {
+			ActorRef worker = remote().actorFor(Worker.class.getName(),
+					wInfo.getIdentifier(), wInfo.getPort());
 			WorkerInfo.getWorkerRefs().add(worker);
 		}
 	}
 
+	private void stopNWorkers() {
+		for (ActorRef actor : WorkerInfo.getWorkerRefs()) {
+			actor.stop();
+		}
+		Actors.registry().shutdownAll();
+	}
 
 	public static void main(String[] args) {
-			remoteSupport = remote().start("localhost", 2553);
-			ActorRef client = remote().actorFor(Master.class.getName(),
-					"localhost", 2553);
-			BigInteger n = new BigInteger("1137047281562824484226171575219374004320812483047");
-			CalculateMessage calculate = new CalculateMessage(n, 0);
-			client.tell(calculate);
+		remote().start("localhost", 2553);
+		ActorRef client = remote().actorFor(Master.class.getName(),
+				"localhost", 2553);
+		//This Message sends the GUI & GUI starts here
+		BigInteger n = new BigInteger(
+				"1137047281562824484226171575219374004320812483047");
+		CalculateMessage calculate = new CalculateMessage(n, 50, 0);
+		client.tell(calculate);
 	}
 }
-
