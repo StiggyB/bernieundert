@@ -1,5 +1,17 @@
 package a02;
 
+/**
+ * Praktikum: VSP<br>
+ * Semester: WS11<br>
+ * Aufgaben-Nr.: 02<br>
+ * 
+ * Version: V0.1<br>
+ * Aenderungen:
+ * 
+ * Quellen: API, Swing, VS Folien
+ * 
+ * @author Mueller-Pettenpohl, Tell #1989982, Benjamin, Burchart #1863248<br>
+ */
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -15,7 +27,7 @@ public class ResultMessage implements Serializable {
 		this.results = result;
 		this.cpuTimes = cpuTimes;
 	}
-	
+
 	public List<Long> getCpuTimes() {
 		return cpuTimes;
 	}

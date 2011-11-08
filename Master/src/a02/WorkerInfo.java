@@ -1,5 +1,17 @@
 package a02;
 
+/**
+ * Praktikum: VSP<br>
+ * Semester: WS11<br>
+ * Aufgaben-Nr.: 02<br>
+ * 
+ * Version: V0.1<br>
+ * Aenderungen:
+ * 
+ * Quellen: API, Swing, VS Folien
+ * 
+ * @author Mueller-Pettenpohl, Tell #1989982, Benjamin, Burchart #1863248<br>
+ */
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +23,16 @@ public class WorkerInfo implements Serializable {
 	private String host;
 	private int port;
 	private int nWorkers;
-	static private List<ActorRef> workerRefs = new ArrayList<ActorRef>();
+	private static List<ActorRef> workerRefs = new ArrayList<ActorRef>();
 
-	public static List<ActorRef> getWorkerRefs() {
-		return workerRefs;
-	}
-
-	public WorkerInfo(String identifier, int port, int AmountWorkers) {
+	public WorkerInfo(String identifier, int port, int nWorkers) {
 		this.host = identifier;
 		this.port = port;
-		this.nWorkers = AmountWorkers;
+		this.nWorkers = nWorkers;
+	}
+	
+	public static List<ActorRef> getWorkerRefs() {
+		return workerRefs;
 	}
 
 	public void setIdentifier(String identifier) {
@@ -63,4 +75,11 @@ public class WorkerInfo implements Serializable {
 			return false;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "WorkerInfo [host=" + host + ", port=" + port + ", nWorkers="
+				+ nWorkers + "]";
+	}
+
 }
