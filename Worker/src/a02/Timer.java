@@ -1,5 +1,17 @@
 package a02;
 
+/**
+ * Praktikum: VSP<br>
+ * Semester: WS11<br>
+ * Aufgaben-Nr.: 02<br>
+ * 
+ * Version: V0.1<br>
+ * Aenderungen:
+ * 
+ * Quellen: API, Swing, VS Folien
+ * 
+ * @author Mueller-Pettenpohl, Tell #1989982, Benjamin, Burchart #1863248<br>
+ */
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,17 +75,19 @@ public class Timer implements Serializable {
 		int i = 1;
 		long completeCpuTime = 0;
 		for (Long cpuTime : cpuTimes) {
-			cpuTimeString.append("[Factor " + i + ": " + (cpuTime / 1000 % 60)
-					+ "Sec : " + (cpuTime % 1000) + "Msec]\t");
+			cpuTimeString.append("\t\t[Factor " + i + ": "
+					+ (cpuTime / 1000 % 60) + " Sec : " + (cpuTime % 1000)
+					+ " Msec]\n");
 			completeCpuTime += cpuTime;
 			i++;
 		}
 		return "Wall time:\t\t[" + (durationTime / 1000 / 3600) + " Hours : "
 				+ ((durationTime / 1000 % 3600) / 60) + " Min : "
 				+ (durationTime / 1000 % 60) + " Sec : "
-				+ (durationTime % 1000) + " Msec]" + "\nCPU Times:\t\t"
-				+ cpuTimeString + "\nComplete CPU Time:\t[" + completeCpuTime
-				+ "Msec]";
+				+ (durationTime % 1000) + " Msec]" + "\nCPU Times:"
+				+ cpuTimeString + "Complete CPU Time:\t["
+				+ (completeCpuTime / 1000 % 60) + " Sec : "
+				+ (completeCpuTime % 1000) + " Msec]";
 	}
 
 }
