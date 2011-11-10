@@ -81,6 +81,6 @@
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/spring-expression-3.0.5.RELEASE.jar"/>
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/stax-api-1.0-2.jar"/>
 	<classpathentry kind="lib" path="/Users/Administrator/Documents/Studium/BTI5WS11/VS/Praktikum/Verschiedenes/akka-microkernel-1.2/lib/akka/stax-api-1.0.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/WS2011_VS_Worker"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WS2011_VS_Lab2_Worker"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
