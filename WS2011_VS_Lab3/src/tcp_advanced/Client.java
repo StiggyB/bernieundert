@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import namensdienst.InvokeMessage;
 
 public class Client {
 	private Socket mySocket;
@@ -16,7 +19,8 @@ public class Client {
 		mySocket = new Socket(host, port);
 		InputStream is = mySocket.getInputStream();
 		in = new ObjectInputStream(is);
-		out = new ObjectOutputStream(mySocket.getOutputStream());
+		OutputStream os = mySocket.getOutputStream();
+		out = new ObjectOutputStream(os);
 	}
 	
 	public Object receive() throws IOException, ClassNotFoundException {
@@ -40,15 +44,11 @@ public class Client {
 	 * @throws ClassNotFoundException 
 	 */
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
-		// Verbindung aufbauen
 		Client myClient = new Client("localhost", 14001);
 		
-		// Kommunikation
-		myClient.send("Knock, knock!");
-		System.out.println(myClient.receive());
+		InvokeMessage message = new InvokeMessage("IT IS!", null);
+		myClient.send(message);
 		
-		// Verbindung schliessen
-		myClient.close();
 	}
 
 }
