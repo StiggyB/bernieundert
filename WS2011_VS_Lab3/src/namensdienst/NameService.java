@@ -1,13 +1,17 @@
 package namensdienst;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import tcp_advanced.Server;
 
 public abstract class NameService {
 	
 	private Map<String, ObjectRef> entries = new HashMap<String, ObjectRef>();
 	private Server socket;
-	private List<Threads> workerList = new ArrayList<Threads>();
+	private List<Thread> workerList = new ArrayList<Thread>();
 	
 	
 	public abstract void rebind(Object servant, String name);
