@@ -1,6 +1,7 @@
 package tcp_advanced;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -13,8 +14,8 @@ public class Client {
 	
 	public Client(String host, int port) throws UnknownHostException, IOException {
 		mySocket = new Socket(host, port);
-		
-		in = new ObjectInputStream(mySocket.getInputStream());
+		InputStream is = mySocket.getInputStream();
+		in = new ObjectInputStream(is);
 		out = new ObjectOutputStream(mySocket.getOutputStream());
 	}
 	
