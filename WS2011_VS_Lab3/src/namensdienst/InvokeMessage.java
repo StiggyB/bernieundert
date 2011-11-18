@@ -12,4 +12,13 @@ public class InvokeMessage implements Serializable{
 		this.methodName = methodName;
 		this.methodArgs = methodArgs;
 	}
+
+	public String getMethodName() {
+		return methodName;
+	}
+
+	public Object[] getMethodArgs() {
+		return methodArgs;
+	}
+	
 }
