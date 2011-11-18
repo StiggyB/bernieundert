@@ -48,7 +48,7 @@ public class Client {
 		System.out.println("RUNNING");
 		Client client = new Client("localhost", 14001);
 		
-		InvokeMessage message = new InvokeMessage("IT IS!", null);
+		InvokeMessage message = new InvokeMessage(null, "IT IS!", null);
 		client.send(message);
 		
 		System.out.println("RUNNING... closed");
