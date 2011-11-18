@@ -3,12 +3,11 @@ package namensdienst;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mware_lib.NameService;
 import mware_lib.ObjectBroker;
+import tcp_advanced.Client;
 import tcp_advanced.Server;
 
 /**
@@ -23,8 +22,13 @@ public class NameServiceServer {
 	private ServerSocket socket;
 	private List<Thread> workerList = new ArrayList<Thread>();
 
-	public void delegateRequest(String host, int port) {
-		
+	//TODO implement sync for worker threads
+	
+	public void delegateRequest(Client client) {
+		NameServiceWorker nsWorker = new NameServiceWorker(client, null/*ref on localNS*/);
+		Thread worker = new Thread(nsWorker);
+		workerList.add(worker);
+		worker.start();
 	}
 	
 	
