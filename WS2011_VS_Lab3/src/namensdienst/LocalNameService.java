@@ -8,10 +8,18 @@ import mware_lib.NameService;
 
 public class LocalNameService extends NameService {
 
-	private Map<String, RemoteObject> remoteEntries = new HashMap<String, RemoteObject>();
+	private Map<String, RemoteObject> remoteEntries;
 	
-	public Map<String, RemoteObject> getRemoteEntries() {
-		return remoteEntries;
+	public LocalNameService() {
+		this.remoteEntries = new HashMap<String, RemoteObject>();
+	}
+	
+	synchronized public void put(String key, RemoteObject value) {
+		remoteEntries.put(key, value);
+	}
+	
+	synchronized public RemoteObject get(Object key) {
+		return remoteEntries.get(key);
 	}
 
 	@Override
@@ -27,4 +35,5 @@ public class LocalNameService extends NameService {
 	public Object resolve(String name) {
 		return remoteEntries.get(name);
 	}
+
 }

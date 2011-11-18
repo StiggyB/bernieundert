@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -43,12 +44,14 @@ public class Client {
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 * @throws ClassNotFoundException 
+	 * @throws NoSuchMethodException 
+	 * @throws SecurityException 
 	 */
-	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
+	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, SecurityException, NoSuchMethodException {
 		System.out.println("RUNNING");
 		Client client = new Client("localhost", 14001);
 		
-		InvokeMessage message = new InvokeMessage(null, "IT IS!", null);
+		InvokeMessage message = new InvokeMessage("IT IS!", Client.class.getMethod("receive", (Class<?>[])null), null);
 		client.send(message);
 		
 		System.out.println("RUNNING... closed");

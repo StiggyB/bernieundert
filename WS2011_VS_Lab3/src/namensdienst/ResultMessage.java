@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class ResultMessage implements Serializable{
 
 	private Object result;
-
+	private Exception[] remoteExceptions;
 
 	public ResultMessage(Object result) {
 		super();
@@ -14,5 +14,9 @@ public class ResultMessage implements Serializable{
 	
 	public Object getResult() {
 		return result;
+	}
+	
+	public Exception[] getRemoteExceptions() {
+		return remoteExceptions;
 	}
 }

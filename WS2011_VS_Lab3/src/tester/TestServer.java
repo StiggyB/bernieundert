@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 import namensdienst.InvokeMessage;
 import namensdienst.ResultMessage;
 
-public class Test_Server {
+public class TestServer {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		System.out.println("TESTER");
