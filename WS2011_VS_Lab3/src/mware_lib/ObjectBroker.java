@@ -1,6 +1,6 @@
 package mware_lib;
 
-import namensdienst.NameService;
+import namensdienst.LocalNameService;
 
 public class ObjectBroker {
 	
@@ -8,7 +8,6 @@ public class ObjectBroker {
 	private int port;
 	
 	public ObjectBroker(String host, int port) {
-		super();
 		this.host = host;
 		this.port = port;
 	}
@@ -20,7 +19,7 @@ public class ObjectBroker {
 	   	// Parameter: Host und Port, bei dem die Dienste (Namensdienst)
 	   	//            kontaktiert werden sollen.
 	public NameService getNameService() {
-		return new LocalNameService();
+		return new LocalNameService(/*host, port*/);
 	}
 		// Liefert den Namensdienst (Stellvetreterobjekt).
 }

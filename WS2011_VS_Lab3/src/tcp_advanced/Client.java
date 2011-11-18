@@ -17,10 +17,11 @@ public class Client {
 	
 	public Client(String host, int port) throws UnknownHostException, IOException {
 		mySocket = new Socket(host, port);
-		InputStream is = mySocket.getInputStream();
-		in = new ObjectInputStream(is);
+		
 		OutputStream os = mySocket.getOutputStream();
 		out = new ObjectOutputStream(os);
+		InputStream is = mySocket.getInputStream();
+		in = new ObjectInputStream(is);
 	}
 	
 	public Object receive() throws IOException, ClassNotFoundException {
@@ -44,11 +45,14 @@ public class Client {
 	 * @throws ClassNotFoundException 
 	 */
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
-		Client myClient = new Client("localhost", 14001);
+		System.out.println("RUNNING");
+		Client client = new Client("localhost", 14001);
 		
 		InvokeMessage message = new InvokeMessage("IT IS!", null);
-		myClient.send(message);
+		client.send(message);
 		
+		System.out.println("RUNNING... closed");
+		client.close();
 	}
 
 }
