@@ -39,7 +39,7 @@ public class Server {
 		Object message = conn.receive();
 		if(message instanceof InvokeMessage) {
 			InvokeMessage iMsg = (InvokeMessage)message;
-			System.out.println(iMsg.getMethodName());
+			System.out.println(iMsg.getClassName());
 		} else if(message instanceof ResultMessage) {
 			ResultMessage rMsg = (ResultMessage)message;
 			System.out.println(rMsg.getResult());

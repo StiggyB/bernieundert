@@ -1,13 +1,12 @@
 package namensdienst;
 
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mware_lib.NameService;
-import mware_lib.ObjectBroker;
 import tcp_advanced.Client;
+import tcp_advanced.Connection;
 import tcp_advanced.Server;
 
 /**
@@ -17,26 +16,44 @@ import tcp_advanced.Server;
  * @author Administrator
  *
  */
-public class NameServiceServer {
+public class NameServiceServer implements Runnable{
 
-	private ServerSocket socket;
+	//TODO implement dynamic proxy/ skeleton
+	private String host;
+	private int port;
+	private boolean isRunning;
+	private Client client;
+	private Server server;
+	private LocalNameService nameService;
 	private List<Thread> workerList = new ArrayList<Thread>();
 
-	//TODO implement sync for worker threads
+	public NameServiceServer(String host, int port, LocalNameService nameService) throws UnknownHostException, IOException {
+		this.host = host;
+		this.port = port;
+		this.isRunning = true;
+		this.nameService = nameService;
+		this.client = new Client(this.host, this.port);
+		this.server = new Server(this.port);
+	}
 	
-	public void delegateRequest(Client client) {
-		NameServiceWorker nsWorker = new NameServiceWorker(client, null/*ref on localNS*/);
+	public void delegateRequest(Connection connection) {
+		NameServiceWorker nsWorker = new NameServiceWorker(connection, nameService);
 		Thread worker = new Thread(nsWorker);
 		workerList.add(worker);
 		worker.start();
 	}
 	
-	
-	public static void main(String[] args) throws IOException {
-		Server server = new Server(14001);
-		ObjectBroker ob = new ObjectBroker("localhost", 14001);
-		ObjectBroker.getBroker("localhost", 14001);
-		NameService nService = ob.getNameService();
+	@Override
+	public void run() {
+		while(isRunning) {
+			try {
+				Connection connection = server.getConnection();
+				delegateRequest(connection);
+				connection.close();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-	
 }

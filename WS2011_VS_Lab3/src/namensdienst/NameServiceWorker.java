@@ -5,19 +5,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import tcp_advanced.Client;
+import tcp_advanced.Connection;
 
 public class NameServiceWorker implements Runnable {
 
 	private Client client;
+	private Connection connection;
 	private LocalNameService localNS;
 	private Object remoteResult;
 	private boolean isRunning;
 
-	public NameServiceWorker(Client client, LocalNameService lnService) {
-		this.client = client;
+	public NameServiceWorker(Connection connection, LocalNameService lnService) {
+		this.connection = connection;
 		this.localNS = lnService;
 		this.remoteResult = null;
-		this.isRunning = false;
+		this.isRunning = true;
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class NameServiceWorker implements Runnable {
 		while (isRunning) {
 			Object message = null;
 			try {
-				message = client.receive();
+				message = connection.receive();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
@@ -34,7 +36,7 @@ public class NameServiceWorker implements Runnable {
 			}
 			if (message instanceof InvokeMessage) {
 				InvokeMessage iMsg = (InvokeMessage) message;
-				RemoteObject remoteObj = localNS.getRemoteEntries().get(
+				RemoteObject remoteObj = localNS.get(
 						iMsg.getClassName());
 				Method invokeMeth = iMsg.getInvMethod();
 				try {
@@ -50,7 +52,7 @@ public class NameServiceWorker implements Runnable {
 
 				ResultMessage rMsg = new ResultMessage(remoteResult);
 				try {
-					client.send(rMsg);
+					connection.send(rMsg);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
