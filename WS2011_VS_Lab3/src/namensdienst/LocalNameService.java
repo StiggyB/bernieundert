@@ -10,6 +10,10 @@ public class LocalNameService extends NameService {
 
 	private Map<String, RemoteObject> remoteEntries;
 	
+	synchronized public Map<String, RemoteObject> getRemoteEntries() {
+		return remoteEntries;
+	}
+
 	public LocalNameService() {
 		this.remoteEntries = new HashMap<String, RemoteObject>();
 	}

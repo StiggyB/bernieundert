@@ -4,20 +4,18 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import tcp_advanced.Client;
 import tcp_advanced.Connection;
 
 public class NameServiceWorker implements Runnable {
 
-	private Client client;
 	private Connection connection;
 	private LocalNameService localNS;
 	private Object remoteResult;
 	private boolean isRunning;
 
-	public NameServiceWorker(Connection connection, LocalNameService lnService) {
+	public NameServiceWorker(Connection connection, LocalNameService localNS) {
 		this.connection = connection;
-		this.localNS = lnService;
+		this.localNS = localNS;
 		this.remoteResult = null;
 		this.isRunning = true;
 	}

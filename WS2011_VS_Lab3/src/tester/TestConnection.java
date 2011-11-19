@@ -12,7 +12,7 @@ public class TestConnection {
 		Client c = new Client("localhost", 14001);
 		
 		System.out.println("RUNNING");
-		InvokeMessage message = new InvokeMessage("IT IS!", Client.class.getMethod("receive", (Class<?>[])null), null);
+		InvokeMessage message = new InvokeMessage("IT IS!", Client.class.getMethod("receive", (Class<?>[])null), (Object[])null);
 		c.send(message);
 		
 		System.out.println("RUNNING");

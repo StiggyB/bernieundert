@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -51,7 +50,7 @@ public class Client {
 		System.out.println("RUNNING");
 		Client client = new Client("localhost", 14001);
 		
-		InvokeMessage message = new InvokeMessage("IT IS!", Client.class.getMethod("receive", (Class<?>[])null), null);
+		InvokeMessage message = new InvokeMessage("IT IS!", Client.class.getMethod("receive", (Class<?>[])null), (Object[])null);
 		client.send(message);
 		
 		System.out.println("RUNNING... closed");

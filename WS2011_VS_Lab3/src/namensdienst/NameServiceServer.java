@@ -1,17 +1,15 @@
 package namensdienst;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import tcp_advanced.Client;
 import tcp_advanced.Connection;
 import tcp_advanced.Server;
 
 /**
  * This NameServiceServer delegates requests from the Clients
- *  to the NameServerWorker
+ * to the NameServerWorker
  * 
  * @author Administrator
  *
@@ -19,21 +17,19 @@ import tcp_advanced.Server;
 public class NameServiceServer implements Runnable{
 
 	//TODO implement dynamic proxy/ skeleton
-	private String host;
+//	private String host;
 	private int port;
 	private boolean isRunning;
-	private Client client;
 	private Server server;
 	private LocalNameService nameService;
 	private List<Thread> workerList = new ArrayList<Thread>();
 
-	public NameServiceServer(String host, int port, LocalNameService nameService) throws UnknownHostException, IOException {
-		this.host = host;
+	public NameServiceServer(String host, int port, LocalNameService nameService) {
+//		this.host = host;
 		this.port = port;
 		this.isRunning = true;
 		this.nameService = nameService;
-		this.client = new Client(this.host, this.port);
-		this.server = new Server(this.port);
+		
 	}
 	
 	public void delegateRequest(Connection connection) {
@@ -45,6 +41,12 @@ public class NameServiceServer implements Runnable{
 	
 	@Override
 	public void run() {
+		try {
+			this.server = new Server(this.port);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		while(isRunning) {
 			try {
 				Connection connection = server.getConnection();

@@ -26,11 +26,11 @@ public class ObjectBroker {
 	public static ObjectBroker getBroker(String serviceHost, int listenPort) throws UnknownHostException, IOException {
 		return new ObjectBroker(serviceHost, listenPort);
 	}
-
 	// Das hier zurückgelieferte Objekt soll der zentrale Einstiegspunkt
 	// der Middleware aus Anwendersicht sein.
 	// Parameter: Host und Port, bei dem die Dienste (Namensdienst)
 	// kontaktiert werden sollen.
+
 	public NameService getNameService() {
 		return nameService;
 	}

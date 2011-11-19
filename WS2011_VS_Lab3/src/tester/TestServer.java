@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import namensdienst.InvokeMessage;
 import namensdienst.ResultMessage;
 
 public class TestServer {
