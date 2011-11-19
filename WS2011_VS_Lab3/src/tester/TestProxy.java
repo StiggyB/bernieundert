@@ -2,7 +2,6 @@ package tester;
 
 import java.lang.reflect.Proxy;
 
-import mware_lib.Handler;
 
 public class TestProxy {
 

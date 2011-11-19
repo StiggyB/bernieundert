@@ -13,9 +13,9 @@ public class InvokeMessage implements Serializable{
 	private Method invMethod;
 	private Object[] methodArgs;
 	
-	public InvokeMessage(String className, Method methodName, Object... methodArgs) {
+	public InvokeMessage(String className, Method invMethod, Object... methodArgs) {
 		this.className = className;
-		this.invMethod = methodName;
+		this.invMethod = invMethod;
 		this.methodArgs = methodArgs;
 	}
 

@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import mware_lib.NameService;
 import mware_lib.ObjectBroker;
+import appl.ManagerImpl;
 import branch_access.Manager;
-import branch_access.ManagerSkeleton;
 import cash_access.Account;
 
 public class TestNameService {
@@ -23,11 +23,13 @@ public class TestNameService {
 		NameService localNS = obLocal.getNameService();
 
 		System.out.println("Nameservices implemented");
-		Manager remoteManager = new ManagerSkeleton(remoteNS, "Manager", PORT);
+		Manager remoteManager = new ManagerImpl(remoteNS);
 		remoteNS.rebind(remoteManager, "Manager");
 
-		System.out.println("RemoteManager implemented");
+		System.out.println("RemoteManager implemented: " + remoteManager);
 		Manager localManager = (Manager) localNS.resolve("Manager");
+		
+		System.out.println("localManager: " + localManager);
 		String localAcc = localManager.createAccount("1234");
 
 		System.out.println("LocalManager implemented");

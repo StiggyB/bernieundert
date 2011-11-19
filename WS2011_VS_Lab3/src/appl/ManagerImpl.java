@@ -1,14 +1,30 @@
 package appl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import mware_lib.NameService;
 import branch_access.Manager;
+import cash_access.Account;
 
 public class ManagerImpl extends Manager {
 
+	NameService nameService;
+	List<Account> accList;
+	
+	public ManagerImpl(NameService nameService) {
+		super();
+		this.nameService = nameService;
+		accList = new ArrayList<Account>();
+	}
+	
 	@Override
 	public String createAccount(String owner) {
-		// TODO Auto-generated method stub
 		System.out.println("createAccount");
-		return null;
+		AccountImpl acc = new AccountImpl(owner);
+		accList.add(acc);
+		nameService.rebind(acc, acc.getAccID());
+		return acc.getAccID();
 	}
 
 	@Override

@@ -8,14 +8,20 @@ import mware_lib.NameService;
 
 public class LocalNameService extends NameService {
 
+	private static LocalNameService instance = new LocalNameService();
 	private Map<String, RemoteObject> remoteEntries;
+	
+
+	private LocalNameService() {
+		this.remoteEntries = new HashMap<String, RemoteObject>();
+	}
+	
+	public static LocalNameService getInstance() {
+		return instance;
+	}
 	
 	synchronized public Map<String, RemoteObject> getRemoteEntries() {
 		return remoteEntries;
-	}
-
-	public LocalNameService() {
-		this.remoteEntries = new HashMap<String, RemoteObject>();
 	}
 	
 	synchronized public void put(String key, RemoteObject value) {
