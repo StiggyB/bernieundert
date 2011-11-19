@@ -5,11 +5,15 @@ import java.lang.reflect.Method;
 
 public class InvokeMessage implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2128014230850201840L;
 	private String className;
 	private Method invMethod;
 	private Object[] methodArgs;
 	
-	public InvokeMessage(String className, Method methodName, Object[] methodArgs) {
+	public InvokeMessage(String className, Method methodName, Object... methodArgs) {
 		this.className = className;
 		this.invMethod = methodName;
 		this.methodArgs = methodArgs;
