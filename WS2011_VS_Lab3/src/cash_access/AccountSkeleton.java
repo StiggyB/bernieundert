@@ -12,10 +12,10 @@ public class AccountSkeleton extends Account {
 	private String host;
 	private int port;
 	private Client client;
-	private NameService nameService;
+//	private NameService nameService;
 
 	public AccountSkeleton(NameService nameService, String hostName, int port) {
-		this.nameService = nameService;
+//		this.nameService = nameService;
 		this.host = hostName;
 		this.port = port;
 		try {
@@ -62,7 +62,7 @@ public class AccountSkeleton extends Account {
 		Double result = null;
 		try {
 			InvokeMessage iMsg = new InvokeMessage("Account", this.getClass()
-					.getMethod("getBalance", (Class<?>)null), (Object[])null);
+					.getMethod("getBalance", double.class), (Object[])null);
 			client.send(iMsg);
 			Object resultMsg = client.receive();
 			if (resultMsg instanceof Double) {

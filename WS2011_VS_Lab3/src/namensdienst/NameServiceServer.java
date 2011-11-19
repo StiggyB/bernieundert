@@ -16,12 +16,15 @@ import tcp_advanced.Server;
  */
 public class NameServiceServer implements Runnable{
 
-	//TODO implement dynamic proxy/ skeleton
+	//TODO implement invoking side - resultMsg etc.
+	//TODO implement only one nsServerThread permitted
+	
 //	private String host;
 	private int port;
 	private boolean isRunning;
 	private Server server;
 	private LocalNameService nameService;
+	private Thread nsServerThread;
 	private List<Thread> workerList = new ArrayList<Thread>();
 
 	public NameServiceServer(String host, int port, LocalNameService nameService) {
@@ -29,7 +32,9 @@ public class NameServiceServer implements Runnable{
 		this.port = port;
 		this.isRunning = true;
 		this.nameService = nameService;
-		
+		this.nsServerThread = new Thread(this);
+		this.nsServerThread.setDaemon(true);
+		this.nsServerThread.start();
 	}
 	
 	public void delegateRequest(Connection connection) {
@@ -43,19 +48,15 @@ public class NameServiceServer implements Runnable{
 	public void run() {
 		try {
 			this.server = new Server(this.port);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		while(isRunning) {
-			try {
-				Connection connection = server.getConnection();
+			Connection connection = null;
+			while(isRunning) {
+				connection = server.getConnection();
 				delegateRequest(connection);
-				connection.close();
 				
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+		connection.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

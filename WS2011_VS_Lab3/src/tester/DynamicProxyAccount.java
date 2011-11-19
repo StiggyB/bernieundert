@@ -2,7 +2,6 @@ package tester;
 
 import java.lang.reflect.Proxy;
 
-import mware_lib.Handler;
 import mware_lib.NameService;
 import cash_access.Account;
 

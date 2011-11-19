@@ -11,16 +11,15 @@ public class ObjectBroker {
 	private String host;
 	private int port;
 	private LocalNameService nameService;
-	private NameServiceServer nameServiceServer;
-	private Thread nsThread;
+//	private NameServiceServer nameServiceServer;
+//	private Thread nsThread;
 
 	public ObjectBroker(String host, int port) throws UnknownHostException, IOException {
 		this.host = host;
 		this.port = port;
-		nameService = new LocalNameService();
-		nameServiceServer = new NameServiceServer(this.host, this.port, nameService);
-		nsThread = new Thread(nameServiceServer);
-		nsThread.setDaemon(true);
+		this.nameService = LocalNameService.getInstance();
+		new NameServiceServer(this.host, this.port, nameService);
+//		this.nameServiceServer = new NameServiceServer(this.host, this.port, nameService);
 	}
 
 	public static ObjectBroker getBroker(String serviceHost, int listenPort) throws UnknownHostException, IOException {

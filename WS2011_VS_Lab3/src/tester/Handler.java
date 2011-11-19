@@ -1,4 +1,4 @@
-package mware_lib;
+package tester;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
