@@ -34,7 +34,9 @@ public class NameServiceServer implements Runnable{
 		this.nameService = nameService;
 		this.nsServerThread = new Thread(this);
 		this.nsServerThread.setDaemon(true);
-		this.nsServerThread.start();
+		if(nameService == null) {
+			this.nsServerThread.start();
+		}
 	}
 	
 	public void delegateRequest(Connection connection) {

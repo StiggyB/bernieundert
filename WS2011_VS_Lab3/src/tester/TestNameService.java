@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import mware_lib.NameService;
 import mware_lib.ObjectBroker;
-import appl.ManagerImpl;
+import application.ManagerImpl;
 import branch_access.Manager;
 import cash_access.Account;
 

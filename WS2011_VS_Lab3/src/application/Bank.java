@@ -1,4 +1,4 @@
-package appl;
+package application;
 
 public class Bank {
 

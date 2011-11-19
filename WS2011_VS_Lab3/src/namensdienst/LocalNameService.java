@@ -11,6 +11,9 @@ public class LocalNameService extends NameService {
 	private static LocalNameService instance = new LocalNameService();
 	private Map<String, RemoteObject> remoteEntries;
 	
+	synchronized public Map<String, RemoteObject> getRemoteEntries() {
+		return remoteEntries;
+	}
 
 	private LocalNameService() {
 		this.remoteEntries = new HashMap<String, RemoteObject>();
@@ -18,10 +21,6 @@ public class LocalNameService extends NameService {
 	
 	public static LocalNameService getInstance() {
 		return instance;
-	}
-	
-	synchronized public Map<String, RemoteObject> getRemoteEntries() {
-		return remoteEntries;
 	}
 	
 	synchronized public void put(String key, RemoteObject value) {
