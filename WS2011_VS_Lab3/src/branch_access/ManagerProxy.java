@@ -8,13 +8,13 @@ import namensdienst.InvokeMessage;
 import tcp_advanced.Client;
 import mware_lib.NameService;
 
-public class ManagerSkeleton extends Manager {
+public class ManagerProxy extends Manager {
 
 	private String host;
 	private int port;
 	private Client client;
 	
-	public ManagerSkeleton(NameService nameService, String hostName, int port) {
+	public ManagerProxy(NameService nameService, String hostName, int port) {
 		this.host = hostName;
 		this.port = port;
 		try {

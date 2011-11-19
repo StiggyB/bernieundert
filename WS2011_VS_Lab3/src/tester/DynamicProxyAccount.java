@@ -4,6 +4,7 @@ import java.lang.reflect.Proxy;
 
 import mware_lib.NameService;
 import cash_access.Account;
+import cash_access.OverdraftException;
 
 public class DynamicProxyAccount extends Account{
 

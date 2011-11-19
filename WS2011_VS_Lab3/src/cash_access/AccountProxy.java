@@ -7,14 +7,14 @@ import mware_lib.NameService;
 import namensdienst.InvokeMessage;
 import tcp_advanced.Client;
 
-public class AccountSkeleton extends Account {
+public class AccountProxy extends Account {
 
 	private String host;
 	private int port;
 	private Client client;
 //	private NameService nameService;
 
-	public AccountSkeleton(NameService nameService, String hostName, int port) {
+	public AccountProxy(NameService nameService, String hostName, int port) {
 //		this.nameService = nameService;
 		this.host = hostName;
 		this.port = port;
