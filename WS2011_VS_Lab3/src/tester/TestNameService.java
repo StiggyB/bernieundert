@@ -11,7 +11,7 @@ import cash_access.Account;
 public class TestNameService {
 
 	public static final int PORT = 14001;
-	
+
 	public static void main(String[] args) throws IOException {
 
 		System.out.println("Test started");
@@ -28,7 +28,7 @@ public class TestNameService {
 
 		System.out.println("RemoteManager implemented: " + remoteManager);
 		Manager localManager = (Manager) localNS.resolve("Manager");
-		
+
 		System.out.println("localManager: " + localManager);
 		String localAcc = localManager.createAccount("1234");
 
