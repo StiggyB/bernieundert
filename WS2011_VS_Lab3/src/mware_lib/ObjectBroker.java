@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import namensdienst.LocalNameService;
-import namensdienst.NameServiceServer;
 
 public class ObjectBroker {
 
@@ -17,8 +16,7 @@ public class ObjectBroker {
 	public ObjectBroker(String host, int port) throws UnknownHostException, IOException {
 		this.host = host;
 		this.port = port;
-		this.nameService = LocalNameService.getInstance();
-		new NameServiceServer(this.host, this.port, nameService);
+		this.nameService = new LocalNameService(this.host, this.port);
 //		this.nameServiceServer = new NameServiceServer(this.host, this.port, nameService);
 	}
 

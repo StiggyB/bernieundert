@@ -24,7 +24,6 @@ public class NameServiceServer implements Runnable{
 	private boolean isRunning;
 	private Server server;
 	private LocalNameService nameService;
-	private Thread nsServerThread;
 	private List<Thread> workerList = new ArrayList<Thread>();
 
 	public NameServiceServer(String host, int port, LocalNameService nameService) {
@@ -32,11 +31,6 @@ public class NameServiceServer implements Runnable{
 		this.port = port;
 		this.isRunning = true;
 		this.nameService = nameService;
-		this.nsServerThread = new Thread(this);
-		this.nsServerThread.setDaemon(true);
-		if(nameService == null) {
-			this.nsServerThread.start();
-		}
 	}
 	
 	public void delegateRequest(Connection connection) {
