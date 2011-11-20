@@ -32,7 +32,7 @@ public class MWCommunication {
 			Object resMsg = client.receive();
 			System.out.println("Message: " + resMsg);
 			if ( resMsg instanceof RemoteObject) {
-				result = ((RemoteObject)resMsg).getObjRef();
+				result = ((RemoteObject)resMsg).getType();
 				System.out.println("Result: " + result);
 			}
 			client.close();

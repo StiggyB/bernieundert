@@ -14,7 +14,7 @@ public class AccountProxy extends Account {
 	private Client client;
 //	private NameService nameService;
 
-	public AccountProxy(NameService nameService, String hostName, int port) {
+	public AccountProxy(/*NameService nameService,*/ String hostName, int port) {
 //		this.nameService = nameService;
 		this.host = hostName;
 		this.port = port;

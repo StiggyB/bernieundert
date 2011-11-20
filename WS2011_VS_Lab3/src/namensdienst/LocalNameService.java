@@ -5,6 +5,10 @@ import java.util.Map;
 
 import mware_lib.MWCommunication;
 import mware_lib.NameService;
+import branch_access.Manager;
+import branch_access.ManagerProxy;
+import cash_access.Account;
+import cash_access.AccountProxy;
 
 public class LocalNameService extends NameService {
 
@@ -35,6 +39,7 @@ public class LocalNameService extends NameService {
 	synchronized public Object get(Object key) {
 		return remoteEntries.get(key);
 	}
+	
 
 	@Override
 	public void rebind(Object servant, String name) {
@@ -55,12 +60,29 @@ public class LocalNameService extends NameService {
 			this.remoteEntries = new HashMap<String, Object>();
 			this.mwCom = new MWCommunication(host, port);
 		}
-		this.remoteEntries.put(name, mwCom.sendRequest(name));
+		Object remoteObj = mwCom.sendRequest(name);
+		remoteObj = generateObjectRef(name);
+		if(remoteObj != null) {
+			this.remoteEntries.put(name, remoteObj);
+		}
 		System.out.println(remoteEntries);
 		for (String key : remoteEntries.keySet()) {
 			System.out.println("Entries: " + remoteEntries.get(key));
 		}
 		return remoteEntries.get(name);
+	}
+
+	public Object generateObjectRef(Object remoteObj) {
+		Class<?> remoteClass = null;  
+		if (remoteObj instanceof RemoteObject) {
+			remoteClass = ((RemoteObject)remoteObj).getType();
+		}
+		if (Account.class.equals(remoteClass)) {
+			remoteObj = new AccountProxy(host, port);
+		} else if (Manager.class.equals(remoteClass)) {
+			remoteObj = new ManagerProxy(host, port);
+		}
+		return remoteObj;
 	}
 
 }

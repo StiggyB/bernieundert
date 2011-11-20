@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import namensdienst.InvokeMessage;
-
 import tcp_advanced.Client;
-import mware_lib.NameService;
 
 public class ManagerProxy extends Manager {
 
@@ -14,7 +12,7 @@ public class ManagerProxy extends Manager {
 	private int port;
 	private Client client;
 	
-	public ManagerProxy(NameService nameService, String hostName, int port) {
+	public ManagerProxy(String hostName, int port) {
 		this.host = hostName;
 		this.port = port;
 		try {
