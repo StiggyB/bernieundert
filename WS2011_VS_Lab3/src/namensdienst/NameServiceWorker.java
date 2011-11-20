@@ -52,14 +52,14 @@ public class NameServiceWorker implements Runnable {
 				if (localNS.getRemoteEntries().containsKey(name)) {
 					RemoteObject remoteObj = new RemoteObject(name,
 							new BigInteger(6, new SecureRandom()),
-							localNS.get(name));
+							localNS.get(name).getClass());
 					System.out.println(localNS.get(name));
 					connection.send(remoteObj);
 				}
 			} else if (message instanceof RemoteObject) {
 				RemoteObject remoteObj = (RemoteObject) message;
 				localNS.put(remoteObj.getRemoteName(),
-						remoteObj.getObjRef());
+						localNS.generateObjectRef(remoteObj));
 			}
 			connection.close();
 		} catch (IOException e) {
