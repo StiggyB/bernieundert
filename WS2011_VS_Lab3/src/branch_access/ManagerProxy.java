@@ -31,17 +31,12 @@ public class ManagerProxy extends Manager {
 		System.out.println("remote call");
 		String result = null;
 		try {
-			InvokeMessage iMsg = new InvokeMessage("Account", this.getClass()
-					.getMethod("createAccount", String.class), owner);
+			InvokeMessage iMsg = new InvokeMessage("Account", "createAccount", owner);
 			client.send(iMsg);
 			Object resultMsg = client.receive();
 			if (resultMsg instanceof String) {
 				result = (String)resultMsg;
 			} 
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

@@ -30,13 +30,8 @@ public class AccountProxy extends Account {
 	@Override
 	public void deposit(double amount) {
 		try {
-			InvokeMessage iMsg = new InvokeMessage("Account", this.getClass()
-					.getMethod("deposit", Double.class), amount);
+			InvokeMessage iMsg = new InvokeMessage("Account", "deposit", amount);
 			client.send(iMsg);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -45,13 +40,8 @@ public class AccountProxy extends Account {
 	@Override
 	public void withdraw(double amount) throws OverdraftException {
 		try {
-			InvokeMessage iMsg = new InvokeMessage("Account", this.getClass()
-					.getMethod("withdraw", Double.class), amount);
+			InvokeMessage iMsg = new InvokeMessage("Account", "withdraw", amount);
 			client.send(iMsg);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -61,17 +51,12 @@ public class AccountProxy extends Account {
 	public double getBalance() {
 		Double result = null;
 		try {
-			InvokeMessage iMsg = new InvokeMessage("Account", this.getClass()
-					.getMethod("getBalance", double.class), (Object[])null);
+			InvokeMessage iMsg = new InvokeMessage("Account", "getBalance", (Object[])null);
 			client.send(iMsg);
 			Object resultMsg = client.receive();
 			if (resultMsg instanceof Double) {
 				result = (Double)resultMsg;
 			} 
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

@@ -1,5 +1,6 @@
 package application;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +8,18 @@ import mware_lib.NameService;
 import branch_access.Manager;
 import cash_access.Account;
 
-public class ManagerImpl extends Manager {
+public class ManagerImpl extends Manager implements Serializable {
 
-	NameService nameService;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9139178637734761018L;
+	//	NameService nameService;
 	List<Account> accList;
 	
 	public ManagerImpl(NameService nameService) {
 		super();
-		this.nameService = nameService;
+//		this.nameService = nameService;
 		accList = new ArrayList<Account>();
 	}
 	
@@ -23,7 +28,7 @@ public class ManagerImpl extends Manager {
 		System.out.println("createAccount");
 		AccountImpl acc = new AccountImpl(owner);
 		accList.add(acc);
-		nameService.rebind(acc, acc.getAccID());
+//		nameService.rebind(acc, acc.getAccID());
 		return acc.getAccID();
 	}
 

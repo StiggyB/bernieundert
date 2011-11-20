@@ -16,10 +16,9 @@ import tcp_advanced.Server;
  */
 public class NameServiceServer implements Runnable {
 
-	// TODO implement invoking side - resultMsg etc.
+	// TODO implement remote invocation with Strings (StringTokenizer/ split()) - Class is serializable!
 	// TODO implement only one nsServerThread permitted
 
-	// private String host;
 	private int port;
 	private boolean isRunning;
 	private Server server;
@@ -28,13 +27,13 @@ public class NameServiceServer implements Runnable {
 	private List<Thread> workerList = new ArrayList<Thread>();
 
 	public NameServiceServer(String host, int port, LocalNameService nameService) {
-		// this.host = host;
 		this.port = port;
 		this.isRunning = true;
 		this.nameService = nameService;
 	}
 
 	public void delegateRequest(Connection connection) {
+		System.out.println("Delegate!");
 		NameServiceWorker nsWorker = new NameServiceWorker(connection,
 				nameService);
 		Thread worker = new Thread(nsWorker);
@@ -45,13 +44,16 @@ public class NameServiceServer implements Runnable {
 	@Override
 	public void run() {
 		try {
+			int i = 0;
 			this.server = new Server(this.port);
 			while (isRunning) {
-				connection = server.getConnection();
+				System.out.println("Waiting for client" + i + "...on" + port);
+				connection = new Connection (server.accept());
+				System.out.println(connection.toString());
 				delegateRequest(connection);
-
+				i++;
 			}
-			connection.close();
+			server.shutdown();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

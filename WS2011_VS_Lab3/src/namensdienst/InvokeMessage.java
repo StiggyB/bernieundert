@@ -1,7 +1,6 @@
 package namensdienst;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 
 public class InvokeMessage implements Serializable{
 
@@ -10,10 +9,10 @@ public class InvokeMessage implements Serializable{
 	 */
 	private static final long serialVersionUID = 2128014230850201840L;
 	private String className;
-	private Method invMethod;
+	private String invMethod;
 	private Object[] methodArgs;
 	
-	public InvokeMessage(String className, Method invMethod, Object... methodArgs) {
+	public InvokeMessage(String className, String invMethod, Object... methodArgs) {
 		this.className = className;
 		this.invMethod = invMethod;
 		this.methodArgs = methodArgs;
@@ -23,7 +22,7 @@ public class InvokeMessage implements Serializable{
 		return className;
 	}
 
-	public Method getInvMethod() {
+	public String getMethodName() {
 		return invMethod;
 	}
 
