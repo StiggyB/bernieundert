@@ -8,6 +8,7 @@ public class ResultMessage implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -2917288197125287853L;
+	//TODO Force Serializable for the result
 	private Object result;
 	private Exception[] remoteExceptions;
 

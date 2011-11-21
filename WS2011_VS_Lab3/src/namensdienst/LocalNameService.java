@@ -52,6 +52,7 @@ public class LocalNameService extends NameService {
 		if (servant != null) {
 			remoteEntries.put(name, servant);
 		}
+		System.out.println("REBIND MapID: " + remoteEntries);
 	}
 
 	@Override
@@ -63,27 +64,27 @@ public class LocalNameService extends NameService {
 		}
 		Object remoteObjType = mwCom.sendRequest(name);
 		System.out.println("OBJECTTYPE: " + remoteObjType.getClass());
-		Object remoteObj = generateObjectRef(remoteObjType);
+		Object remoteObj = generateObjectRef(remoteObjType, name);
 		if(remoteObj != null) {
 			this.remoteEntries.put(name, remoteObj);
 		}
-		System.out.println("MapID: " + remoteEntries);
 		for (String key : remoteEntries.keySet()) {
 			System.out.println("Entries: " + remoteEntries.get(key));
 		}
+		System.out.println("RESOLVE MapID: " + remoteEntries);
 		return remoteEntries.get(name);
 	}
 
-	public Object generateObjectRef(Object remoteObj) {
+	public Object generateObjectRef(Object remoteObj, String name) {
 		Class<?> remoteClass = null;  
 		if (remoteObj instanceof RemoteObject) {
 			remoteClass = ((RemoteObject)remoteObj).getType();
 			System.out.println("TYPE: " + remoteClass);
 		}
 		if (AccountImpl.class.equals(remoteClass)) {
-			remoteObj = new AccountProxy(host, port);
+			remoteObj = new AccountProxy(host, port, name);
 		} else if (ManagerImpl.class.equals(remoteClass)) {
-			remoteObj = new ManagerProxy(host, port);
+			remoteObj = new ManagerProxy(host, port, name);
 		} else {
 			remoteObj = null;
 		}
