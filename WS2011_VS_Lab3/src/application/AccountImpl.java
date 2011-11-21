@@ -14,6 +14,7 @@ public class AccountImpl extends Account {
 	
 	
 	public AccountImpl(String owner) {
+		super();
 		this.balance = 0;
 		this.owner = owner;
 		this.accID = new BigInteger(6, new SecureRandom()).toString();

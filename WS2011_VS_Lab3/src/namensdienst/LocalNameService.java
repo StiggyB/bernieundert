@@ -5,9 +5,9 @@ import java.util.Map;
 
 import mware_lib.MWCommunication;
 import mware_lib.NameService;
-import branch_access.Manager;
+import application.AccountImpl;
+import application.ManagerImpl;
 import branch_access.ManagerProxy;
-import cash_access.Account;
 import cash_access.AccountProxy;
 
 public class LocalNameService extends NameService {
@@ -48,6 +48,7 @@ public class LocalNameService extends NameService {
 			this.nsServerThread.start();
 			this.remoteEntries = new HashMap<String, Object>();
 		}
+		System.out.println("REBIND Servant: " + servant + "; Name: " + name);
 		if (servant != null) {
 			remoteEntries.put(name, servant);
 		}
@@ -55,17 +56,18 @@ public class LocalNameService extends NameService {
 
 	@Override
 	public Object resolve(String name) {
-		System.out.println("Servant: " + name);
-		if (remoteEntries == null && !(nsServerThread.isAlive())) {
+		System.out.println("RESOLVE Servant: " + name);
+		if (remoteEntries == null) {
 			this.remoteEntries = new HashMap<String, Object>();
 			this.mwCom = new MWCommunication(host, port);
 		}
-		Object remoteObj = mwCom.sendRequest(name);
-		remoteObj = generateObjectRef(name);
+		Object remoteObjType = mwCom.sendRequest(name);
+		System.out.println("OBJECTTYPE: " + remoteObjType.getClass());
+		Object remoteObj = generateObjectRef(remoteObjType);
 		if(remoteObj != null) {
 			this.remoteEntries.put(name, remoteObj);
 		}
-		System.out.println(remoteEntries);
+		System.out.println("MapID: " + remoteEntries);
 		for (String key : remoteEntries.keySet()) {
 			System.out.println("Entries: " + remoteEntries.get(key));
 		}
@@ -76,11 +78,14 @@ public class LocalNameService extends NameService {
 		Class<?> remoteClass = null;  
 		if (remoteObj instanceof RemoteObject) {
 			remoteClass = ((RemoteObject)remoteObj).getType();
+			System.out.println("TYPE: " + remoteClass);
 		}
-		if (Account.class.equals(remoteClass)) {
+		if (AccountImpl.class.equals(remoteClass)) {
 			remoteObj = new AccountProxy(host, port);
-		} else if (Manager.class.equals(remoteClass)) {
+		} else if (ManagerImpl.class.equals(remoteClass)) {
 			remoteObj = new ManagerProxy(host, port);
+		} else {
+			remoteObj = null;
 		}
 		return remoteObj;
 	}
