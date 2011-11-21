@@ -41,5 +41,8 @@ public class TestNameService {
 		double balance = account.getBalance();
 		balance = account.getBalance();
 		System.out.println("Acctual balance: " + balance);
+		
+		//Next step
+//		System.out.println(localManager.removeAccount("1234"));
 	}
 }

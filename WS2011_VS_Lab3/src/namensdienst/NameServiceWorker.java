@@ -1,6 +1,7 @@
 package namensdienst;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
@@ -26,21 +27,19 @@ public class NameServiceWorker implements Runnable {
 	public void run() {
 
 		Object message = null;
+		ResultMessage rMsg = null;
 		try {
 			message = connection.receive();
 			if (message instanceof InvokeMessage) {
 				InvokeMessage iMsg = (InvokeMessage) message;
-				System.out.println("TESTTEST");
-				// TODO sync local Map with remoteObj & localObj (AccImpl)
 				Object remoteObj = localNS.get(iMsg.getClassName());
 				System.out.println("KeyName: " + iMsg.getClassName());
 				System.out.println("RemoteObject: " + remoteObj);
 				Method invokeMeth;
 				try {
-					Class<?> [] argArray = null;
-					if(iMsg.getMethodArgs() != null) {
-						List <Class<?>> methodArgs = new ArrayList<Class<?>>();
-						
+					Class<?>[] argArray = null;
+					if (iMsg.getMethodArgs() != null) {
+						List<Class<?>> methodArgs = new ArrayList<Class<?>>();
 						for (Object type : iMsg.getMethodArgs()) {
 							System.out.println("PARAMETERVALUE: " + type);
 							methodArgs.add(unboxType(type.getClass()));
@@ -50,10 +49,10 @@ public class NameServiceWorker implements Runnable {
 							argArray[i] = methodArgs.get(i);
 						}
 					}
-					invokeMeth = remoteObj.getClass().getMethod(iMsg.getMethodName(), argArray);
+					invokeMeth = remoteObj.getClass().getMethod(
+							iMsg.getMethodName(), argArray);
 					remoteResult = invokeMeth.invoke(remoteObj,
-							iMsg.getMethodArgs());
-					System.out.println("TEST IT!");
+							(Object[]) iMsg.getMethodArgs());
 				} catch (SecurityException e) {
 					e.printStackTrace();
 				} catch (NoSuchMethodException e) {
@@ -66,25 +65,27 @@ public class NameServiceWorker implements Runnable {
 					e1.printStackTrace();
 				}
 				System.out.println("REMOTERESULT: " + remoteResult);
-				if(remoteResult != null) {
-					ResultMessage rMsg = new ResultMessage(remoteResult);
+				if (remoteResult != null && remoteResult instanceof Serializable) {
+					Serializable serialResult = (Serializable) remoteResult;
+					rMsg = new ResultMessage(serialResult);
 					connection.send(rMsg);
 				}
 			} else if (message instanceof String) {
 				String name = (String) message;
 				if (localNS.getRemoteEntries().containsKey(name)) {
 					RemoteObject remoteObj = new RemoteObject(name,
-							new BigInteger(6, new SecureRandom()),
-							localNS.get(name).getClass());
-					//TODO Maybe difference between local AccImpl and remote AccProxy!!
+							new BigInteger(6, new SecureRandom()), localNS.get(
+									name).getClass());
 					System.out.println("LOCAL RemoteOBJ: " + localNS.get(name));
 					connection.send(remoteObj);
 				}
 			} else if (message instanceof RemoteObject) {
 				RemoteObject remoteObj = (RemoteObject) message;
 				System.out.println("Worker RemoteObj: " + message);
-				localNS.put(remoteObj.getRemoteName(),
-						localNS.generateObjectRef(remoteObj, remoteObj.getRemoteName()));
+				localNS.put(
+						remoteObj.getRemoteName(),
+						localNS.generateObjectRef(remoteObj,
+								remoteObj.getRemoteName()));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -98,22 +99,22 @@ public class NameServiceWorker implements Runnable {
 			}
 		}
 	}
-	
+
 	private Class<?> unboxType(Class<?> type) {
-		System.out.println("TYPE: " + type);
+		Class<?> primType = type;
 		if (type.equals(Byte.class)) {
-			return byte.class;
+			primType = byte.class;
 		} else if (type.equals(Short.class)) {
-			return short.class;
+			primType = short.class;
 		} else if (type.equals(Integer.class)) {
-			return int.class;
+			primType = int.class;
 		} else if (type.equals(Float.class)) {
-			return float.class;
+			primType = float.class;
 		} else if (type.equals(Double.class)) {
-			return double.class;
+			primType = double.class;
 		} else if (type.equals(Character.class)) {
-			return char.class;
+			primType = char.class;
 		}
-		return type;
+		return primType;
 	}
 }

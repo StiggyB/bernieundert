@@ -3,7 +3,7 @@ package namensdienst;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-public class RemoteObject implements Serializable{
+public class RemoteObject implements Serializable {
 
 	/**
 	 * 
@@ -12,7 +12,7 @@ public class RemoteObject implements Serializable{
 	private String remoteName;
 	private BigInteger objID;
 	private Class<?> type;
-	
+
 	public Class<?> getType() {
 		return type;
 	}
@@ -30,5 +30,10 @@ public class RemoteObject implements Serializable{
 		this.objID = objID;
 		this.type = type;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "RemoteObject [remoteName=" + remoteName + ", objID=" + objID
+				+ ", type=" + type + "]";
+	}
 }
