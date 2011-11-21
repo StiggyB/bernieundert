@@ -10,13 +10,12 @@ public class MWCommunication {
 	private String host;
 	private int port;
 	private Client client;
-	
+
 	public MWCommunication(String host, int port) {
-		super();
 		this.host = host;
 		this.port = port;
 	}
-	
+
 	public Object sendRequest(String name) {
 		Object result = null;
 		try {
@@ -24,17 +23,21 @@ public class MWCommunication {
 			client.send(name);
 			Object resMsg = client.receive();
 			System.out.println("Message: " + resMsg);
-			if ( resMsg instanceof RemoteObject) {
-				result = ((RemoteObject)resMsg);
-				System.out.println("Result: " + result);
+			if (resMsg instanceof RemoteObject) {
+				result = ((RemoteObject) resMsg);
 			}
-			client.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				client.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 		}
 		return result;
 	}
-	
 }

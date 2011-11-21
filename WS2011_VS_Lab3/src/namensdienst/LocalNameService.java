@@ -12,6 +12,8 @@ import cash_access.AccountProxy;
 
 public class LocalNameService extends NameService {
 
+	// TODO implement specific exceptions...
+
 	private String host;
 	private int port;
 	private NameServiceServer nameServiceServer;
@@ -39,12 +41,10 @@ public class LocalNameService extends NameService {
 	synchronized public Object get(Object key) {
 		return remoteEntries.get(key);
 	}
-	
 
 	@Override
 	public void rebind(Object servant, String name) {
 		if (remoteEntries == null && !(nsServerThread.isAlive())) {
-			System.out.println("create it!");
 			this.nsServerThread.start();
 			this.remoteEntries = new HashMap<String, Object>();
 		}
@@ -63,23 +63,18 @@ public class LocalNameService extends NameService {
 			this.mwCom = new MWCommunication(host, port);
 		}
 		Object remoteObjType = mwCom.sendRequest(name);
-		System.out.println("OBJECTTYPE: " + remoteObjType.getClass());
+		if (remoteObjType != null) {
 		Object remoteObj = generateObjectRef(remoteObjType, name);
-		if(remoteObj != null) {
-			this.remoteEntries.put(name, remoteObj);
-		}
-		for (String key : remoteEntries.keySet()) {
-			System.out.println("Entries: " + remoteEntries.get(key));
+		this.remoteEntries.put(name, remoteObj);
 		}
 		System.out.println("RESOLVE MapID: " + remoteEntries);
 		return remoteEntries.get(name);
 	}
 
 	public Object generateObjectRef(Object remoteObj, String name) {
-		Class<?> remoteClass = null;  
+		Class<?> remoteClass = null;
 		if (remoteObj instanceof RemoteObject) {
-			remoteClass = ((RemoteObject)remoteObj).getType();
-			System.out.println("TYPE: " + remoteClass);
+			remoteClass = ((RemoteObject) remoteObj).getType();
 		}
 		if (AccountImpl.class.equals(remoteClass)) {
 			remoteObj = new AccountProxy(host, port, name);
@@ -89,6 +84,11 @@ public class LocalNameService extends NameService {
 			remoteObj = null;
 		}
 		return remoteObj;
+	}
+	
+	public void remove(String key) {
+		//TODO impl remove specific value
+		
 	}
 
 }

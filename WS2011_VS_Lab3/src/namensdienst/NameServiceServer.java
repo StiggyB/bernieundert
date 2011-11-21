@@ -16,9 +16,6 @@ import tcp_advanced.Server;
  */
 public class NameServiceServer implements Runnable {
 
-	// TODO implement remote invocation with Strings (StringTokenizer/ split()) - Class is serializable!
-	// TODO implement only one nsServerThread permitted
-
 	private int port;
 	private boolean isRunning;
 	private Server server;
@@ -48,8 +45,7 @@ public class NameServiceServer implements Runnable {
 			this.server = new Server(this.port);
 			while (isRunning) {
 				System.out.println("Waiting for client" + i + "...on" + port);
-				connection = new Connection (server.accept());
-				System.out.println(connection.toString());
+				connection = new Connection(server.accept());
 				delegateRequest(connection);
 				i++;
 			}

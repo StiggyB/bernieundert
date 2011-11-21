@@ -11,13 +11,13 @@ public class ManagerImpl extends Manager {
 
 	NameService nameService;
 	List<Account> accList;
-	
+
 	public ManagerImpl(NameService nameService) {
 		super();
 		this.nameService = nameService;
 		accList = new ArrayList<Account>();
 	}
-	
+
 	@Override
 	public String createAccount(String owner) {
 		System.out.println("createAccount");
@@ -30,9 +30,20 @@ public class ManagerImpl extends Manager {
 
 	@Override
 	public boolean removeAccount(String accountID) {
-		// TODO Auto-generated method stub
 		System.out.println("removeAccount");
-		return false;
+		boolean result = false;
+		//TODO source of exception
+		Object account = nameService.resolve(accountID);
+		if (!(accList.isEmpty()) && accList.contains(account)) {
+			for (Account acc : accList) {
+				if (acc.equals(account)) {
+					acc = null;
+					account = null;
+					result = true;
+				}
+			}
+		}
+		return result;
 	}
 
 }

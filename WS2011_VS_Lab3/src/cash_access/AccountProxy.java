@@ -1,6 +1,7 @@
 package cash_access;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 
 import namensdienst.InvokeMessage;
@@ -12,7 +13,7 @@ public class AccountProxy extends Account {
 	private int port;
 	private Client client;
 	private String accID;
-	
+
 	public AccountProxy(String hostName, int port, String accID) {
 		super();
 		this.host = hostName;
@@ -56,19 +57,16 @@ public class AccountProxy extends Account {
 		Double result = new Double(0);
 		try {
 			this.client = new Client(this.host, this.port);
-			System.out.println("AUSGABE");
-			InvokeMessage iMsg = new InvokeMessage(accID, "getBalance", (Object[])null);
+			InvokeMessage iMsg = new InvokeMessage(accID, "getBalance",
+					(Serializable[]) null);
 			client.send(iMsg);
 			Object msg = client.receive();
-			System.out.println("ResultMSG: " + msg.getClass());
 			if (msg instanceof ResultMessage) {
-				ResultMessage resultMsg = (ResultMessage)msg; 
-				System.out.println("ResultMSG2: " + resultMsg.getResult());
+				ResultMessage resultMsg = (ResultMessage) msg;
 				if (resultMsg.getResult() instanceof Double) {
-					result = (Double)resultMsg.getResult();
+					result = (Double) resultMsg.getResult();
 				}
-			} 
-			System.out.println("RESULT: " + result);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
