@@ -10,6 +10,7 @@ public class InvokeMessage implements Serializable{
 	private static final long serialVersionUID = 2128014230850201840L;
 	private String className;
 	private String invMethod;
+	//TODO Force Serializable Objects with Serializable[]
 	private Object[] methodArgs;
 	
 	public InvokeMessage(String className, String invMethod, Object... methodArgs) {

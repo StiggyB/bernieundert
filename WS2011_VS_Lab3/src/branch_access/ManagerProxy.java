@@ -11,11 +11,13 @@ public class ManagerProxy extends Manager {
 	private String host;
 	private int port;
 	private Client client;
+	private String remoteName;
 	
-	public ManagerProxy(String hostName, int port) {
+	public ManagerProxy(String hostName, int port, String remoteName) {
 		super();
 		this.host = hostName;
 		this.port = port;
+		this.remoteName = remoteName;
 	}
 
 	@Override
@@ -24,7 +26,7 @@ public class ManagerProxy extends Manager {
 		String result = null;
 		try {
 			this.client = new Client(this.host, this.port);
-			InvokeMessage iMsg = new InvokeMessage("Manager", "createAccount", owner);
+			InvokeMessage iMsg = new InvokeMessage(remoteName, "createAccount", owner);
 			System.out.println("INVOKEMSG: " + iMsg);
 			client.send(iMsg);
 			Object resultMsg = client.receive();

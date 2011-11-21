@@ -36,5 +36,10 @@ public class TestNameService {
 		Account account = (Account) localNS.resolve(localAcc);
 		System.out.println("DEPOSIT with: " + account);
 		account.deposit(10);
+		
+		System.out.println("ACCOUNT: " + account);
+		double balance = account.getBalance();
+		balance = account.getBalance();
+		System.out.println("Acctual balance: " + balance);
 	}
 }
