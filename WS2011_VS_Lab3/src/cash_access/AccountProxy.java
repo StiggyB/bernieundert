@@ -3,19 +3,19 @@ package cash_access;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import mware_lib.NameService;
 import namensdienst.InvokeMessage;
 import tcp_advanced.Client;
 
 public class AccountProxy extends Account {
 
+	//TODO Maybe new Client connection in the methods and close
+	
 	private String host;
 	private int port;
 	private Client client;
-//	private NameService nameService;
 
-	public AccountProxy(/*NameService nameService,*/ String hostName, int port) {
-//		this.nameService = nameService;
+	public AccountProxy(String hostName, int port) {
+		super();
 		this.host = hostName;
 		this.port = port;
 		try {
@@ -29,6 +29,7 @@ public class AccountProxy extends Account {
 
 	@Override
 	public void deposit(double amount) {
+		//TODO Lookup the correct className in iMsg ("Account"?) - should be accID
 		try {
 			InvokeMessage iMsg = new InvokeMessage("Account", "deposit", amount);
 			client.send(iMsg);

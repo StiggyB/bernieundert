@@ -1,9 +1,9 @@
 package branch_access;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 import namensdienst.InvokeMessage;
+import namensdienst.ResultMessage;
 import tcp_advanced.Client;
 
 public class ManagerProxy extends Manager {
@@ -13,15 +13,9 @@ public class ManagerProxy extends Manager {
 	private Client client;
 	
 	public ManagerProxy(String hostName, int port) {
+		super();
 		this.host = hostName;
 		this.port = port;
-		try {
-			this.client = new Client(this.host, this.port);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -29,12 +23,19 @@ public class ManagerProxy extends Manager {
 		System.out.println("remote call");
 		String result = null;
 		try {
-			InvokeMessage iMsg = new InvokeMessage("Account", "createAccount", owner);
+			this.client = new Client(this.host, this.port);
+			InvokeMessage iMsg = new InvokeMessage("Manager", "createAccount", owner);
+			System.out.println("INVOKEMSG: " + iMsg);
 			client.send(iMsg);
 			Object resultMsg = client.receive();
-			if (resultMsg instanceof String) {
-				result = (String)resultMsg;
-			} 
+			
+			if (resultMsg instanceof ResultMessage) {
+				Object remoteResult = ((ResultMessage) resultMsg).getResult();
+				if (remoteResult instanceof String) {
+					result = (String)remoteResult;
+				} 
+			}
+			client.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

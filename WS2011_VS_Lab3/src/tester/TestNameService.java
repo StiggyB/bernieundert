@@ -32,8 +32,9 @@ public class TestNameService {
 		System.out.println("localManager: " + localManager);
 		String localAcc = localManager.createAccount("1234");
 
-		System.out.println("LocalManager implemented");
+		System.out.println("LocalManager implemented with AccID: " + localAcc);
 		Account account = (Account) localNS.resolve(localAcc);
+		System.out.println("DEPOSIT with: " + account);
 		account.deposit(10);
 	}
 }

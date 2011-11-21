@@ -28,10 +28,13 @@ public class NameServiceWorker implements Runnable {
 			message = connection.receive();
 			if (message instanceof InvokeMessage) {
 				InvokeMessage iMsg = (InvokeMessage) message;
+				// TODO sync local Map with remoteObj & localObj (AccImpl)
 				Object remoteObj = localNS.get(iMsg.getClassName());
+				System.out.println("KeyName: " + iMsg.getClassName());
+				System.out.println("RemoteObject: " + remoteObj);
 				Method invokeMeth;
 				try {
-					invokeMeth = remoteObj.getClass().getMethod(iMsg.getMethodName(), iMsg.getMethodArgs().getClass());
+					invokeMeth = remoteObj.getClass().getMethod(iMsg.getMethodName(), iMsg.getMethodArgs()[0].getClass());
 					remoteResult = invokeMeth.invoke(remoteObj,
 							iMsg.getMethodArgs());
 				} catch (SecurityException e) {
@@ -45,6 +48,7 @@ public class NameServiceWorker implements Runnable {
 				} catch (InvocationTargetException e1) {
 					e1.printStackTrace();
 				}
+				System.out.println("REMOTERESULT: " + remoteResult);
 				ResultMessage rMsg = new ResultMessage(remoteResult);
 				connection.send(rMsg);
 			} else if (message instanceof String) {
@@ -53,11 +57,13 @@ public class NameServiceWorker implements Runnable {
 					RemoteObject remoteObj = new RemoteObject(name,
 							new BigInteger(6, new SecureRandom()),
 							localNS.get(name).getClass());
-					System.out.println(localNS.get(name));
+					//TODO Maybe difference between local AccImpl and remote AccProxy!!
+					System.out.println("LOCAL RemoteOBJ: " + localNS.get(name));
 					connection.send(remoteObj);
 				}
 			} else if (message instanceof RemoteObject) {
 				RemoteObject remoteObj = (RemoteObject) message;
+				System.out.println("Worker RemoteObj: " + message);
 				localNS.put(remoteObj.getRemoteName(),
 						localNS.generateObjectRef(remoteObj));
 			}
