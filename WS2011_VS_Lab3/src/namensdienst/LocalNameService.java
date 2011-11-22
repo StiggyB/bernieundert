@@ -42,11 +42,18 @@ public class LocalNameService extends NameService {
 		return remoteEntries.get(key);
 	}
 
+	synchronized public void remove(String key) {
+		if(!(remoteEntries.isEmpty())) {
+			remoteEntries.remove(key);
+		}
+	}
+
 	@Override
 	public void rebind(Object servant, String name) {
 		if (remoteEntries == null && !(nsServerThread.isAlive())) {
 			this.nsServerThread.start();
 			this.remoteEntries = new HashMap<String, Object>();
+			this.mwCom = new MWCommunication(host, port);
 		}
 		System.out.println("REBIND Servant: " + servant + "; Name: " + name);
 		if (servant != null) {
@@ -64,8 +71,8 @@ public class LocalNameService extends NameService {
 		}
 		Object remoteObjType = mwCom.sendRequest(name);
 		if (remoteObjType != null) {
-		Object remoteObj = generateObjectRef(remoteObjType, name);
-		this.remoteEntries.put(name, remoteObj);
+			Object remoteObj = generateObjectRef(remoteObjType, name);
+			this.remoteEntries.put(name, remoteObj);
 		}
 		System.out.println("RESOLVE MapID: " + remoteEntries);
 		return remoteEntries.get(name);
@@ -85,10 +92,4 @@ public class LocalNameService extends NameService {
 		}
 		return remoteObj;
 	}
-	
-	public void remove(String key) {
-		//TODO impl remove specific value
-		
-	}
-
 }

@@ -25,7 +25,6 @@ public class NameServiceWorker implements Runnable {
 
 	@Override
 	public void run() {
-
 		Object message = null;
 		ResultMessage rMsg = null;
 		try {
@@ -62,7 +61,8 @@ public class NameServiceWorker implements Runnable {
 				} catch (IllegalAccessException e1) {
 					e1.printStackTrace();
 				} catch (InvocationTargetException e1) {
-					e1.printStackTrace();
+					//e1.printStackTrace();
+					e1.getCause().printStackTrace();
 				}
 				System.out.println("REMOTERESULT: " + remoteResult);
 				if (remoteResult != null && remoteResult instanceof Serializable) {
@@ -70,6 +70,16 @@ public class NameServiceWorker implements Runnable {
 					rMsg = new ResultMessage(serialResult);
 					connection.send(rMsg);
 				}
+			} else if (message instanceof RemoteObject) {
+				RemoteObject remoteObj = (RemoteObject) message;
+				System.out.println("Worker RemoteObj: " + message);
+				localNS.put(
+						remoteObj.getRemoteName(),
+						localNS.generateObjectRef(remoteObj,
+								remoteObj.getRemoteName()));
+			} else if (message instanceof UnbindMessage) {
+				String key = ((UnbindMessage)message).getRemoteName();
+				localNS.remove(key);
 			} else if (message instanceof String) {
 				String name = (String) message;
 				if (localNS.getRemoteEntries().containsKey(name)) {
@@ -79,13 +89,6 @@ public class NameServiceWorker implements Runnable {
 					System.out.println("LOCAL RemoteOBJ: " + localNS.get(name));
 					connection.send(remoteObj);
 				}
-			} else if (message instanceof RemoteObject) {
-				RemoteObject remoteObj = (RemoteObject) message;
-				System.out.println("Worker RemoteObj: " + message);
-				localNS.put(
-						remoteObj.getRemoteName(),
-						localNS.generateObjectRef(remoteObj,
-								remoteObj.getRemoteName()));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

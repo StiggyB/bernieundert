@@ -36,7 +36,6 @@ public class MWCommunication {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
 		}
 		return result;
 	}

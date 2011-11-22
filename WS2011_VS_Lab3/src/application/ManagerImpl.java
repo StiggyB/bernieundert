@@ -5,17 +5,16 @@ import java.util.List;
 
 import mware_lib.NameService;
 import branch_access.Manager;
-import cash_access.Account;
 
 public class ManagerImpl extends Manager {
 
 	NameService nameService;
-	List<Account> accList;
+	List<AccountImpl> accList;
 
 	public ManagerImpl(NameService nameService) {
 		super();
 		this.nameService = nameService;
-		accList = new ArrayList<Account>();
+		accList = new ArrayList<AccountImpl>();
 	}
 
 	@Override
@@ -32,13 +31,11 @@ public class ManagerImpl extends Manager {
 	public boolean removeAccount(String accountID) {
 		System.out.println("removeAccount");
 		boolean result = false;
-		//TODO source of exception
-		Object account = nameService.resolve(accountID);
-		if (!(accList.isEmpty()) && accList.contains(account)) {
-			for (Account acc : accList) {
-				if (acc.equals(account)) {
-					acc = null;
-					account = null;
+		if (!(accList.isEmpty())) {
+			int i;
+			for (i = 0; i < accList.size(); i++) {
+				if ((accList.get(i).getAccID().equals(accountID))) {
+					accList.remove(i);
 					result = true;
 				}
 			}

@@ -14,9 +14,9 @@ public class AccountImpl extends Account {
 
 	public AccountImpl(String owner) {
 		super();
-		this.balance = 1;
+		this.balance = 0;
 		this.owner = owner;
-		this.accID = new BigInteger(6, new SecureRandom()).toString();
+		this.accID = new BigInteger(16, new SecureRandom()).toString();
 	}
 
 	public String getOwner() {
@@ -37,8 +37,8 @@ public class AccountImpl extends Account {
 	public void withdraw(double amount) throws OverdraftException {
 		System.out.println("withdraw");
 		if (amount > balance) {
-			throw new OverdraftException("The owner" + owner
-					+ " have not enough balance on his account" + accID + ".");
+			throw new OverdraftException("The owner: '" + owner
+					+ "' has not enough balance on his account: '" + accID + "'.");
 		} else {
 			balance -= amount;
 		}

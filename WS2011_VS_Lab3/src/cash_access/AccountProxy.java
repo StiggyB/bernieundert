@@ -2,7 +2,6 @@ package cash_access;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.UnknownHostException;
 
 import namensdienst.InvokeMessage;
 import namensdienst.ResultMessage;
@@ -19,13 +18,6 @@ public class AccountProxy extends Account {
 		this.host = hostName;
 		this.port = port;
 		this.accID = accID;
-		try {
-			this.client = new Client(this.host, this.port);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
