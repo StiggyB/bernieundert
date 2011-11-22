@@ -50,9 +50,7 @@ public class TestNameService {
 		balance = account.getBalance();
 		System.out.println("Acctual balance: " + balance);
 		
-		//Next step
 		System.out.println(localManager.removeAccount(localAcc));
-		
 		
 	}
 }

@@ -3,6 +3,9 @@ package tester;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import testApplication.OnlineUserImpl;
+import test_user_access.OnlineUser;
+
 import mware_lib.NameService;
 import mware_lib.ObjectBroker;
 import application.ManagerImpl;
@@ -19,12 +22,28 @@ public class TestMiddleware {
 	NameService remoteNS = obRemote.getNameService();
 
 	System.out.println("Testing...");
-//	ObjectBroker obLocal = ObjectBroker.getBroker("localhost", PORT);
-//	NameService localNS = obLocal.getNameService();
+	ObjectBroker obLocal = ObjectBroker.getBroker("localhost", PORT);
+	NameService localNS = obLocal.getNameService();
 
 	System.out.println("Nameservices implemented");
 	Manager remoteManager = new ManagerImpl(remoteNS);
 	remoteNS.rebind(remoteManager, "Manager");
+	
+	Manager localManager = (Manager) localNS.resolve("Manager");
+	
+	String testerID = localManager.createAccount("Tester");
+	String targetTesterID = localManager.createAccount("targetTester");
+	
+	System.out.println("New Accounts: " + testerID + ", " + targetTesterID);
+	OnlineUser remoteUser = new OnlineUserImpl();
+	remoteNS.rebind(remoteUser, "User");
+	
+	OnlineUser localUser = (OnlineUser) localNS.resolve("User");
+	
+	System.out.println("Do trasfer from: " + localUser + " - to: " + targetTesterID);
+	localUser.doTransfer("Tester", "targetTester", targetTesterID, 1234);
+	
+	
 	}
 	
 }

@@ -5,7 +5,7 @@ import test_user_access.OnlineUser;
 public class OnlineUserImpl extends OnlineUser {
 
 	@Override
-	public boolean doTransfer(String accOwner, String accTarget, int BSC) {
+	public boolean doTransfer(String accOwner, String accTarget, String accID, int BSC) {
 		System.out.println("doTransfer");
 		return false;
 	}

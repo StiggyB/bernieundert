@@ -46,7 +46,7 @@ public class AccountProxy extends Account {
 
 	@Override
 	public double getBalance() {
-		Double result = new Double(0);
+		Double result = Double.NaN;
 		try {
 			this.client = new Client(this.host, this.port);
 			InvokeMessage iMsg = new InvokeMessage(accID, "getBalance",

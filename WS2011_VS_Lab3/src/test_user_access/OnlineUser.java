@@ -2,7 +2,7 @@ package test_user_access;
 
 public abstract class OnlineUser {
 
-	public abstract boolean doTransfer(String accOwner, String accTarget, int BSC);
+	public abstract boolean doTransfer(String accOwner, String accTarget, String accID, int BSC);
 	
 	public abstract String showTransactionVolume();
 	
