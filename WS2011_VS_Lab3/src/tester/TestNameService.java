@@ -52,5 +52,8 @@ public class TestNameService {
 		
 		System.out.println(localManager.removeAccount(localAcc));
 		
+		Manager localManager2 = (Manager) localNS.resolve("Manager");
+		System.out.println("localManager2: " + localManager2);
+		
 	}
 }

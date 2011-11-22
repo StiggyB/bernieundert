@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import namensdienst.RemoteObject;
+import namensdienst.UnbindMessage;
 import tcp_advanced.Client;
 
 public class MWCommunication {
@@ -41,19 +42,23 @@ public class MWCommunication {
 		return result;
 	}
 	
-	public Object sendSync(String name) {
-		Object result = null;
-		
-		try {
-			this.client = new Client(this.host, this.port);
-			client.send(name);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void sendSync(String name) {
+		if (name != null) {
+			try {
+				this.client = new Client(this.host, this.port);
+				UnbindMessage ubMsg = new UnbindMessage(name);
+				client.send(ubMsg);
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					client.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
-		return result;
+		}
 	}
 }
