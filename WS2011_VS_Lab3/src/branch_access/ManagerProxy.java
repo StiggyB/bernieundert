@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import namensdienst.InvokeMessage;
 import namensdienst.ResultMessage;
+import namensdienst.UnbindMessage;
 import tcp_advanced.Client;
 
 public class ManagerProxy extends Manager {
@@ -66,13 +67,17 @@ public class ManagerProxy extends Manager {
 					result = (Boolean)remoteResult;
 				}
 			}
+			client.close();
+			this.client = new Client(this.host, this.port);
+			UnbindMessage ubMsg = new UnbindMessage(accountID);
+			client.send(ubMsg);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				client.close();
+			client.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
