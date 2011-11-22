@@ -1,10 +1,16 @@
 package namensdienst;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import mware_lib.MWCommunication;
 import mware_lib.NameService;
+import testApplication.OnlineUserImpl;
+import test_user_access.OnlineUser;
+import test_user_access.OnlineUserProxy;
 import application.AccountImpl;
 import application.ManagerImpl;
 import branch_access.ManagerProxy;
@@ -16,6 +22,7 @@ public class LocalNameService extends NameService {
 
 	private String host;
 	private int port;
+	private List<Class<?>> typeList;
 	private NameServiceServer nameServiceServer;
 	private MWCommunication mwCom;
 	private Thread nsServerThread;
@@ -24,6 +31,7 @@ public class LocalNameService extends NameService {
 	public LocalNameService(String host, int port) {
 		this.host = host;
 		this.port = port;
+		this.typeList = new ArrayList<Class<?>>();
 		this.nameServiceServer = new NameServiceServer(this.host, this.port,
 				this);
 		this.nsServerThread = new Thread(this.nameServiceServer);
@@ -55,6 +63,7 @@ public class LocalNameService extends NameService {
 			this.remoteEntries = new HashMap<String, Object>();
 			this.mwCom = new MWCommunication(host, port);
 		}
+		typeList.add(servant.getClass());
 		System.out.println("REBIND Servant: " + servant + "; Name: " + name);
 		if (servant != null) {
 			remoteEntries.put(name, servant);
@@ -71,6 +80,7 @@ public class LocalNameService extends NameService {
 		}
 		Object remoteObjType = mwCom.sendRequest(name);
 		if (remoteObjType != null) {
+			System.out.println("NEW REMOTEOBJ: " + remoteObjType);
 			Object remoteObj = generateObjectRef(remoteObjType, name);
 			this.remoteEntries.put(name, remoteObj);
 		}
@@ -80,16 +90,30 @@ public class LocalNameService extends NameService {
 
 	public Object generateObjectRef(Object remoteObj, String name) {
 		Class<?> remoteClass = null;
+		Object resultObj = null;
 		if (remoteObj instanceof RemoteObject) {
 			remoteClass = ((RemoteObject) remoteObj).getType();
 		}
+		//TODO impl dynamic generation String & Type is not dynamic
+//		try {
+//			resultObj = remoteObj.getClass().newInstance();
+//		} catch (InstantiationException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		}
+//		for (Class<?> type : typeList) {
+//			Type newType = OnlineUser.class;
+//			if(type.equals(remoteClass)) {
+//			}
+//		}
 		if (AccountImpl.class.equals(remoteClass)) {
-			remoteObj = new AccountProxy(host, port, name);
+			resultObj = new AccountProxy(host, port, name);
 		} else if (ManagerImpl.class.equals(remoteClass)) {
-			remoteObj = new ManagerProxy(host, port, name);
-		} else {
-			remoteObj = null;
-		}
-		return remoteObj;
+			resultObj = new ManagerProxy(host, port, name);
+		} else if (OnlineUserImpl.class.equals(remoteClass)) {
+			resultObj = new OnlineUserProxy(host, port, name);
+		} 
+		return resultObj;
 	}
 }

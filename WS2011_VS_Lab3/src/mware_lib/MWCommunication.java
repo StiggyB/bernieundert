@@ -1,6 +1,7 @@
 package mware_lib;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import namensdienst.RemoteObject;
 import tcp_advanced.Client;
@@ -36,6 +37,22 @@ public class MWCommunication {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+		return result;
+	}
+	
+	public Object sendSync(String name) {
+		Object result = null;
+		
+		try {
+			this.client = new Client(this.host, this.port);
+			client.send(name);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return result;
 	}
