@@ -25,6 +25,10 @@ public class LocalNameService extends NameService {
 	private List<Class<?>> typeList;
 	private NameServiceServer nameServiceServer;
 	private MWCommunication mwCom;
+	public MWCommunication getMwCom() {
+		return mwCom;
+	}
+
 	private Thread nsServerThread;
 	private Map<String, Object> remoteEntries;
 
@@ -78,6 +82,7 @@ public class LocalNameService extends NameService {
 			this.remoteEntries = new HashMap<String, Object>();
 			this.mwCom = new MWCommunication(host, port);
 		}
+//		mwCom.sendSync(name);
 		Object remoteObjType = mwCom.sendRequest(name);
 		if (remoteObjType != null) {
 			System.out.println("NEW REMOTEOBJ: " + remoteObjType);
@@ -95,8 +100,11 @@ public class LocalNameService extends NameService {
 			remoteClass = ((RemoteObject) remoteObj).getType();
 		}
 		//TODO impl dynamic generation String & Type is not dynamic
+		//TODO use newInstance and set the variables InvocationHandler
 //		try {
 //			resultObj = remoteObj.getClass().newInstance();
+//			Object obj = remoteClass.cast(resultObj);
+//			
 //		} catch (InstantiationException e) {
 //			e.printStackTrace();
 //		} catch (IllegalAccessException e) {
@@ -111,8 +119,8 @@ public class LocalNameService extends NameService {
 			resultObj = new AccountProxy(host, port, name);
 		} else if (ManagerImpl.class.equals(remoteClass)) {
 			resultObj = new ManagerProxy(host, port, name);
-		} else if (OnlineUserImpl.class.equals(remoteClass)) {
-			resultObj = new OnlineUserProxy(host, port, name);
+//		} else if (OnlineUserImpl.class.equals(remoteClass)) {
+//			resultObj = new OnlineUserProxy(host, port, name);
 		} 
 		return resultObj;
 	}

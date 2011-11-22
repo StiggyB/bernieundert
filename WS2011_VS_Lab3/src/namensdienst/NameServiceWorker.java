@@ -78,8 +78,14 @@ public class NameServiceWorker implements Runnable {
 						localNS.generateObjectRef(remoteObj,
 								remoteObj.getRemoteName()));
 			} else if (message instanceof UnbindMessage) {
-				String key = ((UnbindMessage)message).getRemoteName();
-				localNS.remove(key);
+				UnbindMessage ubMsg = (UnbindMessage)message;
+				String key = ubMsg.getRemoteName();
+				System.out.println("REMOVE THIS ACCID: " + key);
+				if(localNS.getRemoteEntries().containsKey(key)) {
+					localNS.remove(key);
+//					localNS.getMwCom().sendSync(key);
+					System.out.println("UNBIND MAP: " + localNS.getRemoteEntries());
+				}
 			} else if (message instanceof String) {
 				String name = (String) message;
 				if (localNS.getRemoteEntries().containsKey(name)) {
