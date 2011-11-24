@@ -1,6 +1,7 @@
 package mware_lib;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import messages.RebindMessage;
@@ -22,6 +23,7 @@ public class LocalNameService extends NameService {
 	private String host;
 	private int port;
 	private Client client;
+	private static int skeletonPort = 2500;
 	
 //	private List<Class<?>> typeList;
 
@@ -35,7 +37,10 @@ public class LocalNameService extends NameService {
 		System.out.println("REBIND OBJECT: " + servant + "NAME: " + name);
 		try {
 			client = new Client(this.host, this.port);
-			RebindMessage rbMsg = new RebindMessage((generateSkeletons(servant.getClass(), name)).getClass(), name);
+			Class<?> objType = (generateSkeletons(servant.getClass(), name));
+			RemoteInfo rInfo = new RemoteInfo(InetAddress
+						.getLocalHost().getHostAddress(), skeletonPort, objType);
+			RebindMessage rbMsg = new RebindMessage(rInfo, name);
 			System.out.println("MSG REBIND: " + rbMsg);
 			client.send(rbMsg);
 		} catch (UnknownHostException e1) {
@@ -78,11 +83,11 @@ public class LocalNameService extends NameService {
 			client.send(resMsg);
 			resultObj = client.receive();
 			System.out.println("RESOLVE RECEIVE: " + resultObj);
-			Class<?> objType = null;
-			if (resultObj instanceof Class<?>) {
-				objType = (Class<?>) resultObj;
+			if(resultObj instanceof RemoteInfo) {
+				RemoteInfo rMsg = (RemoteInfo)resultObj;
+				System.out.println("GENERATEOBJ: " + rMsg.getType());
+				resultObj = generateObjectRef(rMsg.getType(), name, rMsg.getHost(), rMsg.getPort());
 			}
-			resultObj = generateObjectRef(objType, name);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -114,25 +119,36 @@ public class LocalNameService extends NameService {
 //		return remoteEntries.get(name);
 //	}
 	
-	public Object generateSkeletons (Class<?> remoteType, String name) {
-		Object resultObj = null;
+	public Class<?> generateSkeletons (Class<?> remoteType, String name) {
+		Class<?> resultObj = null;
 		if (Account.class.equals(remoteType.getSuperclass())) {
-			resultObj = new AccountSkeleton(port);
+			resultObj = Account.class;
+			AccountSkeleton accSkel = new AccountSkeleton(skeletonPort);
+			accSkel.start();
 		} else if (Manager.class.equals(remoteType.getSuperclass())) {
-			resultObj = new ManagerSkeleton(port);
+			resultObj = Manager.class;
+			ManagerSkeleton manSkel;
+			try {
+				manSkel = new ManagerSkeleton(skeletonPort);
+				manSkel.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		System.out.println("SKELETON TYPE: " + resultObj);
 		return resultObj;
 	}
 	
-	public Object generateObjectRef(Class<?> remoteType, String name) {
+	public Object generateObjectRef(Class<?> remoteType, String name, String skelHost, int skelPort) {
 		Object resultObj = null;
-		if (Account.class.equals(remoteType.getSuperclass())) {
-			resultObj = new AccountProxy(host, port, name);
-		} else if (Manager.class.equals(remoteType.getSuperclass())) {
-			resultObj = new ManagerProxy(host, port, name);
-		} else if (OnlineUser.class.equals(remoteType.getSuperclass())) {
-			resultObj = new OnlineUserProxy(host, port, name);
+		if (Account.class.equals(remoteType)) {
+			resultObj = new AccountProxy(skelHost, skelPort, name);
+		} else if (Manager.class.equals(remoteType)) {
+			resultObj = new ManagerProxy(skelHost, skelPort, name);
+		} else if (OnlineUser.class.equals(remoteType)) {
+			resultObj = new OnlineUserProxy(skelHost, skelPort, name);
 		} 
+		System.out.println("PROXY TYPE: " + resultObj);
 		return resultObj;
 	}
 

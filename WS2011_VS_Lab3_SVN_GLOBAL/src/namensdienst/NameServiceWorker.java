@@ -1,29 +1,22 @@
 package namensdienst;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
-import messages.InvokeMessage;
 import messages.RebindMessage;
 import messages.ResolveMessage;
-import messages.ResultMessage;
 import messages.UnbindMessage;
 import tcp_advanced.Connection;
 
 public class NameServiceWorker implements Runnable {
 
+	//TODO Exceptions for the bank!!!
+	
 	private Connection connection;
 	private NameServiceServer NSServer;
-	private Object remoteResult;
 
 	public NameServiceWorker(Connection connection, NameServiceServer NSServer) {
 		this.connection = connection;
 		this.NSServer = NSServer;
-		this.remoteResult = null;
 	}
 
 	@Override
@@ -32,20 +25,16 @@ public class NameServiceWorker implements Runnable {
 		try {
 			message = connection.receive();
 			if (message instanceof RebindMessage) {
-				System.out.println("REBINDMSG: " + message);
+				System.out.println("REBINDMSG1: " + message);
 				RebindMessage rbMsg = (RebindMessage)message;
-				NSServer.put(rbMsg.getRemoteName(), rbMsg.getType()); 
+				NSServer.put(rbMsg.getRemoteName(), rbMsg.getRemoteInfo()); 
 			} else if (message instanceof ResolveMessage) {
 				System.out.println("RESOLVEMSG: " + message);
 				ResolveMessage resMsg = (ResolveMessage)message;
-				Object resultObj = NSServer.get(resMsg.getRemoteName());
-				System.out.println("WORKER RESULTMESSAGE: " + resultObj);
-				Serializable serialObj = null;
-				if (resultObj instanceof Serializable) {
-					serialObj = (Serializable) resultObj;
-				}
-				ResultMessage resuMsg = new ResultMessage(serialObj);
-				connection.send(resuMsg);
+				System.out.println("MAP: " + NSServer.getRemoteEntries());
+				Object remoteInfo = NSServer.get(resMsg.getRemoteName());
+				System.out.println("WORKER RESULTMESSAGE: " + remoteInfo);
+				connection.send(remoteInfo);
 			} else if (message instanceof UnbindMessage) {
 				UnbindMessage ubMsg = (UnbindMessage)message;
 				String key = ubMsg.getRemoteName();

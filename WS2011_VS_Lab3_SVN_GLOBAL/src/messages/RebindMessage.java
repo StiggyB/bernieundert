@@ -9,23 +9,23 @@ public class RebindMessage implements Serializable{
 	 */
 	private static final long serialVersionUID = -5025999473771344271L;
 	private String remoteName;
-	private Class<?> type;
+	private Object remoteInfo;
 
-	public Class<?> getType() {
-		return type;
+	public Object getRemoteInfo() {
+		return this.remoteInfo;
 	}
 
 	public String getRemoteName() {
-		return remoteName;
+		return this.remoteName;
 	}
 
-	public RebindMessage(Class<?> type, String remoteName) {
+	public RebindMessage(Object remoteInfo, String remoteName) {
 		this.remoteName = remoteName;
-		this.type = type;
+		this.remoteInfo = remoteInfo;
 	}
 
 	@Override
 	public String toString() {
-		return "RemoteObject [remoteName=" + remoteName + ", type=" + type + "]";
+		return "RebindMessage [remoteName=" + remoteName + ", type=" + remoteInfo + "]";
 	}
 }
