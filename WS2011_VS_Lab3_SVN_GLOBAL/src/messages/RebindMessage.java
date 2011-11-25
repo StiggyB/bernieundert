@@ -2,6 +2,8 @@ package messages;
 
 import java.io.Serializable;
 
+import mware_lib.RemoteInfo;
+
 public class RebindMessage implements Serializable{
 
 	/**
@@ -9,9 +11,9 @@ public class RebindMessage implements Serializable{
 	 */
 	private static final long serialVersionUID = -5025999473771344271L;
 	private String remoteName;
-	private Object remoteInfo;
+	private RemoteInfo remoteInfo;
 
-	public Object getRemoteInfo() {
+	public RemoteInfo getRemoteInfo() {
 		return this.remoteInfo;
 	}
 
@@ -19,7 +21,7 @@ public class RebindMessage implements Serializable{
 		return this.remoteName;
 	}
 
-	public RebindMessage(Object remoteInfo, String remoteName) {
+	public RebindMessage(RemoteInfo remoteInfo, String remoteName) {
 		this.remoteName = remoteName;
 		this.remoteInfo = remoteInfo;
 	}
