@@ -10,7 +10,6 @@ import java.util.List;
 import messages.InvokeMessage;
 import messages.ResultMessage;
 import tcp_advanced.Connection;
-import branch_access.Manager;
 
 public class AccountWorker implements Runnable {
 
@@ -24,6 +23,7 @@ public class AccountWorker implements Runnable {
 		this.connection = connection;
 		this.iMsg = iMsg;
 		this.account = account;
+		this.workThread = new Thread(this);
 		this.remoteResult = null;
 	}
 

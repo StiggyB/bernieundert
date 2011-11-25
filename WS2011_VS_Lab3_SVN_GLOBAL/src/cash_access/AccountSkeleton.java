@@ -3,8 +3,6 @@ package cash_access;
 import java.io.IOException;
 
 import messages.InvokeMessage;
-import branch_access.ManagerWorker;
-
 import tcp_advanced.Connection;
 import tcp_advanced.Server;
 
@@ -19,6 +17,8 @@ public class AccountSkeleton implements Runnable {
 
 	public AccountSkeleton(int port, Account account) {
 		this.port = port;
+		this.skelThread = new Thread(this);
+		this.isRunning = true;
 		this.account = account;
 	}
 

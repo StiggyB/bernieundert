@@ -27,12 +27,12 @@ public class TestNameService {
 		Manager remoteManager = new ManagerImpl(remoteNS);
 		remoteNS.rebind(remoteManager, "Manager");
 
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		
 		System.out.println("RemoteManager implemented: " + remoteManager);
 		Manager localManager = (Manager) localNS.resolve("Manager");

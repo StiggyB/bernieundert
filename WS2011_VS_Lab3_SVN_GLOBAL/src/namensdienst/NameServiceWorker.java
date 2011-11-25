@@ -43,20 +43,8 @@ public class NameServiceWorker implements Runnable {
 					NSServer.remove(key);
 					UnbindMessage ubMsg2 = new UnbindMessage(key);
 					connection.send(ubMsg2);
-//					localNS.getDeleteList().add(key);
-//					localNS.getMwCom().sendSync(key);
-					System.out.println("UNBIND MAP: " + NSServer.getRemoteEntries());
 				}
 				System.out.println("UNIX: " + NSServer.getRemoteEntries());
-//			} else if (message instanceof String) {
-//				String name = (String) message;
-//				if (NSServer.getRemoteEntries().containsKey(name)) {
-//					RemoteObject remoteObj = new RemoteObject(name,
-//							new BigInteger(6, new SecureRandom()), NSServer.get(
-//									name).getClass());
-//					System.out.println("LOCAL RemoteOBJ: " + NSServer.get(name));
-//					connection.send(remoteObj);
-//				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -70,7 +58,4 @@ public class NameServiceWorker implements Runnable {
 			}
 		}
 	}
-
-	
-	
 }
