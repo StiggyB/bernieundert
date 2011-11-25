@@ -34,10 +34,10 @@ public class LocalNameService extends NameService {
 
 	@Override
 	public void rebind(Object servant, String name) {
-		System.out.println("REBIND OBJECT: " + servant + "NAME: " + name);
+		System.out.println("REBIND OBJECT: " + servant + " NAME: " + name);
 		try {
 			client = new Client(this.host, this.port);
-			Class<?> objType = (generateSkeletons(servant.getClass(), name));
+			Class<?> objType = (generateSkeletons(servant, name));
 			RemoteInfo rInfo = new RemoteInfo(InetAddress
 						.getLocalHost().getHostAddress(), skeletonPort, objType);
 			RebindMessage rbMsg = new RebindMessage(rInfo, name);
@@ -49,6 +49,7 @@ public class LocalNameService extends NameService {
 			e1.printStackTrace();
 		} finally {
 			try {
+				skeletonPort++;
 				client.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -119,17 +120,18 @@ public class LocalNameService extends NameService {
 //		return remoteEntries.get(name);
 //	}
 	
-	public Class<?> generateSkeletons (Class<?> remoteType, String name) {
+	public Class<?> generateSkeletons (Object remoteObj, String name) {
+		Class<?> remoteType = remoteObj.getClass();
 		Class<?> resultObj = null;
 		if (Account.class.equals(remoteType.getSuperclass())) {
 			resultObj = Account.class;
-			AccountSkeleton accSkel = new AccountSkeleton(skeletonPort);
+			AccountSkeleton accSkel = new AccountSkeleton(skeletonPort, (Account)remoteObj);
 			accSkel.start();
 		} else if (Manager.class.equals(remoteType.getSuperclass())) {
 			resultObj = Manager.class;
 			ManagerSkeleton manSkel;
 			try {
-				manSkel = new ManagerSkeleton(skeletonPort);
+				manSkel = new ManagerSkeleton(skeletonPort, (Manager)remoteObj);
 				manSkel.start();
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -15,70 +15,61 @@ public class ManagerWorker implements Runnable {
 
 	private Connection connection;
 	private Object remoteResult;
+	private InvokeMessage iMsg;
+	private Manager manager;
 	private Thread thread;
 
-	public ManagerWorker(Connection c) {
+	public ManagerWorker(Connection c, InvokeMessage iMsg, Manager manager) {
 		this.thread = new Thread(this);
+		this.iMsg = iMsg;
+		this.manager = manager;
 		this.connection = c;
 	}
 
+	// TODO clear method
 	@Override
 	public void run() {
-		Object message = null;
 		ResultMessage rMsg = null;
 		try {
-			message = connection.receive();
-			if (message instanceof InvokeMessage) {
-				InvokeMessage iMsg = (InvokeMessage) message;
-				Object remoteObj = null;
-				try {
-					remoteObj = Class.forName(iMsg.getClassName());
-				} catch (ClassNotFoundException e2) {
-					e2.printStackTrace();
-				}
-				System.out.println("KeyName: " + iMsg.getClassName());
-				System.out.println("RemoteObject: " + remoteObj);
-				Method invokeMeth;
-				try {
-					Class<?>[] argArray = null;
-					if (iMsg.getMethodArgs() != null) {
-						List<Class<?>> methodArgs = new ArrayList<Class<?>>();
-						for (Object type : iMsg.getMethodArgs()) {
-							System.out.println("PARAMETERVALUE: " + type);
-							methodArgs.add(unboxType(type.getClass()));
-						}
-						argArray = new Class<?>[methodArgs.size()];
-						for (int i = 0; i < argArray.length; i++) {
-							argArray[i] = methodArgs.get(i);
-						}
+			System.out.println("KeyName: " + iMsg.getClassName());
+			System.out.println("RemoteObject: " + manager);
+			Method invokeMeth;
+			try {
+				Class<?>[] argArray = null;
+				if (iMsg.getMethodArgs() != null) {
+					List<Class<?>> methodArgs = new ArrayList<Class<?>>();
+					for (Object type : iMsg.getMethodArgs()) {
+						System.out.println("PARAMETERVALUE: " + type);
+						methodArgs.add(unboxType(type.getClass()));
 					}
-					invokeMeth = remoteObj.getClass().getMethod(
-							iMsg.getMethodName(), argArray);
-					remoteResult = invokeMeth.invoke(remoteObj,
-							(Object[]) iMsg.getMethodArgs());
-				} catch (SecurityException e) {
-					e.printStackTrace();
-				} catch (NoSuchMethodException e) {
-					e.printStackTrace();
-				} catch (IllegalArgumentException e1) {
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					e1.printStackTrace();
-				} catch (InvocationTargetException e1) {
-					// e1.printStackTrace();
-					e1.getCause().printStackTrace();
+					argArray = new Class<?>[methodArgs.size()];
+					for (int i = 0; i < argArray.length; i++) {
+						argArray[i] = methodArgs.get(i);
+					}
 				}
-				System.out.println("REMOTERESULT: " + remoteResult);
-				if (remoteResult != null
-						&& remoteResult instanceof Serializable) {
-					Serializable serialResult = (Serializable) remoteResult;
-					rMsg = new ResultMessage(serialResult);
-					connection.send(rMsg);
-				}
+				invokeMeth = manager.getClass().getMethod(
+						iMsg.getMethodName(), argArray);
+				remoteResult = invokeMeth.invoke(manager,
+						(Object[]) iMsg.getMethodArgs());
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e1) {
+				e1.printStackTrace();
+			} catch (IllegalAccessException e1) {
+				e1.printStackTrace();
+			} catch (InvocationTargetException e1) {
+				// e1.printStackTrace();
+				e1.getCause().printStackTrace();
+			}
+			System.out.println("REMOTERESULT: " + remoteResult);
+			if (remoteResult != null && remoteResult instanceof Serializable) {
+				Serializable serialResult = (Serializable) remoteResult;
+				rMsg = new ResultMessage(serialResult);
+				connection.send(rMsg);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			try {

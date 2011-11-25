@@ -25,12 +25,12 @@ public class NameServiceWorker implements Runnable {
 		try {
 			message = connection.receive();
 			if (message instanceof RebindMessage) {
-				System.out.println("REBINDMSG1: " + message);
 				RebindMessage rbMsg = (RebindMessage)message;
+				System.out.println("REBINDMSG1: " + rbMsg.getRemoteName() + ", "+ rbMsg.getRemoteInfo().getType());
 				NSServer.put(rbMsg.getRemoteName(), rbMsg.getRemoteInfo()); 
 			} else if (message instanceof ResolveMessage) {
-				System.out.println("RESOLVEMSG: " + message);
 				ResolveMessage resMsg = (ResolveMessage)message;
+				System.out.println("RESOLVEMSG: " + resMsg.getRemoteName());
 				System.out.println("MAP: " + NSServer.getRemoteEntries());
 				Object remoteInfo = NSServer.get(resMsg.getRemoteName());
 				System.out.println("WORKER RESULTMESSAGE: " + remoteInfo);

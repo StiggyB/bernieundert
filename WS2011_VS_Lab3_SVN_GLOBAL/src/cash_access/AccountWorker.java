@@ -10,34 +10,30 @@ import java.util.List;
 import messages.InvokeMessage;
 import messages.ResultMessage;
 import tcp_advanced.Connection;
+import branch_access.Manager;
 
 public class AccountWorker implements Runnable {
 
 	private Connection connection;
 	private Object remoteResult;
+	private InvokeMessage iMsg;
 	private Thread workThread;
+	private Account account;
 
-	public AccountWorker(Connection connection) {
+	public AccountWorker(Connection connection, InvokeMessage iMsg, Account account) {
 		this.connection = connection;
+		this.iMsg = iMsg;
+		this.account = account;
 		this.remoteResult = null;
 	}
-	
+
+	// TODO clear method
 	@Override
 	public void run() {
-		Object message = null;
 		ResultMessage rMsg = null;
 		try {
-		message = connection.receive();
-		if (message instanceof InvokeMessage) {
-			InvokeMessage iMsg = (InvokeMessage) message;
-			Object remoteObj = null;
-			try {
-				remoteObj = Class.forName(iMsg.getClassName());
-			} catch (ClassNotFoundException e2) {
-				e2.printStackTrace();
-			}
 			System.out.println("KeyName: " + iMsg.getClassName());
-			System.out.println("RemoteObject: " + remoteObj);
+			System.out.println("RemoteObject: " + account);
 			Method invokeMeth;
 			try {
 				Class<?>[] argArray = null;
@@ -52,9 +48,9 @@ public class AccountWorker implements Runnable {
 						argArray[i] = methodArgs.get(i);
 					}
 				}
-				invokeMeth = remoteObj.getClass().getMethod(
+				invokeMeth = account.getClass().getMethod(
 						iMsg.getMethodName(), argArray);
-				remoteResult = invokeMeth.invoke(remoteObj,
+				remoteResult = invokeMeth.invoke(account,
 						(Object[]) iMsg.getMethodArgs());
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -65,7 +61,7 @@ public class AccountWorker implements Runnable {
 			} catch (IllegalAccessException e1) {
 				e1.printStackTrace();
 			} catch (InvocationTargetException e1) {
-				//e1.printStackTrace();
+				// e1.printStackTrace();
 				e1.getCause().printStackTrace();
 			}
 			System.out.println("REMOTERESULT: " + remoteResult);
@@ -74,10 +70,7 @@ public class AccountWorker implements Runnable {
 				rMsg = new ResultMessage(serialResult);
 				connection.send(rMsg);
 			}
-		}
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -87,11 +80,10 @@ public class AccountWorker implements Runnable {
 			}
 		}
 	}
-	
+
 	public void start() {
 		this.workThread.start();
 	}
-	
 
 	private Class<?> unboxType(Class<?> type) {
 		Class<?> primType = type;
@@ -111,5 +103,4 @@ public class AccountWorker implements Runnable {
 		return primType;
 	}
 
-	
 }
