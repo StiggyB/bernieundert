@@ -25,8 +25,6 @@ public class LocalNameService extends NameService {
 	private Client client;
 	private static int skeletonPort = 2500;
 	
-//	private List<Class<?>> typeList;
-
 	public LocalNameService(String host, int port) {
 		this.host = host;
 		this.port = port;
@@ -36,12 +34,12 @@ public class LocalNameService extends NameService {
 	public void rebind(Object servant, String name) {
 		System.out.println("REBIND OBJECT: " + servant + " NAME: " + name);
 		try {
-			client = new Client(this.host, this.port);
 			Class<?> objType = (generateSkeletons(servant, name));
 			RemoteInfo rInfo = new RemoteInfo(InetAddress
 						.getLocalHost().getHostAddress(), skeletonPort, objType);
 			RebindMessage rbMsg = new RebindMessage(rInfo, name);
 			System.out.println("MSG REBIND: " + rbMsg);
+			client = new Client(this.host, this.port);
 			client.send(rbMsg);
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
@@ -57,30 +55,14 @@ public class LocalNameService extends NameService {
 			
 		}
 	}	
-//		if (remoteEntries == null && !(nsServerThread.isAlive())) {
-//			this.nsServerThread.start();
-//			this.remoteEntries = new HashMap<String, Object>();
-//			this.mwCom = new MWCommunication(host, port);
-//		}
-//		if(!(deleteList.isEmpty())) {
-//			for (String key : deleteList) {
-//				mwCom.sendSync(key);
-//			}
-//		}
-//		typeList.add(servant.getClass());
-//		System.out.println("REBIND Servant: " + servant + "; Name: " + name);
-//		if (servant != null) {
-//			remoteEntries.put(name, servant);
-//		}
-//		System.out.println("REBIND MapID: " + remoteEntries);
-//	}
 
 	@Override
 	public Object resolve(String name) {
 		Object resultObj = null;
 		try {
-			client = new Client(this.host, this.port);
 			ResolveMessage resMsg = new ResolveMessage(name);
+			client = new Client(this.host, this.port);
+			Thread.sleep(500);
 			client.send(resMsg);
 			resultObj = client.receive();
 			System.out.println("RESOLVE RECEIVE: " + resultObj);
@@ -95,6 +77,9 @@ public class LocalNameService extends NameService {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			try {
 				client.close();
@@ -104,21 +89,6 @@ public class LocalNameService extends NameService {
 		}
 		return resultObj;
 	}
-//		System.out.println("RESOLVE Servant: " + name);
-//		if (remoteEntries == null) {
-//			this.remoteEntries = new HashMap<String, Object>();
-//			this.mwCom = new MWCommunication(host, port);
-//		}
-////		mwCom.sendSync(name);
-//		Object remoteObjType = mwCom.sendRequest(name);
-//		if (remoteObjType != null) {
-//			System.out.println("NEW REMOTEOBJ: " + remoteObjType);
-//			Object remoteObj = generateObjectRef(remoteObjType, name);
-//			this.remoteEntries.put(name, remoteObj);
-//		}
-//		System.out.println("RESOLVE MapID: " + remoteEntries);
-//		return remoteEntries.get(name);
-//	}
 	
 	public Class<?> generateSkeletons (Object remoteObj, String name) {
 		Class<?> remoteType = remoteObj.getClass();
@@ -147,9 +117,7 @@ public class LocalNameService extends NameService {
 			resultObj = new AccountProxy(skelHost, skelPort, name);
 		} else if (Manager.class.equals(remoteType)) {
 			resultObj = new ManagerProxy(skelHost, skelPort, name);
-		} else if (OnlineUser.class.equals(remoteType)) {
-			resultObj = new OnlineUserProxy(skelHost, skelPort, name);
-		} 
+		}
 		System.out.println("PROXY TYPE: " + resultObj);
 		return resultObj;
 	}

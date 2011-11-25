@@ -26,7 +26,6 @@ public class AccountProxy extends Account {
 			this.client = new Client(this.host, this.port);
 			InvokeMessage iMsg = new InvokeMessage(accID, "deposit", amount);
 			client.send(iMsg);
-			client.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
