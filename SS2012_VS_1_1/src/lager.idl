@@ -1,0 +1,39 @@
+// IDL fuer das Lager-Projekt.
+// Version SS 2012
+
+module lagern {
+
+  interface Fach {
+    exception exNotEnoughPieces{ string s;};
+    exception exInvalidCount{ string s; };
+    readonly attribute long anzahl; //Anzahl gelagerte Teile
+    readonly attribute string name; //Name des Faches
+    //Parameter user zur Kennzeichnung, wer die Aktion aufruft. Dient zur Protokollierung im Monitor.
+    void einlagern( in string user, in long anzahl ) raises( exInvalidCount );
+    void auslagern( in string user, in long anzahl ) raises( exInvalidCount, exNotEnoughPieces );
+  };
+
+  interface Monitor {
+    void aktion( in string user, in string log );
+    void quit();
+  };
+
+  typedef sequence<Fach> FachListe;
+
+  interface Lager {
+    exception exNotFound{ string s;};
+    exception exAlreadyExists{ string s;};
+    //Parameter user zur Kennzeichnung, wer die Aktion aufruft. Dient zur Protokollierung im Monitor.
+    Fach neu( in string user, in string name ) raises( exAlreadyExists );
+    Fach hole( in string user, in string name ) raises( exNotFound );
+    FachListe holeLagerListe();
+
+    void aktiviereMonitor( in Monitor theMonitor );
+    void entferneMonitor( in Monitor theMonitor );
+
+    //Dient zum Beenden der Lageranwendung. Sorgt dafuer, dass das Lager und alle registrierten Monitore beendet werden.
+    void quit();
+  };
+
+
+};
