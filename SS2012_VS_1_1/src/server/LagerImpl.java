@@ -1,47 +1,104 @@
 package server;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.omg.PortableServer.Servant;
+import org.omg.PortableServer.POAPackage.ServantNotActive;
+import org.omg.PortableServer.POAPackage.WrongPolicy;
+
 import lagern.Fach;
+import lagern.FachHelper;
 import lagern.LagerPOA;
 import lagern.Monitor;
 import lagern.LagerPackage.exAlreadyExists;
 import lagern.LagerPackage.exNotFound;
 
-public class LagerImpl extends LagerPOA{
+public class LagerImpl extends LagerPOA {
 
+	private Map<String, Fach> lagerFaecher = new HashMap<String, Fach>();
+	private static List<Monitor> lagerMonitore = new LinkedList<Monitor>();
+
+	//TODO: muss das synchronized sein oder reicht synchronized hashmap?
 	@Override
 	public Fach neu(String user, String name) throws exAlreadyExists {
-		// TODO Auto-generated method stub
-		return null;
+
+		if (lagerFaecher.containsKey(name)) {
+			benachrichtigeMonitore(user, "neu(): Fach " + name + "existiert bereits!");
+			throw new exAlreadyExists("neu(): " + name + "already exists!");
+		}
+
+		LagerfachImpl lagerfach = new LagerfachImpl(user, name);
+		Fach neuesFach = null;
+		org.omg.CORBA.Object ref = null;
+		
+		try {
+			ref = _poa().servant_to_reference((Servant) lagerfach);
+		} catch (ServantNotActive e) {
+			System.err.println("ERROR: " + e);
+			e.printStackTrace();
+		} catch (WrongPolicy e) {
+			System.err.println("ERROR: " + e);
+			e.printStackTrace();
+		}
+		
+		neuesFach = FachHelper.narrow(ref);
+		lagerFaecher.put(name, neuesFach);
+		
+		benachrichtigeMonitore(user, "neu(): Fach '" + name + "' erfolgreich in das Lager eingetragen.");
+		
+		return neuesFach;
 	}
 
+	//TODO: static referenz ok fuer LagerfachImpl??
+	public static void benachrichtigeMonitore(String user, String log) {
+		if (!lagerMonitore.isEmpty()) {
+			for (Monitor mon : lagerMonitore) {
+				mon.aktion(user, log);
+			}
+
+		}
+	}
+
+	//TODO: wtf ... wozu der user?
 	@Override
 	public Fach hole(String user, String name) throws exNotFound {
-		// TODO Auto-generated method stub
-		return null;
+		if(!lagerFaecher.containsKey(name)){
+			throw new exNotFound("hole(): Fach '" + name + "' existiert nicht!");
+		}
+		
+		return lagerFaecher.get(name);
 	}
 
+	//TODO: geht das so mit dem cast???!
 	@Override
 	public Fach[] holeLagerListe() {
-		// TODO Auto-generated method stub
-		return null;
+		return (Fach[]) lagerFaecher.values().toArray();
 	}
 
+	//TODO: linkedlist nicht synced, also methode synchronized?
 	@Override
-	public void aktiviereMonitor(Monitor theMonitor) {
-		// TODO Auto-generated method stub
-		
+	public synchronized void aktiviereMonitor(Monitor theMonitor) {
+		System.out.println("Monitor: '" + theMonitor.toString() + "' hinzugefuegt");
+		lagerMonitore.add(theMonitor);
 	}
 
+	//TODO: linkedlist nicht synced, also methode synchronized?
 	@Override
-	public void entferneMonitor(Monitor theMonitor) {
-		// TODO Auto-generated method stub
-		
+	public synchronized void entferneMonitor(Monitor theMonitor) {
+		if (lagerMonitore.contains(theMonitor)) {
+			lagerMonitore.remove(theMonitor);
+			System.out.println("Monitor: '" + theMonitor.toString() + "' entfernt");
+		}
 	}
 
+	//TODO: joa hier muss wohl auch son hook rein ...
 	@Override
 	public void quit() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
