@@ -52,8 +52,11 @@ public class Client {
 			try {
 				if(aktion.equals("quit")){
 					quit();
-				} else if(aktion.equals("liste")){
+				} else if(aktion.equals("liste")) {
 					liste();
+				} else if(aktion.equals("lagerloop")) {
+					anzahl = Integer.parseInt(args[6]);
+					lagerTestLoop();
 				}
 				
 				lagerfachname = args[6];
@@ -62,12 +65,12 @@ public class Client {
 					username = args[7];
 
 					neu();
-				} else if(aktion.equals("einlagern")){
+				} else if(aktion.equals("einlagern")) {
 					anzahl = Integer.parseInt(args[7]);
 					username = args[8];
 					
 					einlagern();
-				} else if(aktion.equals("auslagern")){
+				} else if(aktion.equals("auslagern")) {
 					anzahl = Integer.parseInt(args[7]);
 					username = args[8];
 					
@@ -85,6 +88,36 @@ public class Client {
 		}
 
 	}
+
+	private static void lagerTestLoop() {
+		try {
+			lagerRef.neu("lagertest", "lagertestloop");
+		} catch (exAlreadyExists e) {
+			System.out.println("neu(): Fach '" + lagerfachname	+ "' existiert bereits!");
+			System.err.println(e.getMessage());
+		}
+
+		Fach fach = null;
+
+		try {
+			
+			fach = lagerRef.hole(username, lagerfachname);
+			for (int i = 0; i < anzahl; i++) {
+				fach.einlagern(username, i);
+			}
+		} catch (exNotFound e) {
+			System.out.println("einlagern(): Fach '" + lagerfachname + "' existiert nicht!");
+			System.err.println(e.getMessage());
+		} catch (exInvalidCount e1) {
+			System.out.println("einlagern(): Ungueltige Anzahl!");
+			System.err.println(e1.getMessage());
+		}
+
+		// wieso fuehrt er dies noch aus, obwohl ne exception kam?!
+		System.out.println("einlagern(): '" + anzahl + "' Teile in '" + lagerfachname + "' eingelagert!");
+	}
+	
+	
 
 	private static void quit() {
 		// TODO Auto-generated method stub
