@@ -69,6 +69,7 @@ public class Server {
 			
 			// DO TIME CONSUMING STUFF....
 	
+			//TODO: komme ich hier überhaupt noch bei strg+c vorbei?
 			// Server beenden
 			System.out.println("Server>shutdown of server is in progress...");
 			ncRef.unbind(path);
@@ -81,7 +82,7 @@ public class Server {
 			e.printStackTrace(System.out);
 		}
 		
-		System.out.println("EOF");
+		System.out.println("Server>EOF");
 
 	}
 
