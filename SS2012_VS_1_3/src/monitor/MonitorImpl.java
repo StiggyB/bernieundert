@@ -6,8 +6,7 @@ public class MonitorImpl extends MonitorPOA{
 
 	@Override
 	public void aktion(String user, String log) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Monitor>Action from user: " + user + " \t\t\tLog-Entry: " + log);
 	}
 
 	@Override
