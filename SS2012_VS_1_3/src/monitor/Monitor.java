@@ -34,7 +34,7 @@ public class Monitor {
 			
 			// Cast Corba ref -> Java Referenz
 			System.out.println("Monitor>getting remote object...");
-			Lager lagerRef = LagerHelper.narrow(obj);
+			final Lager lagerRef = LagerHelper.narrow(obj);
 			
 			// Neuen Monitor erzeugen
 			MonitorImpl monitor = new MonitorImpl();
@@ -46,10 +46,21 @@ public class Monitor {
 			
 			org.omg.CORBA.Object ref = rootPoa.servant_to_reference(monitor);
 			
-			lagern.Monitor href = MonitorHelper.narrow(ref);
+			final lagern.Monitor href = MonitorHelper.narrow(ref);
 
 			// Setze monitor referenz in KontoListe
 			lagerRef.aktiviereMonitor(href);
+
+			Thread hook = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					lagerRef.entferneMonitor(href);
+				}
+			});
+			
+			Runtime.getRuntime().addShutdownHook(hook);
+			monitor.setHook(hook);
+			monitor.setOrb(orb);
 
 			orb.run();
 			
