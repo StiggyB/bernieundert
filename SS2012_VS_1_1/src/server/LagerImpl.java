@@ -96,7 +96,8 @@ public class LagerImpl extends LagerPOA {
 		}
 	}
 
-	//TODO: joa hier muss wohl auch son hook rein ...
+	//TODO: joa hier muss wohl auch son hook rein ... wird vom client gecalled, 
+	//um lager runterzufahren; Monitore abmelden (dort die quit() aufrufen) und lager beenden
 	@Override
 	public void quit() {
 		// TODO Auto-generated method stub
