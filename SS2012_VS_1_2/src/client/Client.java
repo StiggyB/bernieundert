@@ -58,25 +58,19 @@ public class Client {
 				} else if(aktion.equals("lagerloop")) {
 					anzahl = Integer.parseInt(args[6]);
 					lagerTestLoop();
-				}
-				
-				
-				if(aktion.equals("neu")){
+				} else if(aktion.equals("neu")){
 					lagerfachname = args[6];
 					username = args[7];
-
 					neu();
 				} else if(aktion.equals("einlagern")) {
 					lagerfachname = args[6];
 					anzahl = Integer.parseInt(args[7]);
 					username = args[8];
-					
 					einlagern();
 				} else if(aktion.equals("auslagern")) {
 					lagerfachname = args[6];
 					anzahl = Integer.parseInt(args[7]);
 					username = args[8];
-					
 					auslagern();
 				}
 				
