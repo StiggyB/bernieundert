@@ -28,7 +28,7 @@ public class LagerfachImpl extends FachPOA {
 		return fachname;
 	}
 	
-	//eigentlich nicht benoetigt...
+	//TODO: eigentlich nicht benoetigt... nicht im interface, wie rankommen bei gelegenheit?
 	public String getUser() {
 		return user;
 	}
