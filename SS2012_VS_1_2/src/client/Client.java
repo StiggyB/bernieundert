@@ -24,8 +24,12 @@ public class Client {
 	private static int anzahl;
 	
 	public static void main(String[] args) {
-		//-ORBInitialPort 1051 -ORBInitialHost localhost VS1_Lager neu Dildos DildoFee
+		//TODO: Beispiel-Aufruf :) zum beenden einfach statt neu quit, mehr nit ...
+		//Fach anlegen:
+//		-ORBInitialPort 1051 -ORBInitialHost localhost VS1_Lager neu Dildos DildoFee
 		//       0         1          2           3          4      5     6       7 
+		//einlagern:
+		//-ORBInitialPort 1051 -ORBInitialHost localhost VS1_Lager einlagern Dildos 1337 DildoFee
 		lagername = args[4];
 		aktion = args[5];
 
@@ -86,6 +90,7 @@ public class Client {
 
 	}
 
+	//TODO: muss hier was synced sein?
 	private static void lagerTestLoop() {
 		lagerfachname = "lagertestloop";
 		username = "lagertest";
@@ -114,15 +119,13 @@ public class Client {
 			System.err.println(e1.getMessage());
 		}
 
-		// wieso fuehrt er dies noch aus, obwohl ne exception kam?!
 		System.out.println("einlagern(): '" + loopAnzahl + "' Teile in '" + lagerfachname + "' eingelagert!");
 	}
 	
 	
 
 	private static void quit() {
-		// TODO Auto-generated method stub
-		
+		lagerRef.quit();
 	}
 
 	private static void liste() {
@@ -181,7 +184,6 @@ public class Client {
 			System.err.println(e1.getMessage());
 		}
 		
-		//wieso fuehrt er dies noch aus, obwohl ne exception kam?!
 		System.out.println("einlagern(): '" + anzahl + "' Teile in '" + lagerfachname + "' eingelagert!");
 	}
 }
