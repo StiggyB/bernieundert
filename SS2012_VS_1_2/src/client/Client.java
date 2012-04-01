@@ -24,7 +24,8 @@ public class Client {
 	private static int anzahl;
 	
 	public static void main(String[] args) {
-		
+		//-ORBInitialPort 1051 -ORBInitialHost localhost VS1_Lager neu Dildos DildoFee
+		//       0         1          2           3          4      5     6       7 
 		lagername = args[4];
 		aktion = args[5];
 
@@ -126,8 +127,12 @@ public class Client {
 
 	private static void liste() {
 		Fach[] faecher = lagerRef.holeLagerListe();
-		for (Fach fach : faecher) {
-			//TODO: wie an die faecher infos kommen?
+		System.out.println("liste(): Fachname:\tAnzahl Teile:");
+		System.out.println("liste(): ============================");
+		if (faecher.length == 0) {
+			for (Fach fach : faecher) {
+				System.out.println("liste(): " + fach.name() + " -> Anzahl eingelagerter Teile: " + fach.anzahl());
+			}
 		}
 	}
 
