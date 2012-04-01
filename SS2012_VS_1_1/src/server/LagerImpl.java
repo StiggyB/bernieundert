@@ -35,6 +35,7 @@ public class LagerImpl extends LagerPOA {
 		org.omg.CORBA.Object ref = null;
 		
 		try {
+			//TODO: braucht man hier auch son rootPOA aufruf oder reicht das _poa? unterschied? Meherere PCs?
 			ref = _poa().servant_to_reference((Servant) lagerfach);
 		} catch (ServantNotActive e) {
 			System.err.println("ERROR: " + e);
@@ -52,7 +53,7 @@ public class LagerImpl extends LagerPOA {
 		return neuesFach;
 	}
 
-	//TODO: static referenz ok fuer LagerfachImpl??
+	//TODO: static referenz ok fuer LagerfachImpl?? Läuft das dann auch verteilt auf mehereren PCs?
 	public static void benachrichtigeMonitore(String user, String log) {
 		if (!lagerMonitore.isEmpty()) {
 			for (Monitor mon : lagerMonitore) {
@@ -72,16 +73,17 @@ public class LagerImpl extends LagerPOA {
 		return lagerFaecher.get(name);
 	}
 
-	//TODO: geht das so mit dem cast???!
+	//TODO: geht das so mit dem cast???! Nee geht nicht, class cast exception ...
+	// gibts was sexyeres?
 	@Override
 	public Fach[] holeLagerListe() {
-		return (Fach[]) lagerFaecher.values().toArray();
+		return lagerFaecher.values().toArray(new Fach[0]);
 	}
 
 	//TODO: linkedlist nicht synced, also methode synchronized?
 	@Override
 	public synchronized void aktiviereMonitor(Monitor theMonitor) {
-		System.out.println("Monitor: '" + theMonitor.toString() + "' hinzugefuegt");
+		System.out.println("Monitor: '" + theMonitor.hashCode() + "' hinzugefuegt");
 		lagerMonitore.add(theMonitor);
 	}
 
