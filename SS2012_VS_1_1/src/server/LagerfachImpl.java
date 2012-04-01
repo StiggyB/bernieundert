@@ -11,7 +11,7 @@ public class LagerfachImpl extends FachPOA {
 	private int anzahl;
 	private final static int MAX_LAGERTEILE = Integer.MAX_VALUE;
 
-	public LagerfachImpl(String name, String user) {
+	public LagerfachImpl(String user, String name) {
 
 		this.fachname = name;
 		this.user = user;
@@ -44,7 +44,7 @@ public class LagerfachImpl extends FachPOA {
 
 		this.anzahl += anzahl;
 		
-		LagerImpl.benachrichtigeMonitore(user, "einlagern(): '" + anzahl + "' Teile in Fach '" + fachname + "' eingelagert!");
+		LagerImpl.benachrichtigeMonitore(user, "einlagern(): '" + anzahl + "' Teile in Fach '" + this.fachname + "' eingelagert!");
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class LagerfachImpl extends FachPOA {
 		
 		this.anzahl -= anzahl;
 		
-		LagerImpl.benachrichtigeMonitore(user, "auslagern(): '" + anzahl + "' Teile aus Fach '" + fachname + "' ausgelagert!");
+		LagerImpl.benachrichtigeMonitore(user, "auslagern(): '" + anzahl + "' Teile aus Fach '" + this.fachname + "' ausgelagert!");
 	}
 
 }
