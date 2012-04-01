@@ -36,8 +36,9 @@ public class Server {
 			rootPoa.the_POAManager().activate();
 			
 			// Servant-Objekt erstellen
+			//TODO: final ok? wg inner class ...
 	        System.out.println("Server>Creating the servant");
-			LagerImpl lagerServant = new LagerImpl();
+			final LagerImpl lagerServant = new LagerImpl();
 			
 			// Objekt Referenz des Servants holen
 			System.out.println("Server>obtain the reference from the servant");
@@ -64,7 +65,15 @@ public class Server {
 			ncRef.rebind(path, href);
 			System.out.println("Server>Server was started...");
 			
+			Thread hook = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					lagerServant.quit();
+				}
+			});
 			// fuer shutdown
+			Runtime.getRuntime().addShutdownHook(hook);
+			lagerServant.setHook(hook);
 			lagerServant.setOrb(orb);
 			
 			// Orb starten und auf Clients warten

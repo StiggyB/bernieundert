@@ -21,6 +21,7 @@ public class LagerImpl extends LagerPOA {
 
 	private Map<String, Fach> lagerFaecher = new HashMap<String, Fach>();
 	private ORB orb;
+	private Thread hook;
 	private static List<Monitor> lagerMonitore = new LinkedList<Monitor>();
 
 	//TODO: muss das synchronized sein oder reicht hashmap? Die ist ja synchronized afaik...
@@ -105,11 +106,16 @@ public class LagerImpl extends LagerPOA {
 		for (Monitor moni : lagerMonitore) {
 			moni.quit();
 		}
+		Runtime.getRuntime().removeShutdownHook(hook);
 		orb.shutdown(false);
 	}
 
 	public void setOrb(ORB orb) {
 		this.orb = orb;
+	}
+
+	public void setHook(Thread hook) {
+		this.hook = hook;
 	}
 
 }
