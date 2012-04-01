@@ -133,7 +133,7 @@ public class Client {
 		System.out.println("liste(): ============================");
 		if (!(faecher.length == 0)) {
 			for (Fach fach : faecher) {
-				System.out.println("liste(): " + fach.name() + " -> Anzahl eingelagerter Teile: " + fach.anzahl());
+				System.out.println("liste(): " + fach.name() + " -> " + fach.anzahl());
 			}
 		}
 	}
