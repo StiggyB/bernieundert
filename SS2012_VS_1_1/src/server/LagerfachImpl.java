@@ -28,13 +28,11 @@ public class LagerfachImpl extends FachPOA {
 		return fachname;
 	}
 	
-	//TODO: eigentlich nicht benoetigt... nicht im interface, wie rankommen bei gelegenheit?
 	public String getUser() {
 		return user;
 	}
 
-	// TODO: liste an teilen<String> needed oder nur teile durch erhoehung der
-	// anzahl einlagern?
+	//TODO: muss es synchronized sein?
 	@Override
 	public synchronized void einlagern(String user, int anzahl)
 			throws exInvalidCount {
@@ -47,6 +45,7 @@ public class LagerfachImpl extends FachPOA {
 		LagerImpl.benachrichtigeMonitore(user, "einlagern(): '" + anzahl + "' Teile in Fach '" + this.fachname + "' eingelagert!");
 	}
 
+	//TODO: muss es synchronized sein?
 	@Override
 	public synchronized void auslagern(String user, int anzahl) throws exInvalidCount, exNotEnoughPieces {
 		if(anzahl <= 0){

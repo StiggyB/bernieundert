@@ -64,12 +64,12 @@ public class Server {
 			ncRef.rebind(path, href);
 			System.out.println("Server>Server was started...");
 			
+			// fuer shutdown
+			lagerServant.setOrb(orb);
+			
 			// Orb starten und auf Clients warten
 			orb.run();
 			
-			// DO TIME CONSUMING STUFF....
-	
-			//TODO: komme ich hier überhaupt noch bei strg+c vorbei?
 			// Server beenden
 			System.out.println("Server>shutdown of server is in progress...");
 			ncRef.unbind(path);
