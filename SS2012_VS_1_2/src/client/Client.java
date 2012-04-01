@@ -60,18 +60,20 @@ public class Client {
 					lagerTestLoop();
 				}
 				
-				lagerfachname = args[6];
 				
 				if(aktion.equals("neu")){
+					lagerfachname = args[6];
 					username = args[7];
 
 					neu();
 				} else if(aktion.equals("einlagern")) {
+					lagerfachname = args[6];
 					anzahl = Integer.parseInt(args[7]);
 					username = args[8];
 					
 					einlagern();
 				} else if(aktion.equals("auslagern")) {
+					lagerfachname = args[6];
 					anzahl = Integer.parseInt(args[7]);
 					username = args[8];
 					
@@ -129,7 +131,7 @@ public class Client {
 		Fach[] faecher = lagerRef.holeLagerListe();
 		System.out.println("liste(): Fachname:\tAnzahl Teile:");
 		System.out.println("liste(): ============================");
-		if (faecher.length == 0) {
+		if (!(faecher.length == 0)) {
 			for (Fach fach : faecher) {
 				System.out.println("liste(): " + fach.name() + " -> Anzahl eingelagerter Teile: " + fach.anzahl());
 			}
