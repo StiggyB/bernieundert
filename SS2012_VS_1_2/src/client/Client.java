@@ -93,8 +93,11 @@ public class Client {
 	}
 
 	private static void lagerTestLoop() {
+		lagerfachname = "lagertestloop";
+		username = "lagertest";
+		int loopAnzahl = 0;
 		try {
-			lagerRef.neu("lagertest", "lagertestloop");
+			lagerRef.neu(username, lagerfachname);
 		} catch (exAlreadyExists e) {
 			System.out.println("neu(): Fach '" + lagerfachname	+ "' existiert bereits!");
 			System.err.println(e.getMessage());
@@ -105,8 +108,9 @@ public class Client {
 		try {
 			
 			fach = lagerRef.hole(username, lagerfachname);
-			for (int i = 0; i < anzahl; i++) {
+			for (int i = 1; i < anzahl+1; i++) {
 				fach.einlagern(username, i);
+				loopAnzahl+=i;
 			}
 		} catch (exNotFound e) {
 			System.out.println("einlagern(): Fach '" + lagerfachname + "' existiert nicht!");
@@ -117,7 +121,7 @@ public class Client {
 		}
 
 		// wieso fuehrt er dies noch aus, obwohl ne exception kam?!
-		System.out.println("einlagern(): '" + anzahl + "' Teile in '" + lagerfachname + "' eingelagert!");
+		System.out.println("einlagern(): '" + loopAnzahl + "' Teile in '" + lagerfachname + "' eingelagert!");
 	}
 	
 	
