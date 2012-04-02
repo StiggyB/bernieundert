@@ -14,6 +14,7 @@ public class Monitor {
 	
 	public static void main(String[] args) {
 		try {
+			String lagername = args[4];
 			// Zugang zum Namensdienst festlegen (ORB init)
 			//Properties props = new Properties();
 			//props.put("org.omg.CORBA.ORBInitialPort", "1051");
@@ -28,7 +29,7 @@ public class Monitor {
 
 			// Objektreferenz mit Namen "Konto" besorgen
 			System.out.println("Monitor>Resolving the object reference");
-			org.omg.CORBA.Object obj = nc.resolve_str("VS1_Lager"); // Corba
+			org.omg.CORBA.Object obj = nc.resolve_str(lagername); // Corba
 			
 			// Cast Corba ref -> Java Referenz
 			System.out.println("Monitor>getting remote object...");
