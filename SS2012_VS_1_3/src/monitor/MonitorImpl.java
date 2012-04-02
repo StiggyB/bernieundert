@@ -14,12 +14,18 @@ public class MonitorImpl extends MonitorPOA{
 		System.out.println("Monitor>Action from user: " + user + " \t\t\tLog-Entry: " + log);
 	}
 
-	@Override
 	public void quit() {
-		Runtime.getRuntime().removeShutdownHook(hook);
-		orb.shutdown(false);
-	}
+		new Thread(new Runnable() {
 
+			@Override
+			public void run() {
+				System.out.println("Monitor>quit");
+				Runtime.getRuntime().removeShutdownHook(hook);
+				orb.shutdown(false);
+			}
+		}).start();
+	}
+	
 	public void setHook(Thread hook) {
 		this.hook = hook;
 	}
