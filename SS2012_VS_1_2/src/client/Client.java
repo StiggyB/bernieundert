@@ -81,6 +81,8 @@ public class Client {
 					auslagern(username, lagerfachname, anzahl);
 				}
 				
+				System.out.println("Client>executed chosen parameter...");
+				
 			} catch (Exception e) {
 				System.out.println(e.getClass());
 			}
@@ -90,6 +92,8 @@ public class Client {
 			System.err.println(ex);
 			System.exit(1);
 		}
+		
+		System.out.println("Client>exit successful ...");
 
 	}
 
