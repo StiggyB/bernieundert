@@ -68,7 +68,7 @@ public class Server {
 			Thread hook = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					lagerServant.quit();
+					lagerServant.hookQuit();
 				}
 			});
 			// fuer shutdown

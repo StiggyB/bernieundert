@@ -101,13 +101,31 @@ public class LagerImpl extends LagerPOA {
 	//TODO: eigenartig ... Server starten, Moni starten, Client sagt quit; Moni wird noch beendet aber Lager
 	// rennt weiter; im Client gibts ne COMM Exception ... bei meheren Monis werden auch nicht zwingend alle beendet ...
 	// startet man z.B. 3 geht nur einer aus und die anderen beiden + lager rennen weiter ... hmmmm
-	@Override
 	public void quit() {
-		for (Monitor moni : lagerMonitore) {
-			moni.quit();
-		}
-		Runtime.getRuntime().removeShutdownHook(hook);
-		orb.shutdown(false);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("Server>quit");
+				for (Monitor moni : lagerMonitore) {
+					moni.quit();
+				}
+				Runtime.getRuntime().removeShutdownHook(hook);
+				orb.shutdown(false);
+			}
+		}).start();
+	}
+	
+	public void hookQuit() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("Server>quit");
+				for (Monitor moni : lagerMonitore) {
+					moni.quit();
+				}
+				orb.shutdown(false);
+			}
+		}).start();
 	}
 
 	public void setOrb(ORB orb) {
