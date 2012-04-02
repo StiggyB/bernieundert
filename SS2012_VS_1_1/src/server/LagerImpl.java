@@ -102,17 +102,12 @@ public class LagerImpl extends LagerPOA {
 	// rennt weiter; im Client gibts ne COMM Exception ... bei meheren Monis werden auch nicht zwingend alle beendet ...
 	// startet man z.B. 3 geht nur einer aus und die anderen beiden + lager rennen weiter ... hmmmm
 	public void quit() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				System.out.println("Server>quit");
-				for (Monitor moni : lagerMonitore) {
-					moni.quit();
-				}
-				Runtime.getRuntime().removeShutdownHook(hook);
-				orb.shutdown(false);
-			}
-		}).start();
+		System.out.println("Server>quit");
+		for (Monitor moni : lagerMonitore) {
+			moni.quit();
+		}
+		Runtime.getRuntime().removeShutdownHook(hook);
+		orb.shutdown(false);
 	}
 	
 	//TODO: komisch ... ohne thread gehts ... mit strg+c ... wtf ....
@@ -121,7 +116,37 @@ public class LagerImpl extends LagerPOA {
 		for (Monitor moni : lagerMonitore) {
 			moni.quit();
 		}
+		orb.shutdown(false);
 	}
+
+	//	public void quit() {
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				System.out.println("Server>quit");
+//				for (Monitor moni : lagerMonitore) {
+//					moni.quit();
+//				}
+//				Runtime.getRuntime().removeShutdownHook(hook);
+//				orb.shutdown(false);
+//			}
+//		}).start();
+//	}
+//	
+//	//TODO: komisch ... ohne thread gehts ... mit strg+c ... wtf ....
+//	public void hookQuit() {
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				System.out.println("Server>quit");
+//				for (Monitor moni : lagerMonitore) {
+//					moni.quit();
+//				}
+//				Runtime.getRuntime().removeShutdownHook(hook);
+//				orb.shutdown(false);
+//			}
+//		}).start();
+//	}
 
 	public void setOrb(ORB orb) {
 		this.orb = orb;
