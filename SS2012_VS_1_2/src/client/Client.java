@@ -16,14 +16,19 @@ import org.omg.CosNaming.NamingContextExtHelper;
 
 public class Client {
 	
-	private static Lager lagerRef;
-	private static String lagername;
-	private static String lagerfachname;
-	private static String aktion;
-	private static String username;
-	private static int anzahl;
+	private Lager lagerRef;
 	
 	public static void main(String[] args) {
+		new Client().start(args);
+	}
+
+	private void start(String[] args) {
+		String lagername;
+		String lagerfachname;
+		String aktion;
+		String username;
+		int anzahl;
+
 		//TODO: Beispiel-Aufruf :) zum beenden einfach statt neu quit, mehr nit ...
 		//Fach anlegen:
 //		-ORBInitialPort 1051 -ORBInitialHost localhost VS1_Lager neu Dildos DildoFee
@@ -61,21 +66,21 @@ public class Client {
 					liste();
 				} else if(aktion.equals("lagerloop")) {
 					anzahl = Integer.parseInt(args[6]);
-					lagerTestLoop();
+					lagerTestLoop(anzahl);
 				} else if(aktion.equals("neu")){
 					lagerfachname = args[6];
 					username = args[7];
-					neu();
+					neu(lagerfachname, username);
 				} else if(aktion.equals("einlagern")) {
 					lagerfachname = args[6];
 					anzahl = Integer.parseInt(args[7]);
 					username = args[8];
-					einlagern();
+					einlagern(username, lagerfachname, anzahl);
 				} else if(aktion.equals("auslagern")) {
 					lagerfachname = args[6];
 					anzahl = Integer.parseInt(args[7]);
 					username = args[8];
-					auslagern();
+					auslagern(username, lagerfachname, anzahl);
 				}
 				
 			} catch (Exception e) {
@@ -91,9 +96,9 @@ public class Client {
 	}
 
 	//TODO: muss hier was synced sein?
-	private static void lagerTestLoop() {
-		lagerfachname = "lagertestloop";
-		username = "lagertest";
+	private void lagerTestLoop(int anzahl) {
+		String lagerfachname = "lagertestloop";
+		String username = "lagertest";
 		int loopAnzahl = 0;
 		try {
 			lagerRef.neu(username, lagerfachname);
@@ -124,23 +129,21 @@ public class Client {
 	
 	
 
-	private static void quit() {
+	private void quit() {
 		lagerRef.quit();
 	}
 
-	private static void liste() {
+	private void liste() {
 		Fach[] faecher = lagerRef.holeLagerListe();
 		System.out.println("liste(): Fachname:\t\t\tAnzahl Teile:");
 		System.out.println("liste(): ============================================");
-		if (!(faecher.length == 0)) {
-			for (Fach fach : faecher) {
-//				System.out.println("liste(): " + fach.name() + " -> \t\t" + fach.anzahl());
-				System.out.printf("liste(): %-2s -> %-15s\n", fach.name(), fach.anzahl());
-			}
+		for (Fach fach : faecher) {
+			System.out.printf("liste(): %-27s -> %-15s\n", fach.name(),
+					fach.anzahl());
 		}
 	}
 
-	private static void neu() {
+	private void neu(String lagerfachname, String username) {
 		try {
 			lagerRef.neu(username, lagerfachname);
 		} catch (exAlreadyExists e) {
@@ -149,7 +152,7 @@ public class Client {
 		}
 	}
 
-	private static void auslagern() {
+	private void auslagern(String username, String lagerfachname, int anzahl) {
 		Fach fach = null;
 		
 		try {
@@ -170,7 +173,7 @@ public class Client {
 		
 	}
 
-	private static void einlagern() {
+	private void einlagern(String username, String lagerfachname, int anzahl) {
 		Fach fach = null;
 
 		try {

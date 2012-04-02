@@ -34,7 +34,6 @@ public class Monitor {
 			
 			// Cast Corba ref -> Java Referenz
 			System.out.println("Monitor>getting remote object...");
-			//TODO:finakl ok? wg inner class...
 			final Lager lagerRef = LagerHelper.narrow(obj);
 			
 			// Neuen Monitor erzeugen
@@ -50,7 +49,7 @@ public class Monitor {
 			//TODO: hier auch final wg inner class ...
 			final lagern.Monitor href = MonitorHelper.narrow(ref);
 
-			// Setze monitor referenz in KontoListe
+			// Setze monitor referenz
 			lagerRef.aktiviereMonitor(href);
 
 			Thread hook = new Thread(new Runnable() {
