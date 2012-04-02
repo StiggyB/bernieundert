@@ -1,6 +1,5 @@
 package client;
 
-//import java.util.Properties;
 
 import lagern.Fach;
 import lagern.Lager;
@@ -29,7 +28,6 @@ public class Client {
 		String username;
 		int anzahl;
 
-		//TODO: Beispiel-Aufruf :) zum beenden einfach statt neu quit, mehr nit ...
 		//Fach anlegen:
 //		-ORBInitialPort 1051 -ORBInitialHost localhost VS1_Lager neu Dildos DildoFee
 		//       0         1          2           3          4      5     6       7 
@@ -95,7 +93,6 @@ public class Client {
 
 	}
 
-	//TODO: muss hier was synced sein?
 	private void lagerTestLoop(int anzahl) {
 		String lagerfachname = "lagertestloop";
 		String username = "lagertest";

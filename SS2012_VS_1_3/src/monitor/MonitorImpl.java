@@ -4,7 +4,7 @@ import org.omg.CORBA.ORB;
 
 import lagern.MonitorPOA;
 
-public class MonitorImpl extends MonitorPOA{
+public class MonitorImpl extends MonitorPOA {
 
 	private Thread hook;
 	private ORB orb;
@@ -14,6 +14,8 @@ public class MonitorImpl extends MonitorPOA{
 		System.out.println("Monitor>Action from user: " + user + " \t\t\tLog-Entry: " + log);
 	}
 
+	// quit() Methode braucht eigenen Thread, da sonst nach orb.shutdown() die Verbindung weg ist,
+	// fuehrt sonst zu corba-exceptions; Methode wird vom Lager gerufen, wenn es beendet wird.
 	public void quit() {
 		new Thread(new Runnable() {
 
@@ -25,7 +27,7 @@ public class MonitorImpl extends MonitorPOA{
 			}
 		}).start();
 	}
-	
+
 	public void setHook(Thread hook) {
 		this.hook = hook;
 	}

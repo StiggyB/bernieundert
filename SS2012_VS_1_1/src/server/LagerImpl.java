@@ -32,8 +32,11 @@ public class LagerImpl extends LagerPOA {
 	private NameComponent[] path;
 	private List<Monitor> lagerMonitore = new LinkedList<Monitor>();
 
+	// HashMap zwar synced, aber nur die Zugriffe darauf, Rest nicht -> synchronized
 	@Override
 	public synchronized Fach neu(String user, String name) throws exAlreadyExists {
+		
+		// pruefen ob Fach bereits vorhanden ist
 		if (lagerFaecher.containsKey(name)) {
 			benachrichtigeMonitore(user, "neu(): Fach " + name + "existiert bereits!");
 			throw new exAlreadyExists("neu(): " + name + "already exists!");
@@ -43,10 +46,11 @@ public class LagerImpl extends LagerPOA {
 		lagerfach.setLager(this);
 		Fach neuesFach = null;
 		org.omg.CORBA.Object ref = null;
-		
+
 		try {
-			//TODO: braucht man hier auch son rootPOA aufruf oder reicht das _poa? macht das einen unterschied? 
-			//z.B. bei Nutzung auf mehereren PCs?
+			// TODO: braucht man hier auch son rootPOA aufruf oder reicht das
+			// _poa? macht das einen unterschied?
+			// z.B. bei Nutzung auf mehereren PCs?
 			ref = _poa().servant_to_reference((Servant) lagerfach);
 		} catch (ServantNotActive e) {
 			System.err.println("ERROR: " + e);
@@ -55,12 +59,13 @@ public class LagerImpl extends LagerPOA {
 			System.err.println("ERROR: " + e);
 			e.printStackTrace();
 		}
-		
+
+		// Downcast und ablegen in Map
 		neuesFach = FachHelper.narrow(ref);
 		lagerFaecher.put(name, neuesFach);
-		
-		benachrichtigeMonitore(user, "neu(): Fach '" + name + "' erfolgreich in das Lager eingetragen.");
-		
+
+		benachrichtigeMonitore(user, "neu(): Fach '" + name	+ "' erfolgreich in das Lager eingetragen.");
+
 		return neuesFach;
 	}
 
@@ -112,21 +117,32 @@ public class LagerImpl extends LagerPOA {
 		}
 	}
 	
+	// wird gerufen, wenn der Client als Parameter quit sendet, Hook vorher wieder entfernen!
 	public void quit() {
 		System.out.println("Server>Client quitted server");
 		System.out.print("Server>quitting all monitors...");
+		
 		entferneAlleMonitore();
+		
 		System.out.print("OK\nServer>unbinding...");
+		
 		try {
 			ncRef.unbind(path);
-		} catch (NotFound | CannotProceed | InvalidName e) {
+		} catch (NotFound e) {
+			e.printStackTrace();
+		} catch (CannotProceed e) {
+			e.printStackTrace();
+		} catch (InvalidName e) {
 			e.printStackTrace();
 		}
+		
 		System.out.print("OK\nServer>shutting down ORB...");
+		
 		Runtime.getRuntime().removeShutdownHook(hook);
 		orb.shutdown(false);
+		
 		System.out.println("OK\nServer>shutdown was successful...");
-	}	
+	}
 
 	public void setOrb(ORB orb) {
 		this.orb = orb;
