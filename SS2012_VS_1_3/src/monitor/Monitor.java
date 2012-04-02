@@ -1,7 +1,5 @@
 package monitor;
 
-import java.util.Properties;
-
 import lagern.Lager;
 import lagern.LagerHelper;
 import lagern.MonitorHelper;
@@ -17,12 +15,12 @@ public class Monitor {
 	public static void main(String[] args) {
 		try {
 			// Zugang zum Namensdienst festlegen (ORB init)
-			Properties props = new Properties();
-			props.put("org.omg.CORBA.ORBInitialPort", "1051");
-			props.put("org.omg.CORBA.ORBInitialHost", "localhost");
+			//Properties props = new Properties();
+			//props.put("org.omg.CORBA.ORBInitialPort", "1051");
+			//props.put("org.omg.CORBA.ORBInitialHost", "localhost");
 			
 			System.out.println("Monitor>Creating and initializing the ORB");
-			final ORB orb = ORB.init(args, props);
+			final ORB orb = ORB.init(args, null);
 
 			// Zum Namensdienst verbinden (Referenz holen und wandeln)
 			System.out.println("Monitor>getting the root naming context");
@@ -39,19 +37,18 @@ public class Monitor {
 			// Neuen Monitor erzeugen
 			MonitorImpl monitor = new MonitorImpl();
 			
-			
 			//TODO: Wieso? ...
 			POA rootPoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 			rootPoa.the_POAManager().activate();
 			
 			org.omg.CORBA.Object ref = rootPoa.servant_to_reference(monitor);
 			
-			//TODO: hier auch final wg inner class ...
 			final lagern.Monitor href = MonitorHelper.narrow(ref);
 
 			// Setze monitor referenz
 			lagerRef.aktiviereMonitor(href);
 
+			// Shutdown-Hook fuer Beenden mit strg+c
 			Thread hook = new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -62,6 +59,7 @@ public class Monitor {
 				}
 			});
 			
+			// Hook und Objektreferenzen setzen fuer quit() Methode
 			Runtime.getRuntime().addShutdownHook(hook);
 			monitor.setHook(hook);
 			monitor.setOrb(orb);

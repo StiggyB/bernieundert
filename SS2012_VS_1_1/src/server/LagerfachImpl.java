@@ -26,11 +26,12 @@ public class LagerfachImpl extends FachPOA {
 	public String name() {
 		return fachname;
 	}
-	
+
 	public String getUser() {
 		return user;
 	}
 
+	// Lager mit uebergeben spart static Referenzen ...
 	public void setLager(LagerImpl lager) {
 		this.lager = lager;
 	}
