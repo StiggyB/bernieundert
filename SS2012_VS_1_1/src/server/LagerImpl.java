@@ -115,17 +115,12 @@ public class LagerImpl extends LagerPOA {
 		}).start();
 	}
 	
+	//TODO: komisch ... ohne thread gehts ... mit strg+c ... wtf ....
 	public void hookQuit() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				System.out.println("Server>quit");
-				for (Monitor moni : lagerMonitore) {
-					moni.quit();
-				}
-				orb.shutdown(false);
-			}
-		}).start();
+		System.out.println("Server>quit");
+		for (Monitor moni : lagerMonitore) {
+			moni.quit();
+		}
 	}
 
 	public void setOrb(ORB orb) {
