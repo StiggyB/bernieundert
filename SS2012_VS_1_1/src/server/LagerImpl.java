@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.omg.CORBA.ORB;
+import org.omg.CosNaming.NameComponent;
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.PortableServer.Servant;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
@@ -22,6 +27,8 @@ public class LagerImpl extends LagerPOA {
 	private Map<String, Fach> lagerFaecher = new HashMap<String, Fach>();
 	private ORB orb;
 	private Thread hook;
+	private NamingContextExt ncRef;
+	private NameComponent[] path;
 	private static List<Monitor> lagerMonitore = new LinkedList<Monitor>();
 
 	//TODO: muss das synchronized sein oder reicht hashmap? Die ist ja synchronized afaik...
@@ -98,26 +105,31 @@ public class LagerImpl extends LagerPOA {
 		}
 	}
 
+	//TODO: komisch ... ohne thread gehts ... mit strg+c ... wtf ....
+	public void entferneAlleMonitore() {
+		for (Monitor moni : lagerMonitore) {
+			moni.quit();
+		}
+	}
+	
 	//TODO: eigenartig ... Server starten, Moni starten, Client sagt quit; Moni wird noch beendet aber Lager
 	// rennt weiter; im Client gibts ne COMM Exception ... bei meheren Monis werden auch nicht zwingend alle beendet ...
 	// startet man z.B. 3 geht nur einer aus und die anderen beiden + lager rennen weiter ... hmmmm
 	public void quit() {
-		System.out.println("Server>quit");
-		for (Monitor moni : lagerMonitore) {
-			moni.quit();
+		System.out.println("Server>Client quitted server");
+		System.out.print("Server>quitting all monitors...");
+		entferneAlleMonitore();
+		System.out.print("OK\nServer>unbinding...");
+		try {
+			ncRef.unbind(path);
+		} catch (NotFound | CannotProceed | InvalidName e) {
+			e.printStackTrace();
 		}
+		System.out.print("OK\nServer>shutting down ORB...");
 		Runtime.getRuntime().removeShutdownHook(hook);
 		orb.shutdown(false);
-	}
-	
-	//TODO: komisch ... ohne thread gehts ... mit strg+c ... wtf ....
-	public void hookQuit() {
-		System.out.println("Server>quit");
-		for (Monitor moni : lagerMonitore) {
-			moni.quit();
-		}
-		orb.shutdown(false);
-	}
+		System.out.println("OK\nServer>shutdown was successful...");
+	}	
 
 	//	public void quit() {
 //		new Thread(new Runnable() {
@@ -154,6 +166,11 @@ public class LagerImpl extends LagerPOA {
 
 	public void setHook(Thread hook) {
 		this.hook = hook;
+	}
+
+	public void setNcRef(NamingContextExt ncRef, NameComponent[] path) {
+		this.ncRef = ncRef;
+		this.path = path;
 	}
 
 }

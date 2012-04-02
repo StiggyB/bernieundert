@@ -9,6 +9,9 @@ import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
@@ -27,7 +30,7 @@ public class Server {
 
 			System.out.println("Server>starting server...");
 	        System.out.println("Server>creating and initializing the ORB");
-			ORB orb = ORB.init(args, props);
+			final ORB orb = ORB.init(args, props);
 
 			System.out.println("Server>getting reference to rootpoa");
 			POA rootPoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
@@ -54,12 +57,12 @@ public class Server {
 			// Verwendung von NamingContextExt, ist Teil der Interoperable
 			// Naming Service (INS) Spezifikation.
 			System.out.println("Server>using NamingContextExt to provides interoperability");  
-			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+			final NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
 			// binde die Object Reference an einen Namen
 			String name = "VS1_Lager";
 			System.out.println("Server>binding the object reference in naming with name "+ name);
-			NameComponent path[] = ncRef.to_name(name);
+			final NameComponent path[] = ncRef.to_name(name);
 
 			// Objekt href einen Namen zuweisen, unter dem es beim Naming Service nachfragt werden kann
 			ncRef.rebind(path, href);
@@ -69,22 +72,27 @@ public class Server {
 				@Override
 				public void run() {
 					System.out.println("Server>invoked shutdownHook");
-					lagerServant.hookQuit();
+					System.out.print("Server>quitting all monitors...");
+					lagerServant.entferneAlleMonitore();
+					System.out.print("OK\nServer>unbinding...");
+					try {
+						ncRef.unbind(path);
+					} catch (NotFound | CannotProceed | InvalidName e) {
+						e.printStackTrace();
+					}
+					System.out.print("OK\nServer>shutting down ORB...");
+					orb.shutdown(false);
+					System.out.println("OK\nServer>shutdown was successful...");
 				}
 			});
 			// fuer shutdown
 			Runtime.getRuntime().addShutdownHook(hook);
 			lagerServant.setHook(hook);
 			lagerServant.setOrb(orb);
+			lagerServant.setNcRef(ncRef, path);
 			
 			// Orb starten und auf Clients warten
 			orb.run();
-			
-			// Server beenden
-			System.out.println("Server>shutdown of server is in progress...");
-			ncRef.unbind(path);
-	        System.out.println("Server>shutdown was successful...");
-
 		}
 
 		catch (Exception e) {
