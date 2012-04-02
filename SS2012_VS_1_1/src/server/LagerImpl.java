@@ -1,6 +1,7 @@
 package server;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -29,18 +30,17 @@ public class LagerImpl extends LagerPOA {
 	private Thread hook;
 	private NamingContextExt ncRef;
 	private NameComponent[] path;
-	private static List<Monitor> lagerMonitore = new LinkedList<Monitor>();
+	private List<Monitor> lagerMonitore = new LinkedList<Monitor>();
 
-	//TODO: muss das synchronized sein oder reicht hashmap? Die ist ja synchronized afaik...
 	@Override
-	public Fach neu(String user, String name) throws exAlreadyExists {
-
+	public synchronized Fach neu(String user, String name) throws exAlreadyExists {
 		if (lagerFaecher.containsKey(name)) {
 			benachrichtigeMonitore(user, "neu(): Fach " + name + "existiert bereits!");
 			throw new exAlreadyExists("neu(): " + name + "already exists!");
 		}
 
 		LagerfachImpl lagerfach = new LagerfachImpl(user, name);
+		lagerfach.setLager(this);
 		Fach neuesFach = null;
 		org.omg.CORBA.Object ref = null;
 		
@@ -64,39 +64,33 @@ public class LagerImpl extends LagerPOA {
 		return neuesFach;
 	}
 
-	//TODO: static referenz ok fuer LagerfachImpl?? Läuft das dann auch verteilt auf mehereren PCs?
-	public static void benachrichtigeMonitore(String user, String log) {
-		if (!lagerMonitore.isEmpty()) {
-			for (Monitor mon : lagerMonitore) {
-				mon.aktion(user, log);
-			}
-
-		}
+	public void benachrichtigeMonitore(String user, String log) {
+		for (Monitor mon : lagerMonitore) {
+			mon.aktion(user, log);
+	}
 	}
 
 	@Override
 	public Fach hole(String user, String name) throws exNotFound {
-		if(!lagerFaecher.containsKey(name)){
+		Fach fach = lagerFaecher.get(name);
+		if (fach == null) {
 			throw new exNotFound("hole(): Fach '" + name + "' existiert nicht!");
 		}
 		
-		return lagerFaecher.get(name);
+		return fach;
 	}
 
-	//TODO: gibts was sexyeres? :D
 	@Override
 	public Fach[] holeLagerListe() {
-		return lagerFaecher.values().toArray(new Fach[0]);
+		return lagerFaecher.values().toArray(new Fach[lagerFaecher.size()]);
 	}
 
-	//TODO: linkedlist nicht synced, also methode synchronized richtig?
 	@Override
 	public synchronized void aktiviereMonitor(Monitor theMonitor) {
 		System.out.println("Monitor: '" + theMonitor.hashCode() + "' hinzugefuegt");
 		lagerMonitore.add(theMonitor);
 	}
 
-	//TODO: linkedlist nicht synced, also methode synchronized richtig?
 	@Override
 	public synchronized void entferneMonitor(Monitor theMonitor) {
 		if (lagerMonitore.contains(theMonitor)) {
@@ -105,16 +99,19 @@ public class LagerImpl extends LagerPOA {
 		}
 	}
 
-	//TODO: komisch ... ohne thread gehts ... mit strg+c ... wtf ....
 	public void entferneAlleMonitore() {
-		for (Monitor moni : lagerMonitore) {
-			moni.quit();
+		for (Iterator<Monitor> iterator = lagerMonitore.iterator(); iterator.hasNext();) {
+			Monitor moni = iterator.next();
+			try {
+				moni.quit();
+			} catch (Exception e) {
+				System.out.println("Monitor.quit() threw: " + e.getMessage());
+			} finally {
+				iterator.remove();
+			}
 		}
 	}
 	
-	//TODO: eigenartig ... Server starten, Moni starten, Client sagt quit; Moni wird noch beendet aber Lager
-	// rennt weiter; im Client gibts ne COMM Exception ... bei meheren Monis werden auch nicht zwingend alle beendet ...
-	// startet man z.B. 3 geht nur einer aus und die anderen beiden + lager rennen weiter ... hmmmm
 	public void quit() {
 		System.out.println("Server>Client quitted server");
 		System.out.print("Server>quitting all monitors...");
@@ -130,35 +127,6 @@ public class LagerImpl extends LagerPOA {
 		orb.shutdown(false);
 		System.out.println("OK\nServer>shutdown was successful...");
 	}	
-
-	//	public void quit() {
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				System.out.println("Server>quit");
-//				for (Monitor moni : lagerMonitore) {
-//					moni.quit();
-//				}
-//				Runtime.getRuntime().removeShutdownHook(hook);
-//				orb.shutdown(false);
-//			}
-//		}).start();
-//	}
-//	
-//	//TODO: komisch ... ohne thread gehts ... mit strg+c ... wtf ....
-//	public void hookQuit() {
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				System.out.println("Server>quit");
-//				for (Monitor moni : lagerMonitore) {
-//					moni.quit();
-//				}
-//				Runtime.getRuntime().removeShutdownHook(hook);
-//				orb.shutdown(false);
-//			}
-//		}).start();
-//	}
 
 	public void setOrb(ORB orb) {
 		this.orb = orb;

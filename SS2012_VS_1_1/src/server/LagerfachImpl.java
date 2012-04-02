@@ -10,12 +10,11 @@ public class LagerfachImpl extends FachPOA {
 	private String user;
 	private int anzahl;
 	private final static int MAX_LAGERTEILE = Integer.MAX_VALUE;
+	private LagerImpl lager;
 
 	public LagerfachImpl(String user, String name) {
-
 		this.fachname = name;
 		this.user = user;
-
 	}
 
 	@Override
@@ -32,7 +31,10 @@ public class LagerfachImpl extends FachPOA {
 		return user;
 	}
 
-	//TODO: muss es synchronized sein?
+	public void setLager(LagerImpl lager) {
+		this.lager = lager;
+	}
+
 	@Override
 	public synchronized void einlagern(String user, int anzahl)
 			throws exInvalidCount {
@@ -42,21 +44,21 @@ public class LagerfachImpl extends FachPOA {
 
 		this.anzahl += anzahl;
 		
-		LagerImpl.benachrichtigeMonitore(user, "einlagern(): '" + anzahl + "' Teile in Fach '" + this.fachname + "' eingelagert!");
+		lager.benachrichtigeMonitore(user, "einlagern(): '" + anzahl + "' Teile in Fach '" + this.fachname + "' eingelagert!");
 	}
 
-	//TODO: muss es synchronized sein?
 	@Override
 	public synchronized void auslagern(String user, int anzahl) throws exInvalidCount, exNotEnoughPieces {
-		if(anzahl <= 0){
+		if (anzahl <= 0) {
 			throw new exInvalidCount("auslagern(): Ungueltige Anzahl!");
-		} else if(anzahl > this.anzahl) {
+		} else if (anzahl > this.anzahl) {
 			throw new exNotEnoughPieces("auslagern(): Nicht genug Teile im Fach zum Auslagern!");
 		}
 		
 		this.anzahl -= anzahl;
 		
-		LagerImpl.benachrichtigeMonitore(user, "auslagern(): '" + anzahl + "' Teile aus Fach '" + this.fachname + "' ausgelagert!");
+		lager.benachrichtigeMonitore(user, "auslagern(): '" + anzahl + "' Teile aus Fach '" + this.fachname + "' ausgelagert!");
 	}
+
 
 }
