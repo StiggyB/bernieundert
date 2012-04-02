@@ -22,7 +22,7 @@ public class Monitor {
 			props.put("org.omg.CORBA.ORBInitialHost", "localhost");
 			
 			System.out.println("Monitor>Creating and initializing the ORB");
-			ORB orb = ORB.init(args, props);
+			final ORB orb = ORB.init(args, props);
 
 			// Zum Namensdienst verbinden (Referenz holen und wandeln)
 			System.out.println("Monitor>getting the root naming context");
@@ -56,7 +56,10 @@ public class Monitor {
 			Thread hook = new Thread(new Runnable() {
 				@Override
 				public void run() {
+					System.out.println("Monitor>remove monitor");
 					lagerRef.entferneMonitor(href);
+					System.out.println("Monitor>quit");
+					orb.shutdown(false);
 				}
 			});
 			
