@@ -130,11 +130,12 @@ public class Client {
 
 	private static void liste() {
 		Fach[] faecher = lagerRef.holeLagerListe();
-		System.out.println("liste(): Fachname:\tAnzahl Teile:");
-		System.out.println("liste(): ============================");
+		System.out.println("liste(): Fachname:\t\t\tAnzahl Teile:");
+		System.out.println("liste(): ============================================");
 		if (!(faecher.length == 0)) {
 			for (Fach fach : faecher) {
-				System.out.println("liste(): " + fach.name() + " -> " + fach.anzahl());
+//				System.out.println("liste(): " + fach.name() + " -> \t\t" + fach.anzahl());
+				System.out.printf("liste(): %-2s -> %-15s\n", fach.name(), fach.anzahl());
 			}
 		}
 	}
@@ -154,6 +155,7 @@ public class Client {
 		try {
 			fach = lagerRef.hole(username, lagerfachname);
 			fach.auslagern(username, anzahl);
+			System.out.println("auslagern(): '" + anzahl + "' Teile aus '" + lagerfachname + "' ausgelagert!");
 			
 		} catch (exNotFound e) {
 			System.out.println("einlagern(): Fach '" + lagerfachname + "' existiert nicht!");
@@ -166,7 +168,6 @@ public class Client {
 			System.err.println(e2.getMessage());
 		}
 		
-		System.out.println("auslagern(): '" + anzahl + "' Teile aus '" + lagerfachname + "' ausgelagert!");
 	}
 
 	private static void einlagern() {
@@ -175,6 +176,7 @@ public class Client {
 		try {
 			fach = lagerRef.hole(username, lagerfachname);
 			fach.einlagern(username, anzahl);
+			System.out.println("einlagern(): '" + anzahl + "' Teile in '" + lagerfachname + "' eingelagert!");
 			
 		} catch (exNotFound e) {
 			System.out.println("einlagern(): Fach '" + lagerfachname + "' existiert nicht!");
@@ -184,6 +186,5 @@ public class Client {
 			System.err.println(e1.getMessage());
 		}
 		
-		System.out.println("einlagern(): '" + anzahl + "' Teile in '" + lagerfachname + "' eingelagert!");
 	}
 }
