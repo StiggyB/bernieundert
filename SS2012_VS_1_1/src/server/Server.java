@@ -41,8 +41,7 @@ public class Server {
 
 			// Objekt Referenz des Servants holen
 			System.out.println("Server>obtain the reference from the servant");
-			org.omg.CORBA.Object ref = rootPoa
-					.servant_to_reference(lagerServant);
+			org.omg.CORBA.Object ref = rootPoa.servant_to_reference(lagerServant);
 
 			// Downcast Corba-Objekt
 			Lager href = LagerHelper.narrow(ref);
