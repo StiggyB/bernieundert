@@ -29,8 +29,7 @@ public class Server {
 			final ORB orb = ORB.init(args, null);
 
 			System.out.println("Server>getting reference to rootpoa");
-			POA rootPoa = POAHelper.narrow(orb
-					.resolve_initial_references("RootPOA"));
+			POA rootPoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 
 			System.out.println("Server>activating the POA Manager");
 			rootPoa.the_POAManager().activate();
@@ -48,8 +47,7 @@ public class Server {
 
 			// Referenz zum Namensdiesnt (root naming context) holen
 			System.out.println("Server>getting the root naming context");
-			org.omg.CORBA.Object objRef = orb
-					.resolve_initial_references("NameService");
+			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 
 			// Verwendung von NamingContextExt, ist Teil der Interoperable
 			// Naming Service (INS) Spezifikation.
