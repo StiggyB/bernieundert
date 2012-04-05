@@ -56,7 +56,7 @@ public class Monitor {
 					System.out.println("Monitor>remove monitor");
 					lagerRef.entferneMonitor(href);
 					System.out.println("Monitor>quit");
-					orb.shutdown(true);
+					orb.shutdown(false);
 				}
 			});
 			

@@ -82,7 +82,7 @@ public class Server {
 							e.printStackTrace();
 						}
 					System.out.print("OK\nServer>shutting down ORB...");
-					orb.shutdown(true);
+					orb.shutdown(false);
 					System.out.println("OK\nServer>shutdown was successful...");
 				}
 			});

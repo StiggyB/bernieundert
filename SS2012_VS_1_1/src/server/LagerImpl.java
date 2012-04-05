@@ -110,7 +110,8 @@ public class LagerImpl extends LagerPOA {
 			try {
 				moni.quit();
 			} catch (Exception e) {
-				System.out.println("Monitor.quit() threw: " + e.getMessage());
+				System.out.println("Monitor.quit() threw: ");
+				e.printStackTrace();
 			} finally {
 				iterator.remove();
 			}
@@ -136,12 +137,21 @@ public class LagerImpl extends LagerPOA {
 			e.printStackTrace();
 		}
 		
-		System.out.print("OK\nServer>shutting down ORB...");
 		
-		Runtime.getRuntime().removeShutdownHook(hook);
-		orb.shutdown(true);
+
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				System.out.print("OK\nRemoving shutdownHook...");
+				Runtime.getRuntime().removeShutdownHook(hook);
+				System.out.print("OK\nServer>shutting down ORB...");
+				orb.shutdown(false);
+				System.out.println("OK\nServer>shutdown was successful...");
+			}
+		}).start();
 		
-		System.out.println("OK\nServer>shutdown was successful...");
+
 	}
 
 	public void setOrb(ORB orb) {
