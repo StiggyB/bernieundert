@@ -146,7 +146,7 @@ public class LagerImpl extends LagerPOA {
 				System.out.print("OK\nRemoving shutdownHook...");
 				Runtime.getRuntime().removeShutdownHook(hook);
 				System.out.print("OK\nServer>shutting down ORB...");
-				orb.shutdown(false);
+				orb.shutdown(true);
 				System.out.println("OK\nServer>shutdown was successful...");
 			}
 		}).start();

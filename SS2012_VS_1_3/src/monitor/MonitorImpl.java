@@ -23,7 +23,7 @@ public class MonitorImpl extends MonitorPOA {
 			public void run() {
 				System.out.println("Monitor>quit");
 				Runtime.getRuntime().removeShutdownHook(hook);
-				orb.shutdown(false);
+				orb.shutdown(true);
 			}
 		}).start();
 	}
