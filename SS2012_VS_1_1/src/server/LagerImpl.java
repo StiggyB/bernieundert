@@ -1,7 +1,6 @@
 package server;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -105,18 +104,29 @@ public class LagerImpl extends LagerPOA {
 	}
 
 	public void entferneAlleMonitore() {
-		for (Iterator<Monitor> iterator = lagerMonitore.iterator(); iterator.hasNext();) {
-			Monitor moni = iterator.next();
+		for (Monitor moni : lagerMonitore) {
 			try {
 				moni.quit();
 			} catch (Exception e) {
-				System.out.println("Monitor.quit() threw: ");
 				e.printStackTrace();
-			} finally {
-				iterator.remove();
 			}
 		}
 	}
+
+//	Alternative Methode zum Entfernen, beendet Monitore und loescht sie aus der Liste
+//	public void entferneAlleMonitore() {
+//		for (Iterator<Monitor> iterator = lagerMonitore.iterator(); iterator.hasNext();) {
+//			Monitor moni = iterator.next();
+//			try {
+//				moni.quit();
+//			} catch (Exception e) {
+//				System.out.println("Monitor.quit() threw: ");
+//				e.printStackTrace();
+//			} finally {
+//				iterator.remove();
+//			}
+//		}
+//	}
 	
 	// wird gerufen, wenn der Client als Parameter quit sendet, Hook vorher wieder entfernen!
 	public void quit() {
