@@ -47,6 +47,7 @@ public class Monitor {
 			final lagern.Monitor href = MonitorHelper.narrow(ref);
 
 			// Setze monitor referenz
+			System.out.println("Monitor>adding Monitor to Lager...");
 			lagerRef.aktiviereMonitor(href);
 
 			// Shutdown-Hook fuer Beenden mit strg+c
@@ -56,7 +57,7 @@ public class Monitor {
 					System.out.println("Monitor>remove monitor");
 					lagerRef.entferneMonitor(href);
 					System.out.println("Monitor>quit");
-					orb.shutdown(false);
+					orb.shutdown(true);
 				}
 			});
 			
@@ -64,6 +65,7 @@ public class Monitor {
 			Runtime.getRuntime().addShutdownHook(hook);
 			monitor.setHook(hook);
 			monitor.setOrb(orb);
+			System.out.println("Monitor>Monitor was started...");
 
 			orb.run();
 			
