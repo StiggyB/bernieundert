@@ -14,7 +14,6 @@ import monitor.Monitor;
 public class CoordinatorImpl extends CoordinatorPOA {
 
 	private Set<Starter> starters = new HashSet<Starter>();
-	// private List<ggtProcess> processes = new LinkedList<ggtProcess>();
 	private ProcessStruct processes = new ProcessStruct();
 	private int processCount;
 	private int timeout;
@@ -27,7 +26,6 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) {
-		System.out.println("CoordinatorImpl.start()");
 		this.timeout = timeout;
 		this.ggt = ggt;
 

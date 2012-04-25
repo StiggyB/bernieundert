@@ -32,5 +32,7 @@ public class StarterImpl extends StarterPOA {
 		this.coordRef = coordRef;
 		
 	}
+	
+	//TODO: terminate methode in der idl fehlt, wa ...
 
 }
