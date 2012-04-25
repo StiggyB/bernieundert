@@ -25,22 +25,22 @@ class ProcessStruct {
 	}
 
 	private ggtProcess right(ggtProcess process) {
-		return processes.get(processes.indexOf(process) + 1	% processes.size());
+		return processes.get(processes.indexOf(process) + 1 % processes.size());
 	}
-	
-	public void shuffleProcesses(){
+
+	public void shuffleProcesses() {
 		Collections.shuffle(processes);
 	}
-	
-	public int size(){
+
+	public int size() {
 		return processes.size();
 	}
-	
-	public ggtProcess get(int i){
+
+	public ggtProcess get(int i) {
 		return processes.get(i);
 	}
-	
-	public int[] initProcesses(int minDelay, int maxDelay, int timeout,	int ggt, Monitor mntr) {
+
+	public int[] initProcesses(int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) {
 
 		ggtProcess right;
 		ggtProcess left;
@@ -69,14 +69,14 @@ class ProcessStruct {
 		}
 		return processNames;
 	}
-	
-	public ggtProcess[] getStartProcesses(){
+
+	public ggtProcess[] getStartProcesses() {
 		ggtProcess[] allProcesses = sortedProcesses.values().toArray(new ggtProcess[processes.size()]);
 		ggtProcess[] startProcesses = new ggtProcess[3];
 		startProcesses[0] = allProcesses[0];
 		startProcesses[1] = allProcesses[1];
 		startProcesses[2] = allProcesses[2];
-		 
+
 		return startProcesses;
 	}
 }

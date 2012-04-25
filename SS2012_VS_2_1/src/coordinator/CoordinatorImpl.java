@@ -5,25 +5,21 @@ import ggt.Starter;
 import ggt.ggtProcess;
 import ggt.CoordinatorPackage.starterAlreadyExists;
 
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import monitor.Monitor;
 
-
-public class CoordinatorImpl extends CoordinatorPOA{
+public class CoordinatorImpl extends CoordinatorPOA {
 
 	private Set<Starter> starters = new HashSet<Starter>();
-//	private List<ggtProcess> processes = new LinkedList<ggtProcess>();
+	// private List<ggtProcess> processes = new LinkedList<ggtProcess>();
 	private ProcessStruct processes = new ProcessStruct();
 	private int processCount;
 	private int timeout;
 	private int ggt;
-	
+
 	@Override
 	public Starter[] getStarters() {
 		return starters.toArray(new Starter[starters.size()]);
@@ -36,27 +32,32 @@ public class CoordinatorImpl extends CoordinatorPOA{
 		this.ggt = ggt;
 
 		Random rnd = new Random();
-		
+
 		int processCountTmp;
 		for (Starter s : starters) {
 			processCountTmp = rnd.nextInt(maxProcess - minProcess) + minProcess;
 			processCount += processCountTmp;
 			s.createProcesses(processCountTmp);
 		}
-		
-		//timeout einbauen mit exception, sleep einbauen um cpu zeit zu sparen
-		while(processCount != processes.size());
+
+		// timeout einbauen mit exception, sleep einbauen um cpu zeit zu sparen
+		while (processCount != processes.size());
 		// prozesse zufällig wählen (liste shufflen?!)
 		processes.shuffleProcesses();
-		mntr.ring(processes.getProcessNames());
-		mntr.startzahlen(processes.initProcesses(minDelay, maxDelay, timeout, ggt, mntr));
-		
+
 		// ring aufbauen
 		// daten setzen, nachbarn, ....
 		// monitor zahlen und ringbaufbau mitteilen
+		mntr.ring(processes.getProcessNames());
+		mntr.startzahlen(processes.initProcesses(minDelay, maxDelay, timeout, ggt, mntr));
+		ggtProcess[] startProcesses = processes.getStartProcesses();
+		
 		// berechnung starten, 3 prozesse mit kleinsten zahlen auswählen
-		
-		
+		for (ggtProcess s: startProcesses) {
+			s.start();
+		}
+
+
 	}
 
 	@Override
@@ -72,20 +73,22 @@ public class CoordinatorImpl extends CoordinatorPOA{
 				throw new starterAlreadyExists("Starter " + starter.getName() + " is already registered");
 			}
 		}
-		
+
 		starters.add(starter);
 	}
 
-//	@Override
-//	public void registerProcess(ggtProcess process, String starterName, int id) {
-//		String processName = starterName + id;
-//		// eigentlich soll sich doch nur der prozess mit seiner id registrieren, die aus startername und id besteht
-//		// do more stuff here
-//	}
+	// @Override
+	// public void registerProcess(ggtProcess process, String starterName, int
+	// id) {
+	// String processName = starterName + id;
+	// // eigentlich soll sich doch nur der prozess mit seiner id registrieren,
+	// die aus startername und id besteht
+	// // do more stuff here
+	// }
 
 	@Override
 	public void registerProcess(ggtProcess process, String processName) {
 		processes.add(process);
 	}
-	
+
 }
