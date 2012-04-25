@@ -55,10 +55,16 @@ public class CoordinatorImpl extends CoordinatorPOA{
 		starters.add(starter);
 	}
 
+//	@Override
+//	public void registerProcess(ggtProcess process, String starterName, int id) {
+//		String processName = starterName + id;
+//		// eigentlich soll sich doch nur der prozess mit seiner id registrieren, die aus startername und id besteht
+//		// do more stuff here
+//	}
+
 	@Override
-	public void registerProcess(ggtProcess process, String starterName, int id) {
-		String processName = starterName + id;
-		// do more stuff here
+	public void registerProcess(ggtProcess process, String processName) {
+		//do time consuming stuff
 	}
 
 }
