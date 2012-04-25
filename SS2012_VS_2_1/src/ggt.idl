@@ -77,7 +77,7 @@ module ggt {
 		void start(in long minProcess, in long maxProcess, in long minDelay, in long maxDelay, in long timeout, in long ggt, in monitor::Monitor mntr);
 		void shutdown();
 		void registerStarter(in Starter starter) raises (starterAlreadyExists);
-		void registerProcess(in ggtProcess process, in string starterName, in long id);
+		void registerProcess(in ggtProcess process, in string processName);
 		
 	};
 	

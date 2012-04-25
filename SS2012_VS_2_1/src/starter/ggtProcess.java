@@ -10,7 +10,13 @@ public class ggtProcess extends ggtProcessPOA{
 	private String processName;
 	
 	public ggtProcess(int i, StarterImpl starterImpl, Coordinator coordRef) {
-			coordRef.registerProcess(this, starterImpl.getName(), i);
+		// Der ggT-Prozess wird vom Starter gestartet und muss sich als erstes
+		// mit einer Identifikation (String), die sich aus dem Namen des
+		// Starters und der vom Starter vergebenen fortlaufenden Nummer ergibt,
+		// beim Koordinator registrieren.
+		// Müsste man doch erst idl noch wieder anpassen oder?
+		this.processName = starterImpl.getName() + i;	
+		coordRef.registerProcess(this, processName);
 	}
 
 	@Override
