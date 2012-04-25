@@ -16,6 +16,7 @@ class ProcessStruct {
 
 	private List<ggtProcess> processes = new LinkedList<ggtProcess>();
 	private SortedMap<Integer, ggtProcess> sortedProcesses = new TreeMap<Integer, ggtProcess>();
+	private String[] processNames;
 
 	public void add(ggtProcess process) {
 		processes.add(process);
@@ -49,6 +50,7 @@ class ProcessStruct {
 		int delay;
 		Random rnd = new Random();
 		int[] startValues = new int[processes.size()];
+		processNames = new String[processes.size()];
 
 		for (int i = 0; i < processes.size(); i++) {
 			right = right(processes.get(i));
@@ -57,17 +59,13 @@ class ProcessStruct {
 			startValues[i] = startValue;
 			delay = rnd.nextInt(maxDelay - minDelay) + minDelay;
 			processes.get(i).initProcess(left, right, startValue, delay, timeout, mntr);
+			processNames[i] = processes.get(i).getName();
 			sortedProcesses.put(startValue, processes.get(i));
 		}
 		return startValues;
 	}
 
 	public String[] getProcessNames() {
-		String[] processNames = new String[processes.size()];
-		for (int i = 0; i < processes.size(); i++) {
-			processNames[i] = processes.get(i).getName();
-			System.out.println(processes.get(i).getName());
-		}
 		return processNames;
 	}
 
