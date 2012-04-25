@@ -47,7 +47,7 @@ public class Client {
 
 			
 			if (aktion.equals("start")) {
-				String monitorName = args[5];
+				String monitorName = args[6];
 				System.out.println("Client>Resolving monitor reference");
 				org.omg.CORBA.Object monitorObj = nc.resolve_str(monitorName); // Corba
 				
@@ -77,12 +77,12 @@ public class Client {
 
 	//TODO: was sollen die params in der aufgabenstellung monitor und coord? davon macht eigentlich nur der moni noch sinn oder?
 	private void startGgt(String[] args, Coordinator coordRef, Monitor monitorRef) {
-		int minProcess = Integer.parseInt(args[6]);
-		int maxProcess = Integer.parseInt(args[7]);
-		int minDelay = Integer.parseInt(args[8]);
-		int maxDelay = Integer.parseInt(args[9]);
-		int timeout = Integer.parseInt(args[10]);
-		int ggt = Integer.parseInt(args[11]);
+		int minProcess = Integer.parseInt(args[7]);
+		int maxProcess = Integer.parseInt(args[8]);
+		int minDelay = Integer.parseInt(args[9]);
+		int maxDelay = Integer.parseInt(args[10]);
+		int timeout = Integer.parseInt(args[11]);
+		int ggt = Integer.parseInt(args[12]);
 		
 		coordRef.start(minProcess, maxProcess, minDelay, maxDelay, timeout, ggt, monitorRef);
 	}
