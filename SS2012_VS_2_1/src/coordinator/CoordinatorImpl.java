@@ -48,21 +48,11 @@ public class CoordinatorImpl extends CoordinatorPOA{
 		while(processCount != processes.size());
 		// prozesse zufällig wählen (liste shufflen?!)
 		processes.shuffleProcesses();
-		
 		mntr.ring(processes.getProcessNames());
+		mntr.startzahlen(processes.initProcesses(minDelay, maxDelay, timeout, ggt, mntr));
+		
 		// ring aufbauen
 		// daten setzen, nachbarn, ....
-		ggtProcess left;
-		ggtProcess right;
-		int startValue;
-		int delay;
-		for (int i = 0; i < processes.size(); i++) {
-			left = processes.get(i-1 < 0 ? processes.size()-1 : i-1);
-			right = processes.get(i+1 % processes.size());
-			startValue = ggt * (rnd.nextInt(100)+1) * (rnd.nextInt(100)+1);
-			delay = rnd.nextInt(maxDelay - minDelay) + minDelay;
-			processes.get(i).initProcess(left, right, startValue, delay, this.timeout, mntr);
-		}
 		// monitor zahlen und ringbaufbau mitteilen
 		// berechnung starten, 3 prozesse mit kleinsten zahlen auswählen
 		
@@ -98,43 +88,4 @@ public class CoordinatorImpl extends CoordinatorPOA{
 		processes.add(process);
 	}
 	
-	class ProcessStruct {
-
-		private List<ggtProcess> processes = new LinkedList<ggtProcess>();
-
-		void add(ggtProcess process) {
-			processes.add(process);
-		}
-
-		ggtProcess left(ggtProcess process) {
-			return processes
-					.get(processes.indexOf(process) - 1 == 0 ? processes.size() - 1 : processes.indexOf(process) - 1);
-		}
-
-		ggtProcess right(ggtProcess process) {
-			return processes.get(processes.indexOf(process) + 1	% processes.size());
-		}
-		
-		void shuffleProcesses(){
-			Collections.shuffle(processes);
-		}
-		
-		int size(){
-			return processes.size();
-		}
-		
-		ggtProcess get(int i){
-			return processes.get(i);
-		}
-
-		String[] getProcessNames() {
-			String[] processNames = new String[processes.size()];
-			for (int i = 0; i < processes.size(); i++) {
-				processNames[i] = processes.get(i).getName();
-				System.out.println(processes.get(i).getName());
-			}
-			return processNames;
-		}
-	}
-
 }
