@@ -72,11 +72,6 @@ class ProcessStruct {
 
 	public ggtProcess[] getStartProcesses() {
 		ggtProcess[] allProcesses = sortedProcesses.values().toArray(new ggtProcess[processes.size()]);
-		ggtProcess[] startProcesses = new ggtProcess[3];
-		startProcesses[0] = allProcesses[0];
-		startProcesses[1] = allProcesses[1];
-		startProcesses[2] = allProcesses[2];
-
-		return startProcesses;
+    return Arrays.copyOf(sortedProcesses.values().toArray(new ggtProcess[sortedProcesses.size()]), 3);
 	}
 }
