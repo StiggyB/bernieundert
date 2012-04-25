@@ -68,6 +68,7 @@ module ggt {
 		void start();
 		void calc(in long mi);
 		boolean terminate(in string processName);
+		string getName();
 	};
 	
 	interface Coordinator {

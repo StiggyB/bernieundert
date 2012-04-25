@@ -20,7 +20,7 @@ public class ggtProcessImpl extends ggtProcessPOA{
 	private Monitor mntr;
 	
 	public ggtProcessImpl(int i, StarterImpl starterImpl, Coordinator coordRef) {
-		this.processName = starterImpl.getName() + i;	
+		this.processName = starterImpl.getName() + "_" + i;	
 		ggtProcess ggtProcess;
 		try {
 			ggtProcess = ggtProcessHelper.narrow(starterImpl._poa().servant_to_reference(this));
@@ -60,6 +60,11 @@ public class ggtProcessImpl extends ggtProcessPOA{
 	public boolean terminate(String processName) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public String getName() {
+		return processName;
 	}
 
 }
