@@ -52,12 +52,22 @@ public class ggtProcessImpl extends ggtProcessPOA{
 
 	@Override
 	public void calc(int y) {
+		//msg mntr new number
 		if (y < startValue) {
+			//wennn er calcen muss, $delay warten b4 msg2neighbours...
 			startValue = ((startValue - 1) % y) + 1;
+			try {
+				Thread.sleep(delay * 1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			left.calc(startValue);
 			right.calc(startValue);
 		}
 	}
+	
+	//TODO: run methode bauen, die eine state-gesteuerte endlos while-loop hat, worin zeit geprüft wird und msges verwaltet werden?!
+	//TODO: LinkedBlockingQueue -> wg der eintreffenden msges, wenn keine da ist -> blocked
 
 	@Override
 	public boolean terminate(String processName) {
