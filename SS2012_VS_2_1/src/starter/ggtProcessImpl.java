@@ -1,22 +1,38 @@
 package starter;
 
+import org.omg.PortableServer.POAPackage.ServantNotActive;
+import org.omg.PortableServer.POAPackage.WrongPolicy;
+
 import monitor.Monitor;
 import ggt.Coordinator;
+import ggt.ggtProcess;
+import ggt.ggtProcessHelper;
 import ggt.ggtProcessPOA;
 
-public class ggtProcess extends ggtProcessPOA{
+public class ggtProcessImpl extends ggtProcessPOA{
 	
 
 	private String processName;
 	
-	public ggtProcess(int i, StarterImpl starterImpl, Coordinator coordRef) {
+	public ggtProcessImpl(int i, StarterImpl starterImpl, Coordinator coordRef) {
 		// Der ggT-Prozess wird vom Starter gestartet und muss sich als erstes
 		// mit einer Identifikation (String), die sich aus dem Namen des
 		// Starters und der vom Starter vergebenen fortlaufenden Nummer ergibt,
 		// beim Koordinator registrieren.
 		// Müsste man doch erst idl noch wieder anpassen oder?
 		this.processName = starterImpl.getName() + i;	
-		coordRef.registerProcess(this, processName);
+		ggtProcess ggtProcess;
+		try {
+			ggtProcess = ggtProcessHelper.narrow(starterImpl._poa().servant_to_reference(this));
+			coordRef.registerProcess(ggtProcess, processName);
+		} catch (ServantNotActive e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (WrongPolicy e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override

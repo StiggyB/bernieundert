@@ -9,7 +9,7 @@ import ggt.StarterPOA;
 public class StarterImpl extends StarterPOA {
 
 	private String starterName;
-	private List<ggtProcess> ggtProcesses = new ArrayList<ggtProcess>();
+	private List<ggtProcessImpl> ggtProcesses = new ArrayList<ggtProcessImpl>();
 	private Coordinator coordRef;
 
 	public StarterImpl(String starterName) {
@@ -24,7 +24,7 @@ public class StarterImpl extends StarterPOA {
 	@Override
 	public void createProcesses(int count) {
 		for (int i = 0; i < count; i++) {
-			ggtProcesses.add(new ggtProcess(i, this, coordRef));
+			ggtProcesses.add(new ggtProcessImpl(i, this, coordRef));
 		}
 	}
 
