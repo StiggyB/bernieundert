@@ -17,26 +17,26 @@ public class StarterStart {
 	
 	public static void main(String[] args) {
 		try {
-			String lagername = args[4];
-			System.out.println("Monitor>Creating and initializing the ORB");
-			final ORB orb = ORB.init(args, null);
+			String coordName = args[4];
+			String starterName = args[5];
+			System.out.println("Starter>Creating and initializing the ORB");
+			ORB orb = ORB.init(args, null);
 
 			// Zum Namensdienst verbinden (Referenz holen und wandeln)
-			System.out.println("Monitor>getting the root naming context");
+			System.out.println("Starter>getting the root naming context");
 			NamingContextExt nc = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
 
 			// Objektreferenz mit Namen "Konto" besorgen
-			System.out.println("Monitor>Resolving the object reference");
-			org.omg.CORBA.Object obj = nc.resolve_str(lagername); // Corba
+			System.out.println("Starter>Resolving coordinator reference");
+			org.omg.CORBA.Object obj = nc.resolve_str(coordName); // Corba
 			
 			// Cast Corba ref -> Java Referenz
-			System.out.println("Monitor>getting remote object...");
-			final Coordinator coordRef = CoordinatorHelper.narrow(obj);
+			System.out.println("Starter>getting remote object...");
+			Coordinator coordRef = CoordinatorHelper.narrow(obj);
 			
-			// Neuen Monitor erzeugen
-			StarterImpl starter = new StarterImpl();;
+			// Neuen starter erzeugen
+			StarterImpl starter = new StarterImpl(starterName);;
 			
-			//TODO: Wieso? ...
 			POA rootPoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 			rootPoa.the_POAManager().activate();
 			
@@ -44,11 +44,13 @@ public class StarterStart {
 			
 			Starter href = StarterHelper.narrow(ref);
 
-			// Setze monitor referenz
-			System.out.println("Monitor>adding Monitor to Lager...");
+			// Setze starter referenz
+			System.out.println("Starter>adding starter to coordinator...");
 			coordRef.registerStarter(href);
+			
+			starter.setCoordRef(coordRef);
 
-			System.out.println("Monitor>Monitor was started...");
+			System.out.println("Starter>starter was started...");
 
 			orb.run();
 			
@@ -57,7 +59,7 @@ public class StarterStart {
 			System.exit(1);
 		}
 
-		System.out.println("Monitor>EOF");
+		System.out.println("Starter>EOF");
 	}
 
 	

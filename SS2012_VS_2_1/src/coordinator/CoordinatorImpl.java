@@ -6,9 +6,9 @@ import ggt.ggtProcess;
 import ggt.CoordinatorPackage.starterAlreadyExists;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
+
+import monitor.Monitor;
 
 
 public class CoordinatorImpl extends CoordinatorPOA{
@@ -27,7 +27,7 @@ public class CoordinatorImpl extends CoordinatorPOA{
 	}
 
 	@Override
-	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt) {
+	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) {
 		this.minProcess = minProcess;
 		this.maxProcess = maxProcess;
 		this.minDelay = minDelay;
@@ -57,9 +57,8 @@ public class CoordinatorImpl extends CoordinatorPOA{
 
 	@Override
 	public void registerProcess(ggtProcess process, String starterName, int id) {
-		// TODO Auto-generated method stub
-		
+		String processName = starterName + id;
+		// do more stuff here
 	}
-	
 
 }

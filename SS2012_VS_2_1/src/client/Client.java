@@ -6,6 +6,9 @@ import ggt.Coordinator;
 import ggt.CoordinatorHelper;
 import ggt.Starter;
 
+import monitor.Monitor;
+import monitor.MonitorHelper;
+
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
@@ -17,15 +20,14 @@ public class Client {
 		new Client().start(args);
 	}
 
+	
+
 	private void start(String[] args) {
-		String lagername;
+		String coordName = args[4];
+		String aktion = args[5];
+		
 		Coordinator coordRef;
-		//Fach anlegen:
-//		-ORBInitialPort 1051 -ORBInitialHost localhost VS1_Lager neu Dildos DildoFee
-		//       0         1          2           3          4      5     6       7 
-		//einlagern:
-		//-ORBInitialPort 1051 -ORBInitialHost localhost VS1_Lager einlagern Dildos 1337 DildoFee
-		lagername = args[4];
+		Monitor monitorRef;
 
 		try {
 			System.out.println("Client>Creating and initializing the ORB");
@@ -36,16 +38,30 @@ public class Client {
 			NamingContextExt nc = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
 
 			// Objektreferenz mit Namen "Konto" besorgen
-			System.out.println("Client>Resolving the object reference");
-			org.omg.CORBA.Object obj = nc.resolve_str(lagername); // Corba
+			System.out.println("Client>Resolving coordinator reference");
+			org.omg.CORBA.Object coordObj = nc.resolve_str(coordName); // Corba
 			
 			// Cast Corba ref -> Java Referenz
 			System.out.println("Client>getting remote object...");
-			coordRef = CoordinatorHelper.narrow(obj);
-			Starter[] starters = coordRef.getStarters();
-			for (Starter starter : starters) {
-				System.out.println(starter.getName());
+			coordRef = CoordinatorHelper.narrow(coordObj);
+
+			
+			if (aktion.equals("start")) {
+				String monitorName = args[5];
+				System.out.println("Client>Resolving monitor reference");
+				org.omg.CORBA.Object monitorObj = nc.resolve_str(monitorName); // Corba
+				
+				System.out.println("Client>getting remote object...");
+				monitorRef = MonitorHelper.narrow(monitorObj);
+				
+				startGgt(args, coordRef, monitorRef);
+			} else if (aktion.equals("quit")) {
+				quit(coordRef);
+			} else if (aktion.equals("starters")) {
+				getAndPrintStarters(coordRef);
 			}
+
+			System.out.println("Client>executed chosen parameter...");
 			
 			
 		} catch (Exception ex) {
@@ -55,6 +71,32 @@ public class Client {
 		
 		System.out.println("Client>exit successful ...");
 
+	}
+
+
+
+	//TODO: was sollen die params in der aufgabenstellung monitor und coord? davon macht eigentlich nur der moni noch sinn oder?
+	private void startGgt(String[] args, Coordinator coordRef, Monitor monitorRef) {
+		int minProcess = Integer.parseInt(args[6]);
+		int maxProcess = Integer.parseInt(args[7]);
+		int minDelay = Integer.parseInt(args[8]);
+		int maxDelay = Integer.parseInt(args[9]);
+		int timeout = Integer.parseInt(args[10]);
+		int ggt = Integer.parseInt(args[11]);
+		
+		coordRef.start(minProcess, maxProcess, minDelay, maxDelay, timeout, ggt, monitorRef);
+	}
+
+	private void getAndPrintStarters(Coordinator coordRef) {
+		Starter[] starters = coordRef.getStarters();
+		System.out.println("Angemeldete Starter:");
+		for (Starter starter : starters) {
+			System.out.println(starter.getName());
+		}
+	}
+
+	private void quit(Coordinator coordRef) {
+//		coordRef.quit();
 	}
 
 }
