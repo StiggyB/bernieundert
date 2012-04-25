@@ -46,14 +46,17 @@ public class ggtProcessImpl extends ggtProcessPOA{
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
-		
+		left.calc(startValue);
+		right.calc(startValue);
 	}
 
 	@Override
-	public void calc(int mi) {
-		// TODO Auto-generated method stub
-		
+	public void calc(int y) {
+		if (y < startValue) {
+			startValue = ((startValue - 1) % y) + 1;
+			left.calc(startValue);
+			right.calc(startValue);
+		}
 	}
 
 	@Override
