@@ -5,6 +5,7 @@ import ggt.Starter;
 import ggt.ggtProcess;
 import ggt.CoordinatorPackage.starterAlreadyExists;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,6 +50,8 @@ public class CoordinatorImpl extends CoordinatorPOA{
 		//timeout einbauen mit exception
 		while(processCount != processes.size());
 		// prozesse zufällig wählen (liste shufflen?!)
+		Collections.shuffle(processes);
+		mntr.ring(processes.to)
 		// ring aufbauen
 		// daten setzen, nachbarn, ....
 		// monitor zahlen und ringbaufbau mitteilen
