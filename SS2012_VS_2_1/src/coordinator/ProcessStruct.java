@@ -1,5 +1,6 @@
 package coordinator;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,7 +72,6 @@ class ProcessStruct {
 	}
 
 	public ggtProcess[] getStartProcesses() {
-		ggtProcess[] allProcesses = sortedProcesses.values().toArray(new ggtProcess[processes.size()]);
-    return Arrays.copyOf(sortedProcesses.values().toArray(new ggtProcess[sortedProcesses.size()]), 3);
+		return Arrays.copyOf(sortedProcesses.values().toArray(new ggtProcess[sortedProcesses.size()]), 3);
 	}
 }
