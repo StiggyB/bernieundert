@@ -22,7 +22,7 @@ class ProcessStruct {
 	}
 
 	private ggtProcess left(ggtProcess process) {
-		return processes.get(processes.indexOf(process) - 1 < 0 ? processes.size() - 1 : processes.indexOf(process) - 1);
+		return processes.get(processes.indexOf(process) == 0 ? processes.size() - 1 : processes.indexOf(process) - 1);
 	}
 
 	private ggtProcess right(ggtProcess process) {
