@@ -18,6 +18,8 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	private int processCount;
 	private int timeout;
 	private int ggt;
+	
+	//TODO: wenn eine berechnung fertig ist, alles wieder in ursprungszustand setzen (starter, coord) fuer neue berechnung
 
 	@Override
 	public Starter[] getStarters() {
@@ -58,9 +60,16 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	}
 
+	//TODO: Nach Terminierung der Berechnung beauftragt der Koordinator die Starter mit der Beendigung der Prozesse.
+	// woher wois der, dass es fertig ist? ok, prozess sagt coord bescheid, wenn er terminiert ... -> moar shutdown in idl fuer coord und starter:)
 	@Override
 	public void shutdown() {
-		// TODO Auto-generated method stub
+		// TODO Der Client kann über den Koordinator die Beendigung des Systems
+		// anstossen. Die Starter werden vom Koordinator über die Beendigung des
+		// Systems informiert. Falls noch ggT-Prozesse laufen, sollen diese
+		// unabhängig von ihrem momentanen Zustand möglichst unverzüglich
+		// beendet werden. Anschließend beenden sich die Starter und zum Schluss
+		// der Koordinator.
 		System.out.println("CoordinatorImpl.shutdown()");
 	}
 
