@@ -73,9 +73,6 @@ public class Client {
 
 	}
 
-
-
-	//TODO: was sollen die params in der aufgabenstellung monitor und coord? davon macht eigentlich nur der moni noch sinn oder?
 	private void startGgt(String[] args, Coordinator coordRef, Monitor monitorRef) {
 		int minProcess = Integer.parseInt(args[7]);
 		int maxProcess = Integer.parseInt(args[8]);

@@ -31,12 +31,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	private NamingContextExt ncRef;
 	private NameComponent[] path;
 
-	// TODO: wenn eine berechnung fertig ist, alles wieder in ursprungszustand
-	// setzen (starter, coord) fuer neue berechnung
 	
-	//TODO: remove starter methode anbieten ja/nein? interessant, wenn die berechnung durch ist und man will eine neue starten, aber einer der 
-	//starter meldet sich ab, also durchaus sinnvoll, right?!
-
 	@Override
 	public Starter[] getStarters() {
 		return starters.toArray(new Starter[starters.size()]);
@@ -56,9 +51,10 @@ public class CoordinatorImpl extends CoordinatorPOA {
 			s.createProcesses(processCountTmp);
 		}
 
-		// timeout einbauen mit exception, sleep einbauen um cpu zeit zu sparen
-		while (processCount != processes.size())
-			;
+
+		//TODO: - Timeout beim Warten einbauen (Exception), dann alles auf Anfang, wenn bedingung nicht erfuellt wurde
+		//      - Sleep einbauen, um CPU Zeit zu sparen
+		while (processCount != processes.size());
 		// prozesse zufällig wählen (liste shufflen?!)
 		processes.shuffleProcesses();
 
@@ -73,7 +69,10 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		for (ggtProcess s : startProcesses) {
 			s.start();
 		}
-
+		
+		//TODO: muss hier noch was hin? wenn die Berechnung fertig ist, muss der Coord das ja irgendwie mitbekommen. Oder rennt das in anderen
+		//	    Methoden ab?
+		//TODO: wenn eine berechnung fertig ist, alles wieder in ursprungszustand setzen (starter, coord) fuer neue berechnung
 	}
 
 	@Override

@@ -37,9 +37,7 @@ public class StarterImpl extends StarterPOA {
 		
 	}
 
-	//TODO: terminate methode in der idl fehlt, wa ...
-	//TODO: vlt n abwarten einbauen, bis alle prozesse fertig sind, also tot, dann kann er sich ja beenden und muss nix mehr killen, sollen wa ja
-	//auch nich :>
+	//TODO: Wenn alle Prozesse des Starters beendet sind erst shutdown() ausfuehren oder egal? 
 	@Override
 	public void shutdown() {
 		System.out.println("Starter>recved shutdown from Coordinator");
