@@ -52,9 +52,10 @@ public class ggtProcessImpl extends ggtProcessPOA{
 
 	@Override
 	public void calc(int y) {
-		//msg mntr new number
+		//TODO: msg mntr new number
+		//TODO: monitor will ausgeben, von wo die zahl kam, also muss wohl idl angepasst werden ...
 		if (y < startValue) {
-			//wennn er calcen muss, $delay warten b4 msg2neighbours...
+			//TODO: wennn er calcen muss, $delay warten b4 msg2neighbours...
 			startValue = ((startValue - 1) % y) + 1;
 			try {
 				Thread.sleep(delay * 1000);
@@ -66,12 +67,12 @@ public class ggtProcessImpl extends ggtProcessPOA{
 		}
 	}
 	
-	//TODO: run methode bauen, die eine state-gesteuerte endlos while-loop hat, worin zeit geprüft wird und msges verwaltet werden?!
+	//TODO: run methode bauen?! die eine state-gesteuerte endlos while-loop hat, worin zeit geprüft wird und msges verwaltet werden?!
 	//TODO: LinkedBlockingQueue -> wg der eintreffenden msges, wenn keine da ist -> blocked
 
 	@Override
 	public boolean terminate(String processName) {
-		// TODO Auto-generated method stub
+		// TODO terminierung...
 		return false;
 	}
 
