@@ -96,7 +96,7 @@ public class Client {
 	}
 
 	private void quit(Coordinator coordRef) {
-//		coordRef.quit();
+		coordRef.shutdown();
 	}
 
 }

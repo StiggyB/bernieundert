@@ -6,6 +6,7 @@ import ggt.Coordinator;
 import ggt.CoordinatorHelper;
 import ggt.Starter;
 import ggt.StarterHelper;
+import ggt.CoordinatorPackage.starterDoesNotExists;
 
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
@@ -20,7 +21,7 @@ public class StarterStart {
 			String coordName = args[4];
 			String starterName = args[5];
 			System.out.println("Starter>Creating and initializing the ORB");
-			ORB orb = ORB.init(args, null);
+			final ORB orb = ORB.init(args, null);
 
 			// Zum Namensdienst verbinden (Referenz holen und wandeln)
 			System.out.println("Starter>getting the root naming context");
@@ -32,7 +33,7 @@ public class StarterStart {
 			
 			// Cast Corba ref -> Java Referenz
 			System.out.println("Starter>getting remote object...");
-			Coordinator coordRef = CoordinatorHelper.narrow(obj);
+			final Coordinator coordRef = CoordinatorHelper.narrow(obj);
 			
 			// Neuen starter erzeugen
 			StarterImpl starter = new StarterImpl(starterName);;
@@ -42,13 +43,33 @@ public class StarterStart {
 			
 			org.omg.CORBA.Object ref = rootPoa.servant_to_reference(starter);
 			
-			Starter href = StarterHelper.narrow(ref);
+			final Starter href = StarterHelper.narrow(ref);
 
 			// Setze starter referenz
 			System.out.println("Starter>adding starter to coordinator...");
 			coordRef.registerStarter(href);
 			
 			starter.setCoordRef(coordRef);
+			
+			// Shutdown-Hook fuer Beenden mit strg+c
+			Thread hook = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					System.out.println("Starter>remove Starter from Coordinator...");
+					try {
+						coordRef.unregisterStarter(href);
+					} catch (starterDoesNotExists e) {
+						e.printStackTrace();
+					}
+					System.out.print("OK\nStarter>quit");
+					orb.shutdown(true);
+				}
+			});
+			
+			// Hook und Objektreferenzen setzen fuer quit() Methode
+			Runtime.getRuntime().addShutdownHook(hook);
+			starter.setHook(hook);
+			starter.setOrb(orb);
 
 			System.out.println("Starter>starter was started...");
 
