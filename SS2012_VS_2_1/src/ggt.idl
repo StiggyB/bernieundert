@@ -58,6 +58,7 @@ module ggt {
 	interface Starter {
 		string getName();
 		void createProcesses(in long count);
+		void shutdown();
 	};
 
 	typedef sequence<Starter> starterList;
@@ -79,6 +80,7 @@ module ggt {
 		void shutdown();
 		void registerStarter(in Starter starter) raises (starterAlreadyExists);
 		void registerProcess(in ggtProcess process, in string processName);
+		void unregisterStarter(in Starter starter) raises (starterDoesNotExists);
 		
 	};
 	

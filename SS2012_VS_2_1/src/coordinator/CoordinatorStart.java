@@ -7,6 +7,9 @@ import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
@@ -27,7 +30,7 @@ public class CoordinatorStart {
 
 			// Servant-Objekt erstellen
 			System.out.println("Coordinator>Creating the servant");
-			CoordinatorImpl coordServant = new CoordinatorImpl();
+			final CoordinatorImpl coordServant = new CoordinatorImpl();
 
 			// Objekt Referenz des Servants holen
 			System.out.println("Coordinator>obtain the reference from the servant");
@@ -43,17 +46,44 @@ public class CoordinatorStart {
 			// Verwendung von NamingContextExt, ist Teil der Interoperable
 			// Naming Service (INS) Spezifikation.
 			System.out.println("Coordinator>using NamingContextExt to provides interoperability");
-			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+			final NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
 			// binde die Object Reference an einen Namen
 			String name = args[4];
 			System.out.println("Coordinator>binding the object reference in naming with name " + name);
-			NameComponent path[] = ncRef.to_name(name);
+			final NameComponent path[] = ncRef.to_name(name);
 
 			// Objekt href einen Namen zuweisen, unter dem es beim Naming
 			// Service nachfragt werden kann
 			ncRef.rebind(path, href);
 			System.out.println("Coordinator>coordinator was started...");
+			
+			Thread hook = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					System.out.println("Coordinator>invoked shutdownHook");
+					System.out.print("Coordinator>telling all starters to quit...");
+					coordServant.unregisterAllStarters();
+					System.out.print("OK\nCoordinator>unbinding...");
+						try {
+							ncRef.unbind(path);
+						} catch (NotFound e) {
+							e.printStackTrace();
+						} catch (CannotProceed e) {
+							e.printStackTrace();
+						} catch (InvalidName e) {
+							e.printStackTrace();
+						}
+					System.out.print("OK\nCoordinator>shutting down ORB...");
+					orb.shutdown(true);
+					System.out.println("OK\nCoordinator>shutdown was successful...");
+				}
+			});
+			// Hook setzen und Objekte fuer die quit() Methode uebergeben 
+			Runtime.getRuntime().addShutdownHook(hook);
+			coordServant.setHook(hook);
+			coordServant.setOrb(orb);
+			coordServant.setNcRef(ncRef, path);
 
 			// Orb starten und auf Clients warten
 			orb.run();
