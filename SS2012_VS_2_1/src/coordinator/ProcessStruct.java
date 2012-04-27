@@ -73,4 +73,16 @@ class ProcessStruct {
 	public ggtProcess[] getStartProcesses() {
 		return Arrays.copyOf(sortedProcesses.values().toArray(new ggtProcess[sortedProcesses.size()]), 3);
 	}
+	
+	public boolean isEmpty(){
+		return processes.isEmpty();
+	}
+	
+	public void remove(ggtProcess process){
+		if(processes.contains(process)){
+			processes.remove(process);
+			sortedProcesses.remove(process.getName());
+		}
+		
+	}
 }
