@@ -55,14 +55,19 @@ public class StarterStart {
 			Thread hook = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					System.out.println("Starter>remove Starter from Coordinator...");
-					try {
-						coordRef.unregisterStarter(href);
-					} catch (starterDoesNotExists e) {
-						e.printStackTrace();
+					if (!coordRef.isCalculating()) {
+
+						System.out.println("Starter>remove Starter from Coordinator...");
+						try {
+							coordRef.unregisterStarter(href);
+						} catch (starterDoesNotExists e) {
+							e.printStackTrace();
+						}
+						System.out.print("OK\nStarter>quit");
+						orb.shutdown(true);
+					} else {
+						System.out.println("Starter>Calculation in progress, try QUIT again later");
 					}
-					System.out.print("OK\nStarter>quit");
-					orb.shutdown(true);
 				}
 			});
 			

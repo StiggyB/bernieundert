@@ -93,7 +93,12 @@ public class Client {
 	}
 
 	private void quit(Coordinator coordRef) {
-		coordRef.shutdown();
+		if (coordRef.shutdown()) {
+			System.out.println("Client>exit successful ...");
+		} else {
+			System.out.println("Client>Calculation running, exit NOT successful ...");
+			System.out.println("Client>try again later");
+		}
 	}
 
 }
