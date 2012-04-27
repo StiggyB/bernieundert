@@ -11,7 +11,7 @@ import ggt.StarterPOA;
 public class StarterImpl extends StarterPOA {
 
 	private String starterName;
-	private List<ggtProcessImpl> ggtProcesses = new ArrayList<ggtProcessImpl>();
+	private List<ggtProcessImpl> ggtProcesses;
 	private Coordinator coordRef;
 	private Thread hook;
 	private ORB orb;
@@ -27,6 +27,7 @@ public class StarterImpl extends StarterPOA {
 
 	@Override
 	public void createProcesses(int count) {
+		ggtProcesses = new ArrayList<ggtProcessImpl>();
 		for (int i = 0; i < count; i++) {
 			ggtProcesses.add(new ggtProcessImpl(i, this, coordRef));
 		}

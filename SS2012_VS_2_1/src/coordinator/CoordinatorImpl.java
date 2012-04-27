@@ -40,8 +40,10 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) {
+		isCalculating = true;
 		this.timeout = timeout;
 		this.ggt = ggt;
+		processCount = 0;
 
 		Random rnd = new Random();
 
@@ -71,8 +73,22 @@ public class CoordinatorImpl extends CoordinatorPOA {
 			s.start();
 		}
 		
-		isCalculating = true;
-		
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				
+				while(processes.size() != 0){
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				isCalculating = false;
+			}
+			
+		}).start();
 		//TODO: muss hier noch was hin? wenn die Berechnung fertig ist, muss der Coord das ja irgendwie mitbekommen. Oder rennt das in anderen
 		//	    Methoden ab?
 		//TODO: wenn eine berechnung fertig ist, alles wieder in ursprungszustand setzen (starter, coord) fuer neue berechnung
