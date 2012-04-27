@@ -185,5 +185,10 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		this.path = path;
 	}
 
+	@Override
+	public void processCalcDone(ggtProcess process) {
+		processes.remove(process);
+	}
+
 
 }

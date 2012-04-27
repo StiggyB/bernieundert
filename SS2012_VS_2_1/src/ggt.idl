@@ -82,7 +82,7 @@ module ggt {
 		void registerStarter(in Starter starter) raises (starterAlreadyExists);
 		void registerProcess(in ggtProcess process, in string processName);
 		void unregisterStarter(in Starter starter) raises (starterDoesNotExists);
-		
+		void processCalcDone(in ggtProcess process);
 		
 	};
 	
