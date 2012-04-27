@@ -30,6 +30,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	private Thread hook;
 	private NamingContextExt ncRef;
 	private NameComponent[] path;
+	private boolean isCalculating = false;
 
 	
 	@Override
@@ -70,14 +71,20 @@ public class CoordinatorImpl extends CoordinatorPOA {
 			s.start();
 		}
 		
+		isCalculating = true;
+		
 		//TODO: muss hier noch was hin? wenn die Berechnung fertig ist, muss der Coord das ja irgendwie mitbekommen. Oder rennt das in anderen
 		//	    Methoden ab?
 		//TODO: wenn eine berechnung fertig ist, alles wieder in ursprungszustand setzen (starter, coord) fuer neue berechnung
 	}
 
 	@Override
-	public void shutdown() {
+	public boolean shutdown() {
 		System.out.println("Coordinator>Client quitted coordinator");
+		if(isCalculating){
+			System.out.println("Coordinator>Calculation running, cant quit now ...");
+			return false;
+		}
 		System.out.print("Coordinator>tell all starters to quit...");
 		for (Starter s : starters) {
 			s.shutdown();
@@ -106,6 +113,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 				System.out.println("OK\nCoordinator>shutdown was successful...");
 			}
 		}).start();
+		return true;
 	}
 
 	@Override
@@ -132,17 +140,22 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		if(!starters.contains(starter)){
 			throw new starterDoesNotExists(starter.getName());
 		}
-		//TODO: wird der Code nach dem throw eigentlich noch ausgeführt?!
+		// TODO: wird der Code nach dem throw eigentlich noch ausgeführt?!
 		starters.remove(starter);
 		System.out.println("Coordinator>Starter " + starter.getName() + " unregistered");
 	}
-	
+
+	@Override
+	public boolean isCalculating() {
+		return isCalculating;
+	}
+
 	public void unregisterAllStarters() {
 		for (Starter s : starters) {
 			s.shutdown();
 		}
 	}
-	
+
 	public void setOrb(ORB orb) {
 		this.orb = orb;
 	}
@@ -155,7 +168,6 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		this.ncRef = ncRef;
 		this.path = path;
 	}
-
 
 
 }

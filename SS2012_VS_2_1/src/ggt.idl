@@ -77,7 +77,8 @@ module ggt {
     	exception starterDoesNotExists{ string s;};
 		starterList getStarters();
 		void start(in long minProcess, in long maxProcess, in long minDelay, in long maxDelay, in long timeout, in long ggt, in monitor::Monitor mntr);
-		void shutdown();
+		boolean shutdown();
+		boolean isCalculating();
 		void registerStarter(in Starter starter) raises (starterAlreadyExists);
 		void registerProcess(in ggtProcess process, in string processName);
 		void unregisterStarter(in Starter starter) raises (starterDoesNotExists);

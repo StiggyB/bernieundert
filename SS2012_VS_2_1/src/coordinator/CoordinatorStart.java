@@ -61,10 +61,12 @@ public class CoordinatorStart {
 			Thread hook = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					System.out.println("Coordinator>invoked shutdownHook");
-					System.out.print("Coordinator>telling all starters to quit...");
-					coordServant.unregisterAllStarters();
-					System.out.print("OK\nCoordinator>unbinding...");
+					if (!coordServant.isCalculating()) {
+
+						System.out.println("Coordinator>invoked shutdownHook");
+						System.out.print("Coordinator>telling all starters to quit...");
+						coordServant.unregisterAllStarters();
+						System.out.print("OK\nCoordinator>unbinding...");
 						try {
 							ncRef.unbind(path);
 						} catch (NotFound e) {
@@ -74,9 +76,13 @@ public class CoordinatorStart {
 						} catch (InvalidName e) {
 							e.printStackTrace();
 						}
-					System.out.print("OK\nCoordinator>shutting down ORB...");
-					orb.shutdown(true);
-					System.out.println("OK\nCoordinator>shutdown was successful...");
+						System.out.print("OK\nCoordinator>shutting down ORB...");
+						orb.shutdown(true);
+						System.out.println("OK\nCoordinator>shutdown was successful...");
+					} else {
+						System.out.println("Coordinator>Calculation running, try QUIT again later");
+					}
+
 				}
 			});
 			// Hook setzen und Objekte fuer die quit() Methode uebergeben 
