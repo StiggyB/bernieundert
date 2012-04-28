@@ -1,7 +1,7 @@
 package coordinator;
 
-import ggt.Coordinator;
-import ggt.CoordinatorHelper;
+import ggtCorba.Coordinator;
+import ggtCorba.CoordinatorHelper;
 
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;

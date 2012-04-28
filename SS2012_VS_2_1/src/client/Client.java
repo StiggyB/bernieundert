@@ -2,9 +2,11 @@ package client;
 
 
 
-import ggt.Coordinator;
-import ggt.CoordinatorHelper;
-import ggt.Starter;
+import ggtCorba.Coordinator;
+import ggtCorba.CoordinatorHelper;
+import ggtCorba.Starter;
+import ggtCorba.CoordinatorPackage.calculationInProgress;
+import ggtCorba.CoordinatorPackage.noStarters;
 
 import monitor.Monitor;
 import monitor.MonitorHelper;
@@ -80,8 +82,14 @@ public class Client {
 		int maxDelay = Integer.parseInt(args[10]);
 		int timeout = Integer.parseInt(args[11]);
 		int ggt = Integer.parseInt(args[12]);
-		
-		coordRef.start(minProcess, maxProcess, minDelay, maxDelay, timeout, ggt, monitorRef);
+
+		try {
+			coordRef.start(minProcess, maxProcess, minDelay, maxDelay, timeout, ggt, monitorRef);
+		} catch (noStarters e) {
+			e.printStackTrace();
+		} catch (calculationInProgress e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void getAndPrintStarters(Coordinator coordRef) {

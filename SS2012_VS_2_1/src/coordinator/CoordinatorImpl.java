@@ -1,10 +1,12 @@
 package coordinator;
 
-import ggt.CoordinatorPOA;
-import ggt.Starter;
-import ggt.ggtProcess;
-import ggt.CoordinatorPackage.starterAlreadyExists;
-import ggt.CoordinatorPackage.starterDoesNotExists;
+import ggtCorba.CoordinatorPOA;
+import ggtCorba.Starter;
+import ggtCorba.ggtProcess;
+import ggtCorba.CoordinatorPackage.calculationInProgress;
+import ggtCorba.CoordinatorPackage.noStarters;
+import ggtCorba.CoordinatorPackage.starterAlreadyExists;
+import ggtCorba.CoordinatorPackage.starterDoesNotExists;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -30,7 +32,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	private Thread hook;
 	private NamingContextExt ncRef;
 	private NameComponent[] path;
-	private boolean isCalculating = false;
+	private boolean isCalculating = true;
 
 	
 	@Override
@@ -39,9 +41,12 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	}
 
 	@Override
-	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) {
+	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) throws calculationInProgress, noStarters {
 		//TODO: wenn kein starter, dann error ...
-		//TODO: ebenso beim monitor ...
+		if(isCalculating){
+			throw new calculationInProgress();
+		}
+		System.out.println("Ich werde nicht mehr ausgeführt...");
 		isCalculating = true;
 		this.timeout = timeout;
 		this.ggt = ggt;

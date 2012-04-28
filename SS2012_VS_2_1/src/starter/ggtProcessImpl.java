@@ -1,15 +1,16 @@
 package starter;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.omg.PortableServer.POAPackage.ServantNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 import monitor.Monitor;
-import ggt.Coordinator;
-import ggt.ggtProcess;
-import ggt.ggtProcessHelper;
-import ggt.ggtProcessPOA;
+import ggtCorba.Coordinator;
+import ggtCorba.ggtProcess;
+import ggtCorba.ggtProcessHelper;
+import ggtCorba.ggtProcessPOA;
 
 public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 
@@ -24,6 +25,7 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	private final Coordinator coordRef;
 	ggtProcess ggtProcess;
 	private boolean ready =  false;
+	private boolean running =  false;
 	
 	public ggtProcessImpl(int i, StarterImpl starterImpl, Coordinator coordRef) {
 		this.coordRef = coordRef;
@@ -56,12 +58,12 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	public void start() {
 //		left.calc(startValue);
 //		right.calc(startValue);
-		ready = true;
 	}
 
 	@Override
 	public void calc(int y) {
-		ready = true;
+		msges.offer(y);
+		//TODO: call andere methode nun wg berechnung, da alles async sein soll!?
 		//TODO: msg mntr new number
 		//TODO: monitor will ausgeben, von wo die zahl kam, also muss wohl idl angepasst werden, damit id/name des prozesses bekannt
 //		if (y < startValue) {
@@ -92,6 +94,14 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	@Override
 	public void run() {
 		while(ready);
+		while(running){
+			try {
+				msges.poll(timeout, TimeUnit.SECONDS);
+				//do time consuming stuff...
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		System.out.println("ggtProcessImpl.run()");
 		coordRef.processCalcDone(ggtProcess);
 	}
