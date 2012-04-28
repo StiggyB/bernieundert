@@ -12,7 +12,7 @@ import monitor.Monitor;
 
 import ggtCorba.ggtProcess;
 
-class ProcessStruct {
+public class ProcessStruct {
 
 	private List<ggtProcess> processes = new LinkedList<ggtProcess>();
 	private SortedMap<Integer, ggtProcess> sortedProcesses = new TreeMap<Integer, ggtProcess>();

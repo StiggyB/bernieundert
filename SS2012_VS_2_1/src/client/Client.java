@@ -86,9 +86,11 @@ public class Client {
 		try {
 			coordRef.start(minProcess, maxProcess, minDelay, maxDelay, timeout, ggt, monitorRef);
 		} catch (noStarters e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
+			System.err.println("Client>keine Starter angemeldet");
 		} catch (calculationInProgress e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
+			System.err.println("Client>Es laeuft bereits eine Berechnung");
 		}
 	}
 
