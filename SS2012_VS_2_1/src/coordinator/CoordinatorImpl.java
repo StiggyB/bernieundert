@@ -43,7 +43,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	@Override
 	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) throws calculationInProgress, noStarters {
 		//TODO: wenn kein starter, dann error ...
-		if(isCalculating || processes.size() == 0){
+		if(isCalculating || starters.size() == 0){
 			throw new calculationInProgress("calcing");
 		}
 		System.out.println("Ich werde nicht mehr ausgeführt...");
