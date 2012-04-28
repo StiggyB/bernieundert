@@ -58,6 +58,7 @@ module ggt {
 	interface Starter {
 		string getName();
 		void createProcesses(in long count);
+		void killProcesses();
 		void shutdown();
 	};
 
@@ -70,6 +71,7 @@ module ggt {
 		void calc(in long y);
 		boolean terminate(in string processName);
 		string getName();
+		void kill();
 	};
 	
 	interface Coordinator {

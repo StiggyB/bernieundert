@@ -58,6 +58,10 @@ public class CoordinatorStart {
 			ncRef.rebind(path, href);
 			System.out.println("Coordinator>coordinator was started...");
 			
+			//TODO: shutdownhook hat das problem, dass wenn ne berechnung rennt, wird das runterfahren der vm nicht abgebrochen, d.h. starter und
+			//prozesse rennen einfach weiter. ggf. für diesen fall eine void kill() auf den prozessen, wenn shutdownhook durch strg+c gerufen wird
+			//und isCalculating == true ist, wird auf allen prozessen kill gerufen,wo dann Runtime.getRuntime().exit(1); gemacht wird oder so.
+			//Dann ist allerdings isCalculating immer noch == true und die starter würden sich nicht beenden ... ideas?!
 			Thread hook = new Thread(new Runnable() {
 				@Override
 				public void run() {

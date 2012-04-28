@@ -62,4 +62,11 @@ public class StarterImpl extends StarterPOA {
 	public void setOrb(ORB orb) {
 		this.orb = orb;
 	}
+
+	@Override
+	public void killProcesses() {
+		for (ggtProcessImpl s : ggtProcesses) {
+			s.kill();
+		}
+	}
 }
