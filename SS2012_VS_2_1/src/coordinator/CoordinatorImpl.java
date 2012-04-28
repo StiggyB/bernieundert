@@ -40,6 +40,8 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) {
+		//TODO: wenn kein starter, dann error ...
+		//TODO: ebenso beim monitor ...
 		isCalculating = true;
 		this.timeout = timeout;
 		this.ggt = ggt;
@@ -66,7 +68,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		// monitor zahlen und ringbaufbau mitteilen
 		mntr.ring(processes.getProcessNames());
 		mntr.startzahlen(processes.initProcesses(minDelay, maxDelay, timeout, ggt, mntr));
-		ggtProcess[] startProcesses = processes.getStartProcesses();
+		final ggtProcess[] startProcesses = processes.getStartProcesses();
 
 		// berechnung starten, 3 prozesse mit kleinsten zahlen auswählen
 		for (ggtProcess s : startProcesses) {
@@ -85,13 +87,17 @@ public class CoordinatorImpl extends CoordinatorPOA {
 						e.printStackTrace();
 					}
 				}
+				//TODO: wenn eine berechnung fertig ist, alles wieder in ursprungszustand setzen (starter, coord) fuer neue berechnung
+				//TODO: starter sagen, prozesse killen, ja kann der coord auch selber, er hat ja alle ggts; was ist besser?
+				
+				for (Starter s : starters) {
+					s.killProcesses();
+				}
 				isCalculating = false;
+				
 			}
-			
-		}).start();
-		//TODO: muss hier noch was hin? wenn die Berechnung fertig ist, muss der Coord das ja irgendwie mitbekommen. Oder rennt das in anderen
-		//	    Methoden ab?
-		//TODO: wenn eine berechnung fertig ist, alles wieder in ursprungszustand setzen (starter, coord) fuer neue berechnung
+			}).start();
+		
 	}
 
 	@Override
@@ -151,7 +157,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void unregisterStarter(Starter starter) throws starterDoesNotExists {
-		
+		//TODO: wenn isCalculating == true ist abfangen? 
 		//TODO: oder lieber auf contains prüfen und removen ohne exceptions, in dem fall eben nix tun ...?!
 		if(!starters.contains(starter)){
 			throw new starterDoesNotExists(starter.getName());
@@ -187,6 +193,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void processCalcDone(ggtProcess process) {
+		System.out.println("Coordinator>Process " + process.getName() + " has finished calculation");
 		processes.remove(process);
 	}
 
