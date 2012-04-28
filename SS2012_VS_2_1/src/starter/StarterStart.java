@@ -2,11 +2,11 @@ package starter;
 
 
 
-import ggt.Coordinator;
-import ggt.CoordinatorHelper;
-import ggt.Starter;
-import ggt.StarterHelper;
-import ggt.CoordinatorPackage.starterDoesNotExists;
+import ggtCorba.Coordinator;
+import ggtCorba.CoordinatorHelper;
+import ggtCorba.Starter;
+import ggtCorba.StarterHelper;
+import ggtCorba.CoordinatorPackage.starterDoesNotExists;
 
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;

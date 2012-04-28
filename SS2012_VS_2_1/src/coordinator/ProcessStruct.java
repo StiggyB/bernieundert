@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 import monitor.Monitor;
 
-import ggt.ggtProcess;
+import ggtCorba.ggtProcess;
 
 class ProcessStruct {
 

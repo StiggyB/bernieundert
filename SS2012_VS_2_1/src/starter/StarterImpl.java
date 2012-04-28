@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.omg.CORBA.ORB;
 
-import ggt.Coordinator;
-import ggt.StarterPOA;
+import ggtCorba.Coordinator;
+import ggtCorba.StarterPOA;
 
 public class StarterImpl extends StarterPOA {
 
