@@ -47,8 +47,6 @@ public class StarterImpl extends StarterPOA {
 
 			@Override
 			public void run() {
-				// System.out.print("Starter>Removing shutdownHook...");
-				// Runtime.getRuntime().removeShutdownHook(hook);
 				System.out.print("Starter>Killing all processes...");
 				 killProcesses();
 				System.out.print("OK\nStarter>shutting down ORB...");
@@ -56,10 +54,6 @@ public class StarterImpl extends StarterPOA {
 				System.out.println("OK\nStarter>shutdown was successful...");
 			}
 		}).start();
-	}
-
-	public void setHook(Thread hook) {
-		this.hook = hook;
 	}
 
 	public void setOrb(ORB orb) {

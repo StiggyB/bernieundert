@@ -54,16 +54,6 @@ public class StarterStart {
 			
 			starter.setCoordRef(coordRef);
 			
-//			// Shutdown-Hook fuer Beenden mit strg+c
-//			Thread hook = new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//			});
-//			
-//			// Hook und Objektreferenzen setzen fuer quit() Methode
-//			Runtime.getRuntime().addShutdownHook(hook);
-//			starter.setHook(hook);
-			
 			Signal.handle(new Signal("INT"), new SignalHandler() {
 
 				@Override
