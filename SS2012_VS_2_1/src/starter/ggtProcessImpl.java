@@ -83,6 +83,7 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	//TODO: LinkedBlockingQueue -> wg der eintreffenden msges, wenn keine da ist -> blocked sie bis timeout und dann terminate()
 	@Override
 	public boolean terminate(String processName) {
+		//TODO: zusätzlich zum namen noch n bool, ob ok ist oder eben nicht?! return param ist doch quatsch hier ...
 		return false;
 	}
 
