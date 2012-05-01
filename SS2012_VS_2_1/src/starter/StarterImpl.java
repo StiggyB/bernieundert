@@ -35,10 +35,11 @@ public class StarterImpl extends StarterPOA {
 
 	public void setCoordRef(Coordinator coordRef) {
 		this.coordRef = coordRef;
-		
+
 	}
 
-	//TODO: Wenn alle Prozesse des Starters beendet sind erst shutdown() ausfuehren oder egal? 
+	// TODO: Wenn alle Prozesse des Starters beendet sind erst shutdown()
+	// ausfuehren oder egal?
 	@Override
 	public void shutdown() {
 		System.out.println("Starter>recved shutdown from Coordinator");
@@ -46,15 +47,17 @@ public class StarterImpl extends StarterPOA {
 
 			@Override
 			public void run() {
-				System.out.print("Starter>Removing shutdownHook...");
-				Runtime.getRuntime().removeShutdownHook(hook);
+				// System.out.print("Starter>Removing shutdownHook...");
+				// Runtime.getRuntime().removeShutdownHook(hook);
+				System.out.print("Starter>Killing all processes...");
+				 killProcesses();
 				System.out.print("OK\nStarter>shutting down ORB...");
 				orb.shutdown(true);
 				System.out.println("OK\nStarter>shutdown was successful...");
 			}
 		}).start();
 	}
-	
+
 	public void setHook(Thread hook) {
 		this.hook = hook;
 	}
@@ -65,8 +68,10 @@ public class StarterImpl extends StarterPOA {
 
 	@Override
 	public void killProcesses() {
-		for (ggtProcessImpl s : ggtProcesses) {
-			s.kill();
+		if (ggtProcesses != null) {
+			for (ggtProcessImpl s : ggtProcesses) {
+				s.kill();
+			}
 		}
 	}
 }

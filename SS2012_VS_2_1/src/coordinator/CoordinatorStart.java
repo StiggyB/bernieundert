@@ -12,6 +12,8 @@ import org.omg.CosNaming.NamingContextPackage.InvalidName;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
 
 public class CoordinatorStart {
 
@@ -57,41 +59,49 @@ public class CoordinatorStart {
 			// Service nachfragt werden kann
 			ncRef.rebind(path, href);
 			System.out.println("Coordinator>coordinator was started...");
-			
-			//TODO: shutdownhook hat das problem, dass wenn ne berechnung rennt, wird das runterfahren der vm nicht abgebrochen, d.h. starter und
-			//prozesse rennen einfach weiter. ggf. für diesen fall eine void kill() auf den prozessen, wenn shutdownhook durch strg+c gerufen wird
-			//und isCalculating == true ist, wird auf allen prozessen kill gerufen,wo dann Runtime.getRuntime().exit(1); gemacht wird oder so.
-			//Dann ist allerdings isCalculating immer noch == true und die starter würden sich nicht beenden ... ideas?!
-			Thread hook = new Thread(new Runnable() {
+
+			// TODO: shutdownhook hat das problem, dass wenn ne berechnung
+			// rennt, wird das runterfahren der vm nicht abgebrochen, d.h.
+			// starter und
+			// prozesse rennen einfach weiter. ggf. für diesen fall eine void
+			// kill() auf den prozessen, wenn shutdownhook durch strg+c gerufen
+			// wird
+			// und isCalculating == true ist, wird auf allen prozessen kill
+			// gerufen,wo dann Runtime.getRuntime().exit(1); gemacht wird oder
+			// so.
+			// Dann ist allerdings isCalculating immer noch == true und die
+			// starter würden sich nicht beenden ... ideas?!
+			// Thread hook = new Thread(new Runnable() {
+			// @Override
+			// public void run() {
+			// }
+			// });
+			// // Hook setzen und Objekte fuer die quit() Methode uebergeben
+			// Runtime.getRuntime().addShutdownHook(hook);
+			// coordServant.setHook(hook);
+			Signal.handle(new Signal("INT"), new SignalHandler() {
+
 				@Override
-				public void run() {
-					if (!coordServant.isCalculating()) {
-
-						System.out.println("Coordinator>invoked shutdownHook");
-						System.out.print("Coordinator>telling all starters to quit...");
-						coordServant.unregisterAllStarters();
-						System.out.print("OK\nCoordinator>unbinding...");
-						try {
-							ncRef.unbind(path);
-						} catch (NotFound e) {
-							e.printStackTrace();
-						} catch (CannotProceed e) {
-							e.printStackTrace();
-						} catch (InvalidName e) {
-							e.printStackTrace();
-						}
-						System.out.print("OK\nCoordinator>shutting down ORB...");
-						orb.shutdown(true);
-						System.out.println("OK\nCoordinator>shutdown was successful...");
-					} else {
-						System.out.println("Coordinator>Calculation running, try QUIT again later");
+				public void handle(Signal arg0) {
+					System.out.println("Coordinator>invoked strg+c");
+					System.out.print("Coordinator>telling all starters to quit...");
+					coordServant.unregisterAllStarters();
+					System.out.print("OK\nCoordinator>unbinding...");
+					try {
+						ncRef.unbind(path);
+					} catch (NotFound e) {
+						e.printStackTrace();
+					} catch (CannotProceed e) {
+						e.printStackTrace();
+					} catch (InvalidName e) {
+						e.printStackTrace();
 					}
-
+					System.out.print("OK\nCoordinator>shutting down ORB...");
+					orb.shutdown(true);
+					System.out.println("OK\nCoordinator>shutdown was successful...");
 				}
+
 			});
-			// Hook setzen und Objekte fuer die quit() Methode uebergeben 
-			Runtime.getRuntime().addShutdownHook(hook);
-			coordServant.setHook(hook);
 			coordServant.setOrb(orb);
 			coordServant.setNcRef(ncRef, path);
 

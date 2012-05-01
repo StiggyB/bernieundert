@@ -14,6 +14,9 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
+
 public class StarterStart {
 	
 	public static void main(String[] args) {
@@ -51,29 +54,35 @@ public class StarterStart {
 			
 			starter.setCoordRef(coordRef);
 			
-			// Shutdown-Hook fuer Beenden mit strg+c
-			Thread hook = new Thread(new Runnable() {
+//			// Shutdown-Hook fuer Beenden mit strg+c
+//			Thread hook = new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//			});
+//			
+//			// Hook und Objektreferenzen setzen fuer quit() Methode
+//			Runtime.getRuntime().addShutdownHook(hook);
+//			starter.setHook(hook);
+			
+			Signal.handle(new Signal("INT"), new SignalHandler() {
+
 				@Override
-				public void run() {
+				public void handle(Signal arg0) {
 					if (!coordRef.isCalculating()) {
 
-						System.out.println("Starter>remove Starter from Coordinator...");
+						System.out.print("Starter>remove Starter from Coordinator...");
 						try {
 							coordRef.unregisterStarter(href);
 						} catch (starterDoesNotExists e) {
 							e.printStackTrace();
 						}
-						System.out.print("OK\nStarter>quit");
+						System.out.println("OK\nStarter>quit");
 						orb.shutdown(true);
 					} else {
 						System.out.println("Starter>Calculation in progress, try QUIT again later");
 					}
 				}
 			});
-			
-			// Hook und Objektreferenzen setzen fuer quit() Methode
-			Runtime.getRuntime().addShutdownHook(hook);
-			starter.setHook(hook);
 			starter.setOrb(orb);
 
 			System.out.println("Starter>starter was started...");
