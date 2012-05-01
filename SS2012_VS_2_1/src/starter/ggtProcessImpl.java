@@ -26,6 +26,7 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	ggtProcess ggtProcess;
 	private boolean ready =  false;
 	private boolean running =  false;
+	private Thread thread;
 	
 	public ggtProcessImpl(int i, StarterImpl starterImpl, Coordinator coordRef) {
 		this.coordRef = coordRef;
@@ -51,7 +52,8 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 		this.mntr = mntr;
 		System.out.println("ggtProcessImpl.initProcess()");
 		
-		new Thread(this).start();
+		thread = new Thread(this);
+		thread.start();
 	}
 
 	@Override
@@ -82,7 +84,8 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	//TODO: run methode bauen?! die eine state-gesteuerte endlos while-loop hat, worin zeit geprüft wird und msges verwaltet werden?!
 	//TODO: LinkedBlockingQueue -> wg der eintreffenden msges, wenn keine da ist -> blocked sie bis timeout und dann terminate()
 	@Override
-	public boolean terminate(String processName) {
+	public boolean terminate(String processName) { // public void terminate(String pNAme, boolean isAllowed)
+		running = false;
 		//TODO: zusätzlich zum namen noch n bool, ob ok ist oder eben nicht?! return param ist doch quatsch hier ...
 		return false;
 	}
@@ -94,7 +97,6 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 
 	@Override
 	public void run() {
-		while(ready);
 		while(running){
 			try {
 				msges.poll(timeout, TimeUnit.SECONDS);
@@ -111,5 +113,13 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	public void kill() {
 		Runtime.getRuntime().exit(1);
 	}
+	
+	
+	//TODO: 
+	// - Was passiert, wenn der Timeout abgelaufen ist? Terminate wird ausgelöst, wird dann noch auf msges gewartet?
+	// - Was passiert, wenn terminate negativ beantwortet wurde? wieder in poll()?
+	// - Was macht der Thread, während das terminate zirkuliert? pollen oder nicht?
+	// - Wenn terminate ausgelöst wurde, was macht der Thread? Weiter pollen? und wenn timout nochmals erreicht wird, was dann?
+	// - Muss ursprünglicher startwert erhalten bleiben? Oder kann Mi immer durch y ersetzt werden?!
 
 }

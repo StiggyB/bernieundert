@@ -163,7 +163,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	@Override
 	public void unregisterStarter(Starter starter) throws starterDoesNotExists {
 		//TODO: wenn isCalculating == true ist abfangen? was wäre sinnvoll bei laufender berechnung? alles beenden oder cleanup und dann neue
-		//Berechnung möglich
+		//Berechnung möglich, wenn Berechnung rennt unregister nicht zulassen?!
 		//TODO: oder lieber auf contains prüfen und removen ohne exceptions, in dem fall eben nix tun ...?!
 		if(!starters.contains(starter)){
 			throw new starterDoesNotExists(starter.getName());
