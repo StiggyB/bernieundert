@@ -32,7 +32,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	private Thread hook;
 	private NamingContextExt ncRef;
 	private NameComponent[] path;
-	private boolean isCalculating = true;
+	private boolean isCalculating = false;
 
 	
 	@Override
@@ -133,8 +133,8 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 			@Override
 			public void run() {
-				System.out.print("OK\nCoordinator>Removing shutdownHook...");
-				Runtime.getRuntime().removeShutdownHook(hook);
+//				System.out.print("OK\nCoordinator>Removing shutdownHook...");
+//				Runtime.getRuntime().removeShutdownHook(hook);
 				System.out.print("OK\nCoordinator>shutting down ORB...");
 				orb.shutdown(true);
 				System.out.println("OK\nCoordinator>shutdown was successful...");
