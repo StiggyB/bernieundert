@@ -68,8 +68,8 @@ module ggtCorba {
 		// Name/ID des Prozess im Konstruktor
 		void initProcess(in ggtProcess left, in ggtProcess right, in long startValue, in long delay, in long timeout, in monitor::Monitor mntr);
 		void start();
-		void calc(in long y);
-		boolean terminate(in string processName);
+		void calc(in long y, in string msgFrom);
+		void terminate(in string processName, in boolean isAllowed);
 		string getName();
 		void kill();
 	};

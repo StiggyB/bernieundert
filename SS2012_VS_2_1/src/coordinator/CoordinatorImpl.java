@@ -42,7 +42,6 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) throws calculationInProgress, noStarters {
-		//TODO: wenn kein starter, dann error ...
 		if(isCalculating || starters.size() == 0){
 			throw new calculationInProgress("calcing");
 		}
@@ -162,11 +161,9 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	public void unregisterStarter(Starter starter) throws starterDoesNotExists {
 		//TODO: wenn isCalculating == true ist abfangen? was wäre sinnvoll bei laufender berechnung? alles beenden oder cleanup und dann neue
 		//Berechnung möglich, wenn Berechnung rennt unregister nicht zulassen?!
-		//TODO: oder lieber auf contains prüfen und removen ohne exceptions, in dem fall eben nix tun ...?!
 		if(!starters.contains(starter)){
 			throw new starterDoesNotExists(starter.getName());
 		}
-		// TODO: wird der Code nach dem throw eigentlich noch ausgeführt?!
 		starters.remove(starter);
 		System.out.println("Coordinator>Starter " + starter.getName() + " unregistered");
 	}
