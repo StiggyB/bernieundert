@@ -13,7 +13,6 @@ public class StarterImpl extends StarterPOA {
 	private String starterName;
 	private List<ggtProcessImpl> ggtProcesses;
 	private Coordinator coordRef;
-	private Thread hook;
 	private ORB orb;
 
 	public StarterImpl(String starterName) {

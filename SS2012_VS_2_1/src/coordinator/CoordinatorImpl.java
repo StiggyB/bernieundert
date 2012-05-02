@@ -26,10 +26,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	private Set<Starter> starters = new HashSet<Starter>();
 	private ProcessStruct processes = new ProcessStruct();
 	private int processCount;
-	private int timeout;
-	private int ggt;
 	private ORB orb;
-	private Thread hook;
 	private NamingContextExt ncRef;
 	private NameComponent[] path;
 	private boolean isCalculating = false;
@@ -46,8 +43,6 @@ public class CoordinatorImpl extends CoordinatorPOA {
 			throw new calculationInProgress("calcing");
 		}
 		isCalculating = true;
-		this.timeout = timeout;
-		this.ggt = ggt;
 		processCount = 0;
 
 		Random rnd = new Random();
@@ -62,6 +57,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 		//TODO: - Timeout beim Warten einbauen (Exception), dann alles auf Anfang, wenn bedingung nicht erfuellt wurde
 		//      - Sleep einbauen, um CPU Zeit zu sparen
+		//		- wenn nicht alle Prozesse bis Timeout da sind, prozesse killen, prozess liste leeren, isCalculating = false;
 		while (processCount != processes.size());
 		// prozesse zufällig wählen (liste shufflen?!)
 		processes.shuffleProcesses();
@@ -91,11 +87,11 @@ public class CoordinatorImpl extends CoordinatorPOA {
 					}
 				}
 				//TODO: wenn eine berechnung fertig ist, alles wieder in ursprungszustand setzen (starter, coord) fuer neue berechnung
-				//TODO: starter sagen, prozesse killen, ja kann der coord auch selber, er hat ja alle ggts; was ist besser?
 				
 				for (Starter s : starters) {
 					s.killProcesses();
 				}
+				//jetzt muesste die prozesstruktur wieder leer sein ... also neue Berechnung kann gestartet werden
 				isCalculating = false;
 				
 			}
