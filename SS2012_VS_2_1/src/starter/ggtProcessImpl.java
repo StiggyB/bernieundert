@@ -75,8 +75,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 								right.calc(Mi, processName);
 							}
 						} else {
-							right.terminate(processName, true, terminateId);
-							terminateId++;
+							right.terminate(processName, true, ++terminateId);
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
