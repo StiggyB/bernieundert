@@ -159,7 +159,8 @@ public class ggtProcessImpl extends ggtProcessPOA {
 
 	@Override
 	public void kill() {
-		Runtime.getRuntime().exit(1);
+//		Runtime.getRuntime().exit(1);
+		System.out.println(processName + " has exited ... now die ..");
 	}
 	
 	@Override
