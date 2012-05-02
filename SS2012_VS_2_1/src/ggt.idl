@@ -69,7 +69,7 @@ module ggtCorba {
 		void initProcess(in ggtProcess left, in ggtProcess right, in long startValue, in long delay, in long timeout, in monitor::Monitor mntr);
 		void start();
 		void calc(in long y, in string msgFrom);
-		void terminate(in string processName, in boolean isAllowed);
+		void terminate(in string processName, in boolean isAllowed, in long terminateId);
 		string getName();
 		void kill();
 	};
