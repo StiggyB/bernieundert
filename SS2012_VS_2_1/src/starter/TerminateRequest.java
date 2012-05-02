@@ -6,13 +6,11 @@ public class TerminateRequest {
 	private boolean terminate;
 	private String processName;
 	private long timestamp;
-	private int terminateId;
 	
-	public TerminateRequest(String procesName, long timestamp, boolean terminate, int terminateId){
+	public TerminateRequest(String procesName, long timestamp, boolean terminate){
 		this.terminate = terminate;
 		this.processName = procesName;
 		this.timestamp = timestamp;
-		this.terminateId = terminateId;
 	}
 	
 	public String getProcessName() {
@@ -25,9 +23,5 @@ public class TerminateRequest {
 	
 	public long getTimestamp(){
 		return timestamp;
-	}
-	
-	public int getTerminateId() {
-		return terminateId;
 	}
 }
