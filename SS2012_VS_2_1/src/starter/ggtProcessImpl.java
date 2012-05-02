@@ -93,11 +93,14 @@ public class ggtProcessImpl extends ggtProcessPOA {
 				TerminateRequest req;
 
 				boolean running = true;
-				//solange laufen, bis der starter mich killt...
+				//solange laufen, bis der starter mich killt... ich wois, frisst viel cpu zeit ... kA wie man das verbessern kann, da ich ja nicht
+				//weiss, ob die anderen prozesse noch arbeiten und ich noch msges zum verarbeiten kriege
 				while (true) {
 					req = terminateRequests.poll();
+					//wenn beim poll nix drin war -> NULL und damit neuer anlauf ...
 					if (req != null) {
-						// wenn die gepollte term anfrage von mir selbst kam und sie true ist, kann ich aufhören ....
+						// wenn die gepollte term anfrage von mir selbst kam und sie immer noch true ist, kann ich aufhören .... 
+						// war die msg zwar von mir, aber false, verwirf sie einfach...deswegen das else if in z. 113
 						if (req.getProcessName().equals(processName) && req.getTerminate() && running) {
 							System.out.println(processName + " isTerminated == true;");
 							// calc thread auslaufen lassen -> ist dann beendet
@@ -107,7 +110,8 @@ public class ggtProcessImpl extends ggtProcessPOA {
 							//... sonst würde dieser teil hier mehrmals ausgeführt ...
 							mntr.ergebnis(processName, Mi);
 							coordRef.processCalcDone(ggtProcess);
-						} else {
+							//kam die msg nicht von mir selbst, weiterleiten
+						} else if(!req.getProcessName().equals(processName)) {
 							//kam die gepollte nachricht nicht von mir, dann weiterleiten ...
 							//Zeit vergleichen, wenn timeout/2 verstrichen ist, seit dem letzten aufruf von calc() und true drin stand, an 
 							//nachbar entsprechend mit dem urspürnglichen absender und dem true weitersenden
