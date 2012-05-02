@@ -23,6 +23,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	private int delay;
 	private int timeout;
 	private Monitor mntr;
+	private int terminateId = 0;
 	private LinkedBlockingQueue<Integer> msges = new LinkedBlockingQueue<Integer>();
 	private Queue<TerminateRequest> terminateRequests = new LinkedList<TerminateRequest>();
 	private final Coordinator coordRef;
@@ -74,7 +75,8 @@ public class ggtProcessImpl extends ggtProcessPOA {
 								right.calc(Mi, processName);
 							}
 						} else {
-							right.terminate(processName, true);
+							right.terminate(processName, true, terminateId);
+							terminateId++;
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -95,12 +97,14 @@ public class ggtProcessImpl extends ggtProcessPOA {
 					req = terminateRequests.poll();
 					if (req != null) {
 						if (req.getProcessName() == processName	&& req.getTerminate()) {
-							isTerminated = true;
+							if(req.getTerminateId() == terminateId){
+								isTerminated = true;
+							}
 						}
 						if ((System.currentTimeMillis() - lastMsg) / 1000 < timeout / 2) {
-							right.terminate(req.getProcessName(), false);
+							right.terminate(req.getProcessName(), false, req.getTerminateId());
 						} else {
-							right.terminate(req.getProcessName(), true);
+							right.terminate(req.getProcessName(), true, req.getTerminateId());
 						}
 					}
 				}
@@ -125,8 +129,8 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	}
 	
 	@Override
-	public void terminate(String processName, boolean isAllowed) { 
-		terminateRequests.offer(new TerminateRequest(processName, System.currentTimeMillis(), isAllowed));
+	public void terminate(String processName, boolean isAllowed, int terminateId) { 
+		terminateRequests.offer(new TerminateRequest(processName, System.currentTimeMillis(), isAllowed, terminateId));
 		mntr.terminieren(this.processName, processName, isAllowed);
 		
 		//TODO: Ttimeout/2 muss abgelaufen sein, wenn JA dann termkinate mit true, sonst false
