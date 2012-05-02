@@ -54,7 +54,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 		this.delay = delay;
 		this.timeout = timeout;
 		this.mntr = mntr;
-		System.out.println("ggtProcessImpl.initProcess()");
+		System.out.println(processName + " called ggtProcessImpl.initProcess()");
 		
 		calcThread = new Thread(new Runnable() {
 			@Override
@@ -62,6 +62,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 				while (!isTerminated) {
 					try {
 						Integer y = msges.poll(timeout, TimeUnit.SECONDS);
+						// poll() liefert null, wenn das timeout erreicht wurde, ist also der retval != null -> rechnen!
 						if (y != null) {
 							if (y < Mi) {
 								Mi = ((Mi - 1) % y) + 1;
@@ -74,7 +75,9 @@ public class ggtProcessImpl extends ggtProcessPOA {
 								right.calc(Mi, processName);
 							}
 						} else {
+							//retval vom poll war null, also timeout abgelaufen, starte terminierungsanfrage
 							right.terminate(processName, true);
+							System.out.println(processName + " started term req");
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -91,22 +94,34 @@ public class ggtProcessImpl extends ggtProcessPOA {
 			public void run() {
 				TerminateRequest req;
 
+				boolean running = true;
+				//solange laufen, bis der starter mich killt...
 				while (true) {
 					req = terminateRequests.poll();
 					if (req != null) {
-						if (req.getProcessName() == processName && req.getTerminate()) {
+						// wenn die gepollte term anfrage von mir selbst kam und sie true ist, kann ich aufhören ....
+						if (req.getProcessName().equals(processName) && req.getTerminate() && running) {
+							System.out.println(processName + " isTerminated == true;");
+							// calc thread auslaufen lassen -> ist dann beendet
 							isTerminated = true;
-							//TODO: mehrfacher terminate mit true könnte kommen und mehrfach sich beim moni und coord melden ... vlt doch wieder IDs?
+							//dieses if nicht nochmal ausführen ...
+							running = false;
+							//... sonst würde dieser teil hier mehrmals ausgeführt ...
 							mntr.ergebnis(processName, Mi);
 							coordRef.processCalcDone(ggtProcess);
 						} else {
-							if (((System.currentTimeMillis() - lastMsg) / 1000 >= timeout / 2) && req.getTerminate()) {
+							//kam die gepollte nachricht nicht von mir, dann weiterleiten ...
+							//Zeit vergleichen, wenn timeout/2 verstrichen ist, seit dem letzten aufruf von calc() und true drin stand, an 
+							//nachbar entsprechend mit dem urspürnglichen absender und dem true weitersenden
+							if (((System.nanoTime() - lastMsg) >= ((timeout / 2) >> 9)) && req.getTerminate()) {
 								right.terminate(req.getProcessName(), true);
+								System.out.println(processName + " forwarded positive req");
 							} else {
+								//timeout ist nocht nicht abgelaufen oder es stand eh false im request, dann eben false weiterleiten ...
 								right.terminate(req.getProcessName(), false);
+								System.out.println(processName + " forwarded negative req");
 							}
 						}
-						req = null;
 					}
 				}
 			}
@@ -125,7 +140,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	@Override
 	public void calc(int y, String msgFrom) {
 		msges.offer(y);
-		lastMsg = System.currentTimeMillis();
+		lastMsg = System.nanoTime();
 		mntr.rechnen(processName, msgFrom, y);
 	}
 	
@@ -133,10 +148,6 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	public void terminate(String processName, boolean isAllowed) { 
 		terminateRequests.offer(new TerminateRequest(processName, System.currentTimeMillis(), isAllowed));
 		mntr.terminieren(this.processName, processName, isAllowed);
-		
-		//TODO: Ttimeout/2 muss abgelaufen sein, wenn JA dann termkinate mit true, sonst false
-		//TODO: zusätzlich zum namen noch n bool, ob ok ist oder eben nicht?! return param ist doch quatsch hier ...
-		
 	}
 
 	@Override
@@ -149,12 +160,4 @@ public class ggtProcessImpl extends ggtProcessPOA {
 		Runtime.getRuntime().exit(1);
 	}
 	
-	
-	//TODO: 
-	// - Was passiert, wenn der Timeout abgelaufen ist? Terminate wird ausgelöst, wird dann noch auf msges gewartet?
-	// - Was passiert, wenn terminate negativ beantwortet wurde? wieder in poll()?
-	// - Was macht der Thread, während das terminate zirkuliert? pollen oder nicht?
-	// - Wenn terminate ausgelöst wurde, was macht der Thread? Weiter pollen? und wenn timout nochmals erreicht wird, was dann?
-	// - Muss ursprünglicher startwert erhalten bleiben? Oder kann Mi immer durch y ersetzt werden?!
-
 }
