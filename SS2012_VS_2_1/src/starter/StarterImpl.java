@@ -38,8 +38,6 @@ public class StarterImpl extends StarterPOA {
 
 	}
 
-	// TODO: Wenn alle Prozesse des Starters beendet sind erst shutdown()
-	// ausfuehren oder egal?
 	@Override
 	public void shutdown() {
 		System.out.println("Starter>recved shutdown from Coordinator");

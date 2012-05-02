@@ -17,16 +17,16 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	private String processName;
 	private ggtProcess left;
 	private ggtProcess right;
-	private int startValue;
+	private int Mi;
 	private int delay;
 	private int timeout;
 	private Monitor mntr;
 	private LinkedBlockingQueue<Integer> msges = new LinkedBlockingQueue<Integer>();
 	private final Coordinator coordRef;
-	ggtProcess ggtProcess;
-	private boolean ready =  false;
-	private boolean running =  false;
+	private ggtProcess ggtProcess;
+	private boolean isTerminated =  false;
 	private Thread thread;
+	private long lastMsg;
 	
 	public ggtProcessImpl(int i, StarterImpl starterImpl, Coordinator coordRef) {
 		this.coordRef = coordRef;
@@ -46,7 +46,7 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	public void initProcess(ggtProcess left, ggtProcess right,int startValue, int delay, int timeout, Monitor mntr) {
 		this.left = left;
 		this.right = right;
-		this.startValue = startValue;
+		this.Mi = startValue;
 		this.delay = delay;
 		this.timeout = timeout;
 		this.mntr = mntr;
@@ -58,55 +58,64 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 
 	@Override
 	public void start() {
-//		left.calc(startValue);
-//		right.calc(startValue);
+		left.calc(Mi, processName);
+		right.calc(Mi, processName);
 	}
 
 	@Override
-	public void calc(int y) {
+	public void calc(int y, String msgFrom) {
 		msges.offer(y);
-		//TODO: call andere methode nun wg berechnung, da alles async sein soll!?
-		//TODO: msg mntr new number
-		//TODO: monitor will ausgeben, von wo die zahl kam, also muss wohl idl angepasst werden, damit id/name des prozesses bekannt
-//		if (y < startValue) {
-//			//TODO: wennn er calcen muss, $delay warten b4 msg2neighbours...
-//			startValue = ((startValue - 1) % y) + 1;
-//			try {
-//				Thread.sleep(delay * 1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//			left.calc(startValue);
-//			right.calc(startValue);
-//		}
+		lastMsg = System.currentTimeMillis();
+		mntr.rechnen(processName, msgFrom, y);
 	}
 	
-	//TODO: run methode bauen?! die eine state-gesteuerte endlos while-loop hat, worin zeit geprüft wird und msges verwaltet werden?!
-	//TODO: LinkedBlockingQueue -> wg der eintreffenden msges, wenn keine da ist -> blocked sie bis timeout und dann terminate()
 	@Override
-	public boolean terminate(String processName) { // public void terminate(String pNAme, boolean isAllowed)
-		running = false;
+	public void terminate(String processName, boolean isAllowed) { 
+		if(this.processName == processName && isAllowed){
+			isTerminated = true;
+		}
+		mntr.terminieren(this.processName, processName, isAllowed);
+		
+		if((System.currentTimeMillis() - lastMsg) / 1000 < timeout/2){
+			//false an nachbarn
+		} else {
+			//true an nachbarn
+		}
+		
+		//TODO: Ttimeout/2 muss abgelaufen sein, wenn JA dann termkinate mit true, sonst false
 		//TODO: zusätzlich zum namen noch n bool, ob ok ist oder eben nicht?! return param ist doch quatsch hier ...
-		return false;
-	}
-
-	@Override
-	public String getName() {
-		return processName;
 	}
 
 	@Override
 	public void run() {
-		while(running){
+		while (!isTerminated) {
 			try {
-				msges.poll(timeout, TimeUnit.SECONDS);
-				//do time consuming stuff...
+				Integer y = msges.poll(timeout, TimeUnit.SECONDS);
+				if (y != null) {
+					if (y < Mi) {
+						Mi = ((Mi - 1) % y) + 1;
+						try {
+							Thread.sleep(delay * 1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						left.calc(Mi, processName);
+						right.calc(Mi, processName);
+					}
+				} else {
+					right.terminate(processName, true);
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("ggtProcessImpl.run()");
+		mntr.ergebnis(processName, Mi);
 		coordRef.processCalcDone(ggtProcess);
+	}
+	
+	@Override
+	public String getName() {
+		return processName;
 	}
 
 	@Override
