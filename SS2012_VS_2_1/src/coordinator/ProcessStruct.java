@@ -51,6 +51,10 @@ public class ProcessStruct {
 		int[] startValues = new int[processes.size()];
 
 		for (int i = 0; i < processes.size(); i++) {
+			//es können doppelte startValues entstehen ... das gibt n knall in der map oder nicht?
+			//beim löschen kenn ich den startValue nicht mehr ... da jedes mal Mi mit y überschrieben wird, also ursprünglichen wert merken ...
+			//ich habs nun angepasst, aber wenn der startwert bei mind. 2 identisch war, könnte es sein, dass er dann einfach den falschen prozess 
+			//aus der liste löscht. dürfte THEORETISCH nicht weiter schlimm sein .. geht ja nur um die anzahl ... beenden tut der starter ja dann...
 			right = right(processes.get(i));
 			left = left(processes.get(i));
 			startValue = ggt * (rnd.nextInt(100) + 1) * (rnd.nextInt(100) + 1);
@@ -81,7 +85,7 @@ public class ProcessStruct {
 	public void remove(ggtProcess process){
 		if(processes.contains(process)){
 			processes.remove(process);
-			sortedProcesses.remove(process.getName());
+			sortedProcesses.remove(process.getStartValue());
 		}
 		
 	}

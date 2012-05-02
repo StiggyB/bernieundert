@@ -20,8 +20,6 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	private ggtProcess left;
 	private ggtProcess right;
 	private int Mi;
-	private int delay;
-	private int timeout;
 	private Monitor mntr;
 	private LinkedBlockingQueue<Integer> msges = new LinkedBlockingQueue<Integer>();
 	private Queue<TerminateRequest> terminateRequests = new LinkedList<TerminateRequest>();
@@ -31,6 +29,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	private Thread calcThread;
 	private Thread termThread;
 	private long lastMsg;
+	private int startValue;
 	
 	public ggtProcessImpl(int i, StarterImpl starterImpl, Coordinator coordRef) {
 		this.coordRef = coordRef;
@@ -51,8 +50,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 		this.left = left;
 		this.right = right;
 		this.Mi = startValue;
-		this.delay = delay;
-		this.timeout = timeout;
+		this.startValue = startValue;
 		this.mntr = mntr;
 		System.out.println(processName + " called ggtProcessImpl.initProcess()");
 		
@@ -158,6 +156,11 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	@Override
 	public void kill() {
 		Runtime.getRuntime().exit(1);
+	}
+	
+	@Override
+	public int getStartValue() {
+		return startValue;
 	}
 	
 }
