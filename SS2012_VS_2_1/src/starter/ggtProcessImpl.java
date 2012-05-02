@@ -1,5 +1,7 @@
 package starter;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +14,7 @@ import ggtCorba.ggtProcess;
 import ggtCorba.ggtProcessHelper;
 import ggtCorba.ggtProcessPOA;
 
-public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
+public class ggtProcessImpl extends ggtProcessPOA {
 
 	private String processName;
 	private ggtProcess left;
@@ -22,10 +24,12 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	private int timeout;
 	private Monitor mntr;
 	private LinkedBlockingQueue<Integer> msges = new LinkedBlockingQueue<Integer>();
+	private Queue<TerminateRequest> terminateRequests = new LinkedList<TerminateRequest>();
 	private final Coordinator coordRef;
 	private ggtProcess ggtProcess;
 	private boolean isTerminated =  false;
-	private Thread thread;
+	private Thread calcThread;
+	private Thread termThread;
 	private long lastMsg;
 	
 	public ggtProcessImpl(int i, StarterImpl starterImpl, Coordinator coordRef) {
@@ -43,7 +47,7 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	}
 
 	@Override
-	public void initProcess(ggtProcess left, ggtProcess right,int startValue, int delay, int timeout, Monitor mntr) {
+	public void initProcess(final ggtProcess left, final ggtProcess right,int startValue, final int delay, final int timeout, final Monitor mntr) {
 		this.left = left;
 		this.right = right;
 		this.Mi = startValue;
@@ -52,8 +56,59 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 		this.mntr = mntr;
 		System.out.println("ggtProcessImpl.initProcess()");
 		
-		thread = new Thread(this);
-		thread.start();
+		calcThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (!isTerminated) {
+					try {
+						Integer y = msges.poll(timeout, TimeUnit.SECONDS);
+						if (y != null) {
+							if (y < Mi) {
+								Mi = ((Mi - 1) % y) + 1;
+								try {
+									Thread.sleep(delay * 1000);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								left.calc(Mi, processName);
+								right.calc(Mi, processName);
+							}
+						} else {
+							right.terminate(processName, true);
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				mntr.ergebnis(processName, Mi);
+				coordRef.processCalcDone(ggtProcess);
+			}				
+		});
+		
+		termThread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				TerminateRequest req;
+
+				while (!isTerminated) {
+					req = terminateRequests.poll();
+					if (req != null) {
+						if (req.getProcessName() == processName	&& req.getTerminate()) {
+							isTerminated = true;
+						}
+						if ((System.currentTimeMillis() - lastMsg) / 1000 < timeout / 2) {
+							right.terminate(req.getProcessName(), false);
+						} else {
+							right.terminate(req.getProcessName(), true);
+						}
+					}
+				}
+			}
+		});
+
+		calcThread.start();
+		termThread.start();
 	}
 
 	@Override
@@ -71,48 +126,14 @@ public class ggtProcessImpl extends ggtProcessPOA implements Runnable{
 	
 	@Override
 	public void terminate(String processName, boolean isAllowed) { 
-		if(this.processName == processName && isAllowed){
-			isTerminated = true;
-		}
+		terminateRequests.offer(new TerminateRequest(processName, System.currentTimeMillis(), isAllowed));
 		mntr.terminieren(this.processName, processName, isAllowed);
-		
-		if((System.currentTimeMillis() - lastMsg) / 1000 < timeout/2){
-			//false an nachbarn
-		} else {
-			//true an nachbarn
-		}
 		
 		//TODO: Ttimeout/2 muss abgelaufen sein, wenn JA dann termkinate mit true, sonst false
 		//TODO: zusätzlich zum namen noch n bool, ob ok ist oder eben nicht?! return param ist doch quatsch hier ...
+		
 	}
 
-	@Override
-	public void run() {
-		while (!isTerminated) {
-			try {
-				Integer y = msges.poll(timeout, TimeUnit.SECONDS);
-				if (y != null) {
-					if (y < Mi) {
-						Mi = ((Mi - 1) % y) + 1;
-						try {
-							Thread.sleep(delay * 1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						left.calc(Mi, processName);
-						right.calc(Mi, processName);
-					}
-				} else {
-					right.terminate(processName, true);
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		mntr.ergebnis(processName, Mi);
-		coordRef.processCalcDone(ggtProcess);
-	}
-	
 	@Override
 	public String getName() {
 		return processName;
