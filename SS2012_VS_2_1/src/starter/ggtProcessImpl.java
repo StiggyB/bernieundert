@@ -23,7 +23,6 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	private int delay;
 	private int timeout;
 	private Monitor mntr;
-	private int terminateId = 0;
 	private LinkedBlockingQueue<Integer> msges = new LinkedBlockingQueue<Integer>();
 	private Queue<TerminateRequest> terminateRequests = new LinkedList<TerminateRequest>();
 	private final Coordinator coordRef;
@@ -75,14 +74,14 @@ public class ggtProcessImpl extends ggtProcessPOA {
 								right.calc(Mi, processName);
 							}
 						} else {
-							right.terminate(processName, true, ++terminateId);
+							right.terminate(processName, true);
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
-				mntr.ergebnis(processName, Mi);
-				coordRef.processCalcDone(ggtProcess);
+//				mntr.ergebnis(processName, Mi);
+//				coordRef.processCalcDone(ggtProcess);
 			}				
 		});
 		
@@ -92,20 +91,22 @@ public class ggtProcessImpl extends ggtProcessPOA {
 			public void run() {
 				TerminateRequest req;
 
-				while (!isTerminated) {
+				while (true) {
 					req = terminateRequests.poll();
 					if (req != null) {
-						if (req.getProcessName() == processName	&& req.getTerminate()) {
-							if (req.getTerminateId() == terminateId) {
-								isTerminated = true;
-							}
+						if (req.getProcessName() == processName && req.getTerminate()) {
+							isTerminated = true;
+							//TODO: mehrfacher terminate mit true könnte kommen und mehrfach sich beim moni und coord melden ... vlt doch wieder IDs?
+							mntr.ergebnis(processName, Mi);
+							coordRef.processCalcDone(ggtProcess);
 						} else {
 							if (((System.currentTimeMillis() - lastMsg) / 1000 >= timeout / 2) && req.getTerminate()) {
-								right.terminate(req.getProcessName(), true, req.getTerminateId());
+								right.terminate(req.getProcessName(), true);
 							} else {
-								right.terminate(req.getProcessName(), false, req.getTerminateId());
+								right.terminate(req.getProcessName(), false);
 							}
 						}
+						req = null;
 					}
 				}
 			}
@@ -129,8 +130,8 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	}
 	
 	@Override
-	public void terminate(String processName, boolean isAllowed, int terminateId) { 
-		terminateRequests.offer(new TerminateRequest(processName, System.currentTimeMillis(), isAllowed, terminateId));
+	public void terminate(String processName, boolean isAllowed) { 
+		terminateRequests.offer(new TerminateRequest(processName, System.currentTimeMillis(), isAllowed));
 		mntr.terminieren(this.processName, processName, isAllowed);
 		
 		//TODO: Ttimeout/2 muss abgelaufen sein, wenn JA dann termkinate mit true, sonst false

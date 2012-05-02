@@ -45,7 +45,6 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		if(isCalculating || starters.size() == 0){
 			throw new calculationInProgress("calcing");
 		}
-		System.out.println("Ich werde nicht mehr ausgeführt...");
 		isCalculating = true;
 		this.timeout = timeout;
 		this.ggt = ggt;
