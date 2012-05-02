@@ -96,15 +96,19 @@ public class ggtProcessImpl extends ggtProcessPOA {
 				while (!isTerminated) {
 					req = terminateRequests.poll();
 					if (req != null) {
-						if (req.getProcessName() == processName	&& req.getTerminate()) {
-							if(req.getTerminateId() == terminateId){
+						if (req.getProcessName() == processName
+								&& req.getTerminate()) {
+							if (req.getTerminateId() == terminateId) {
 								isTerminated = true;
 							}
-						}
-						if ((System.currentTimeMillis() - lastMsg) / 1000 < timeout / 2) {
-							right.terminate(req.getProcessName(), false, req.getTerminateId());
 						} else {
-							right.terminate(req.getProcessName(), true, req.getTerminateId());
+							if ((System.currentTimeMillis() - lastMsg) / 1000 < timeout / 2) {
+								right.terminate(req.getProcessName(), false,
+										req.getTerminateId());
+							} else {
+								right.terminate(req.getProcessName(), true,
+										req.getTerminateId());
+							}
 						}
 					}
 				}
