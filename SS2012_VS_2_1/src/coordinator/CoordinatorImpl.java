@@ -39,8 +39,10 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) throws calculationInProgress, noStarters {
-		if(isCalculating || starters.isEmpty()){
-			throw new calculationInProgress("calcing");
+		if(isCalculating){
+			throw new calculationInProgress("Can't terminate, Calculation in Progress ...");
+		} else if(starters.isEmpty()){
+			throw new noStarters("No Starters registered, can't start calculation");
 		}
 		isCalculating = true;
 		processCount = 0;
