@@ -98,7 +98,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 				boolean running = true;
 				//solange laufen, bis der starter mich killt... ich wois, frisst viel cpu zeit ... kA wie man das verbessern kann, da ich ja nicht
 				//weiss, ob die anderen prozesse noch arbeiten und ich noch msges zum verarbeiten kriege
-				while (true) {
+				while (isTermTerminated) {
 					req = terminateRequests.poll(); //TODO: blockingQueue
 					//wenn beim poll nix drin war -> NULL und damit neuer anlauf ...
 					if (req != null) {
