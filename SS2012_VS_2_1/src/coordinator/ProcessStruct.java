@@ -12,35 +12,75 @@ import monitor.Monitor;
 
 import ggtCorba.ggtProcess;
 
+/**
+ * 
+ * @author Martin
+ *
+ */
 public class ProcessStruct {
 
 	private List<ggtProcess> processes = new LinkedList<ggtProcess>();
 	private SortedMap<Integer, ggtProcess> sortedProcesses = new TreeMap<Integer, ggtProcess>();
 
+	/**
+	 * 
+	 * @param process
+	 */
 	public void add(ggtProcess process) {
 		processes.add(process);
 	}
 
+	/**
+	 * 
+	 * @param process
+	 * @return
+	 */
 	private ggtProcess left(ggtProcess process) {
 		return processes.get(processes.indexOf(process) == 0 ? processes.size() - 1 : processes.indexOf(process) - 1);
 	}
 
+	/**
+	 * 
+	 * @param process
+	 * @return
+	 */
 	private ggtProcess right(ggtProcess process) {
 		return processes.get((processes.indexOf(process) + 1) % processes.size());
 	}
 
+	/**
+	 * 
+	 */
 	public void shuffleProcesses() {
 		Collections.shuffle(processes);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int size() {
 		return processes.size();
 	}
 
+	/**
+	 * 
+	 * @param i
+	 * @return
+	 */
 	public ggtProcess get(int i) {
 		return processes.get(i);
 	}
 
+	/**
+	 * 
+	 * @param minDelay
+	 * @param maxDelay
+	 * @param timeout
+	 * @param ggt
+	 * @param mntr
+	 * @return
+	 */
 	public int[] initProcesses(int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) {
 
 		ggtProcess right;
@@ -72,6 +112,10 @@ public class ProcessStruct {
 		return startValues;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String[] getProcessNames() {
 		String[] processNames = new String[processes.size()];
 		for (int i = 0; i < processes.size(); i++) {
@@ -80,14 +124,26 @@ public class ProcessStruct {
 		return processNames;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ggtProcess[] getStartProcesses() {
 		return Arrays.copyOf(sortedProcesses.values().toArray(new ggtProcess[sortedProcesses.size()]), 3);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isEmpty() {
 		return processes.isEmpty();
 	}
 
+	/**
+	 * 
+	 * @param process
+	 */
 	public void remove(ggtProcess process) {
 		if (processes.contains(process)) {
 			processes.remove(process);
