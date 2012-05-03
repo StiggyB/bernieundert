@@ -1,12 +1,10 @@
 package starter;
 
-import java.security.Timestamp;
-
 /**
- * Represents a termination request for a running ggt-Calculation. 
+ * Represents a termination request for a running ggt-Calculation.
  * 
  * @author Martin
- *
+ * 
  */
 public class TerminateRequest {
 
@@ -17,8 +15,12 @@ public class TerminateRequest {
 	/**
 	 * 
 	 * @param processName
+	 *            Name of the original process, that started the termination
+	 *            request.
 	 * @param timestamp
+	 *            time when termination request has been issued.
 	 * @param terminate
+	 *            forwarded termination status of the previous process.
 	 */
 	public TerminateRequest(String processName, long timestamp, boolean terminate) {
 		this.terminate = terminate;
@@ -27,7 +29,8 @@ public class TerminateRequest {
 	}
 
 	/**
-	 * This methods returns the name of the original process, which started the termination request.
+	 * This methods returns the name of the original process, which started the
+	 * termination request.
 	 * 
 	 * @return original process name
 	 */
@@ -36,7 +39,8 @@ public class TerminateRequest {
 	}
 
 	/**
-	 * This method indicates, if the anterior process' termination request has been answered as terminate or not terminate.
+	 * This method indicates, if the anterior process' termination request has
+	 * been answered as terminate or not terminate.
 	 * 
 	 * @return last process' termination request status
 	 */
@@ -45,9 +49,10 @@ public class TerminateRequest {
 	}
 
 	/**
-	 * This method can be used to determine at which time this termination request has been issued
+	 * This method can be used to determine at which time this termination
+	 * request has been issued
 	 * 
-	 * @return point of time, when request has been placed 
+	 * @return point of time, when request has been placed
 	 */
 	public long getTimestamp() {
 		return timestamp;
