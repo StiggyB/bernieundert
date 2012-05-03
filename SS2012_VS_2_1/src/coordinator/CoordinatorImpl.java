@@ -31,7 +31,6 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	private NameComponent[] path;
 	private boolean isCalculating = false;
 
-	
 	@Override
 	public Starter[] getStarters() {
 		return starters.toArray(new Starter[starters.size()]);
@@ -39,10 +38,10 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) throws calculationInProgress, noStarters {
-		if(isCalculating){
-			throw new calculationInProgress("Can't terminate, Calculation in Progress ...");
-		} else if(starters.isEmpty()){
-			throw new noStarters("No Starters registered, can't start calculation");
+		if (isCalculating) {
+			throw new calculationInProgress("Exception: Can't terminate, Calculation in Progress ...");
+		} else if (starters.isEmpty()) {
+			throw new noStarters("Exception: No Starters registered, can't start calculation");
 		}
 		isCalculating = true;
 		processCount = 0;
@@ -56,11 +55,13 @@ public class CoordinatorImpl extends CoordinatorPOA {
 			s.createProcesses(processCountTmp);
 		}
 
-
-		//TODO: - Timeout beim Warten einbauen (Exception), dann alles auf Anfang, wenn bedingung nicht erfuellt wurde
-		//      - Sleep einbauen, um CPU Zeit zu sparen
-		//		- wenn nicht alle Prozesse bis Timeout da sind, prozesse killen, prozess liste leeren, isCalculating = false;
-		while (processCount != processes.size());
+		// TODO: - Timeout beim Warten einbauen (Exception), dann alles auf
+		// Anfang, wenn bedingung nicht erfuellt wurde
+		// - Sleep einbauen, um CPU Zeit zu sparen
+		// - wenn nicht alle Prozesse bis Timeout da sind, prozesse killen,
+		// prozess liste leeren, isCalculating = false;
+		while (processCount != processes.size())
+			;
 		// prozesse zufällig wählen (liste shufflen?!)
 		processes.shuffleProcesses();
 
@@ -76,36 +77,38 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		for (ggtProcess s : startProcesses) {
 			s.start();
 		}
-		
+
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				
-				while(processes.size() != 0){
+
+				while (processes.size() != 0) {
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
-				//TODO: wenn eine berechnung fertig ist, alles wieder in ursprungszustand setzen (starter, coord) fuer neue berechnung
-				
+				// TODO: wenn eine berechnung fertig ist, alles wieder in
+				// ursprungszustand setzen (starter, coord) fuer neue berechnung
+
 				for (Starter s : starters) {
 					s.killProcesses();
 				}
-				//jetzt muesste die prozesstruktur wieder leer sein ... also neue Berechnung kann gestartet werden
+				// jetzt muesste die prozesstruktur wieder leer sein ... also
+				// neue Berechnung kann gestartet werden
 				isCalculating = false;
-				
+
 			}
-			}).start();
-		
+		}).start();
+
 	}
 
 	@Override
 	public boolean shutdown() {
 		System.out.println("Coordinator>Client quitted coordinator");
-		if(isCalculating){
+		if (isCalculating) {
 			System.out.println("Coordinator>Calculation running, cant quit now ...");
 			return false;
 		}
@@ -142,7 +145,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 	public void registerStarter(Starter starter) throws starterAlreadyExists {
 		for (Starter s : starters) {
 			if (s.getName().equals(starter.getName())) {
-				throw new starterAlreadyExists("Starter " + starter.getName() + " is already registered");
+				throw new starterAlreadyExists("Exception: Starter " + starter.getName() + " is already registered");
 			}
 		}
 
@@ -157,9 +160,10 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void unregisterStarter(Starter starter) throws starterDoesNotExists {
-		//TODO: wenn isCalculating == true ist abfangen? was wäre sinnvoll bei laufender berechnung? alles beenden oder cleanup und dann neue
-		//Berechnung möglich, wenn Berechnung rennt unregister nicht zulassen?!
-		if(!starters.contains(starter)){
+		// TODO: wenn isCalculating == true ist abfangen? was wäre sinnvoll bei
+		// laufender berechnung? alles beenden oder cleanup und dann neue
+		// Berechnung möglich, wenn Berechnung rennt unregister nicht zulassen?!
+		if (!starters.contains(starter)) {
 			throw new starterDoesNotExists(starter.getName());
 		}
 		starters.remove(starter);
@@ -191,6 +195,5 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		System.out.println("Coordinator>Process " + process.getName() + " has finished calculation");
 		processes.remove(process);
 	}
-
 
 }

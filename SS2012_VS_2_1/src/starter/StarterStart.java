@@ -1,7 +1,5 @@
 package starter;
 
-
-
 import ggtCorba.Coordinator;
 import ggtCorba.CoordinatorHelper;
 import ggtCorba.Starter;
@@ -18,7 +16,7 @@ import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
 public class StarterStart {
-	
+
 	public static void main(String[] args) {
 		try {
 			String coordName = args[4];
@@ -33,27 +31,28 @@ public class StarterStart {
 			// Objektreferenz mit Namen "Konto" besorgen
 			System.out.println("Starter>Resolving coordinator reference");
 			org.omg.CORBA.Object obj = nc.resolve_str(coordName); // Corba
-			
+
 			// Cast Corba ref -> Java Referenz
 			System.out.println("Starter>getting remote object...");
 			final Coordinator coordRef = CoordinatorHelper.narrow(obj);
-			
+
 			// Neuen starter erzeugen
-			StarterImpl starter = new StarterImpl(starterName);;
-			
+			StarterImpl starter = new StarterImpl(starterName);
+			;
+
 			POA rootPoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 			rootPoa.the_POAManager().activate();
-			
+
 			org.omg.CORBA.Object ref = rootPoa.servant_to_reference(starter);
-			
+
 			final Starter href = StarterHelper.narrow(ref);
 
 			// Setze starter referenz
 			System.out.println("Starter>adding starter to coordinator...");
 			coordRef.registerStarter(href);
-			
+
 			starter.setCoordRef(coordRef);
-			
+
 			Signal.handle(new Signal("INT"), new SignalHandler() {
 
 				@Override
@@ -78,8 +77,8 @@ public class StarterStart {
 			System.out.println("Starter>starter was started...");
 
 			orb.run();
-			
-		} catch(Exception e){
+
+		} catch (Exception e) {
 			System.err.println(e);
 			System.exit(1);
 		}
@@ -87,5 +86,4 @@ public class StarterStart {
 		System.out.println("Starter>EOF");
 	}
 
-	
 }
