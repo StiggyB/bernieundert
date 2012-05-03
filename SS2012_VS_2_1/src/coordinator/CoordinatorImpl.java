@@ -164,7 +164,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		// laufender berechnung? alles beenden oder cleanup und dann neue
 		// Berechnung möglich, wenn Berechnung rennt unregister nicht zulassen?!
 		if (!starters.contains(starter)) {
-			throw new starterDoesNotExists(starter.getName());
+			throw new starterDoesNotExists("Exception: Starter " + starter.getName() + " does not exist!");
 		}
 		starters.remove(starter);
 		System.out.println("Coordinator>Starter " + starter.getName() + " unregistered");

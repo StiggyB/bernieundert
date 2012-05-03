@@ -79,8 +79,10 @@ public class Client {
 		try {
 			coordRef.start(minProcess, maxProcess, minDelay, maxDelay, timeout, ggt, monitorRef);
 		} catch (noStarters e) {
+			System.out.println(e.getMessage());
 			System.out.println(e.s);
 		} catch (calculationInProgress e) {
+			System.out.println(e.getMessage());
 			System.out.println(e.s);
 		}
 	}
