@@ -20,6 +20,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	private ggtProcess left;
 	private ggtProcess right;
 	private int Mi;
+	private int timeout;
 	private Monitor mntr;
 	private LinkedBlockingQueue<Integer> msges = new LinkedBlockingQueue<Integer>();
 	private Queue<TerminateRequest> terminateRequests = new LinkedList<TerminateRequest>();
@@ -47,12 +48,13 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	}
 
 	@Override
-	public void initProcess(final ggtProcess left, final ggtProcess right,int startValue, final int delay, final int timeout, final Monitor mntr) {
+	public void initProcess(final ggtProcess left, final ggtProcess right,int startValue, final int delay, final int _timeout, final Monitor mntr) {
 		this.left = left;
 		this.right = right;
 		this.Mi = startValue;
 		this.startValue = startValue;
 		this.mntr = mntr;
+		this.timeout = _timeout * 1000;
 		System.out.println(processName + " called ggtProcessImpl.initProcess()");
 		
 		calcThread = new Thread(new Runnable() {
@@ -60,7 +62,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 			public void run() {
 				while (!isTerminated) {
 					try {
-						Integer y = msges.poll(timeout, TimeUnit.SECONDS);
+						Integer y = msges.poll(timeout, TimeUnit.MILLISECONDS);
 						// poll() liefert null, wenn das timeout erreicht wurde, ist also der retval != null -> rechnen!
 						if (y != null) {
 							if (y < Mi) {
@@ -118,7 +120,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 							//kam die gepollte nachricht nicht von mir, dann weiterleiten ...
 							//Zeit vergleichen, wenn timeout/2 verstrichen ist, seit dem letzten aufruf von calc() und true drin stand, an 
 							//nachbar entsprechend mit dem urspürnglichen absender und dem true weitersenden
-							if (((System.nanoTime() - lastMsg) >= ((timeout / 2) >> 9)) && req.getTerminate()) {
+							if (((System.currentTimeMillis() - lastMsg) >= (timeout / 2)) && req.getTerminate()) {
 								right.terminate(req.getProcessName(), true);
 								System.out.println(processName + " forwarded positive req");
 							} else {
@@ -145,7 +147,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	@Override
 	public void calc(int y, String msgFrom) {
 		msges.offer(y);
-		lastMsg = System.nanoTime();
+		lastMsg = System.currentTimeMillis();
 		mntr.rechnen(processName, msgFrom, y);
 	}
 	
