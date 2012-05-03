@@ -28,6 +28,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	private ggtProcess ggtProcess;
 	private boolean isTerminated =  false;
 	private boolean isTermTerminated =  false;
+	private boolean firstRun = true;
 	private Thread calcThread;
 	private Thread termThread;
 	private long lastMsg;
@@ -77,9 +78,11 @@ public class ggtProcessImpl extends ggtProcessPOA {
 							}
 						} else {
 							//retval vom poll war null, also timeout abgelaufen, starte terminierungsanfrage
-							if(!isTerminated){
-								right.terminate(processName, true);
-								System.out.println(processName + " started term req");
+							if(!isTerminated){ //TODO: nur ausfuehren, wenn mind einmal gerechnet wurde
+								if(!firstRun){
+									right.terminate(processName, true);
+									System.out.println(processName + " started term req");
+								}
 							}
 						}
 					} catch (InterruptedException e) {
@@ -97,6 +100,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 			public void run() {
 				TerminateRequest req;
 
+				//TODO: Request das erste mal senden, wenn mind. einmal gerechnet wurde...
 				boolean running = true;
 				//solange laufen, bis der starter mich killt... ich wois, frisst viel cpu zeit ... kA wie man das verbessern kann, da ich ja nicht
 				//weiss, ob die anderen prozesse noch arbeiten und ich noch msges zum verarbeiten kriege
@@ -146,6 +150,9 @@ public class ggtProcessImpl extends ggtProcessPOA {
 
 	@Override
 	public void calc(int y, String msgFrom) {
+		if(firstRun){
+			firstRun = false;
+		}
 		msges.offer(y);
 		lastMsg = System.currentTimeMillis();
 		mntr.rechnen(processName, msgFrom, y);
