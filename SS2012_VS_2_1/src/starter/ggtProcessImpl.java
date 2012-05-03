@@ -75,10 +75,10 @@ public class ggtProcessImpl extends ggtProcessPOA {
 							}
 						} else {
 							//retval vom poll war null, also timeout abgelaufen, starte terminierungsanfrage
-//							if(!isTerminated){
+							if(!isTerminated){
 								right.terminate(processName, true);
 								System.out.println(processName + " started term req");
-//							}
+							}
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
