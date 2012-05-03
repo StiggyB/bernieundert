@@ -39,7 +39,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	@Override
 	public void start(int minProcess, int maxProcess, int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) throws calculationInProgress, noStarters {
-		if(isCalculating || starters.size() == 0){
+		if(isCalculating || starters.isEmpty()){
 			throw new calculationInProgress("calcing");
 		}
 		isCalculating = true;
@@ -66,7 +66,8 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		// daten setzen, nachbarn, ....
 		// monitor zahlen und ringbaufbau mitteilen
 		mntr.ring(processes.getProcessNames());
-		mntr.startzahlen(processes.initProcesses(minDelay, maxDelay, timeout, ggt, mntr));
+		int startValues[] = processes.initProcesses(minDelay, maxDelay, timeout, ggt, mntr);
+		mntr.startzahlen(startValues);
 		final ggtProcess[] startProcesses = processes.getStartProcesses();
 
 		// berechnung starten, 3 prozesse mit kleinsten zahlen auswählen

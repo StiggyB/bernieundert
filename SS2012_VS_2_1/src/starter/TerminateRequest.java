@@ -17,7 +17,7 @@ public class TerminateRequest {
 		return processName;
 	}
 	
-	public boolean getTerminate(){
+	public boolean isTerminationOk(){
 		return terminate;
 	}
 	
