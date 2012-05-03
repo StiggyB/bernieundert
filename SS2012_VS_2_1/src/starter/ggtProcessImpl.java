@@ -77,7 +77,8 @@ public class ggtProcessImpl extends ggtProcessPOA {
 							}
 						} else {
 							// retval vom poll war null, also timeout
-							// abgelaufen, starte terminierungsanfrage, aber nur wenn mind. 1x gerechnet wurde
+							// abgelaufen, starte terminierungsanfrage, aber nur
+							// wenn mind. 1x gerechnet wurde
 							if (!isCalculationTerminated && !isFirstCalculationRunning) {
 								right.terminate(processName, true);
 								System.out.println(processName + " started term req");

@@ -1,7 +1,5 @@
 package client;
 
-
-
 import ggtCorba.Coordinator;
 import ggtCorba.CoordinatorHelper;
 import ggtCorba.Starter;
@@ -16,18 +14,15 @@ import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 
 public class Client {
-	
-	
+
 	public static void main(String[] args) {
 		new Client().start(args);
 	}
 
-	
-
 	private void start(String[] args) {
 		String coordName = args[4];
 		String aktion = args[5];
-		
+
 		Coordinator coordRef;
 		Monitor monitorRef;
 
@@ -42,20 +37,19 @@ public class Client {
 			// Objektreferenz mit Namen "Konto" besorgen
 			System.out.println("Client>Resolving coordinator reference");
 			org.omg.CORBA.Object coordObj = nc.resolve_str(coordName); // Corba
-			
+
 			// Cast Corba ref -> Java Referenz
 			System.out.println("Client>getting remote object...");
 			coordRef = CoordinatorHelper.narrow(coordObj);
 
-			
 			if (aktion.equals("start")) {
 				String monitorName = args[6];
 				System.out.println("Client>Resolving monitor reference");
 				org.omg.CORBA.Object monitorObj = nc.resolve_str(monitorName); // Corba
-				
+
 				System.out.println("Client>getting remote object...");
 				monitorRef = MonitorHelper.narrow(monitorObj);
-				
+
 				startGgt(args, coordRef, monitorRef);
 			} else if (aktion.equals("quit")) {
 				quit(coordRef);
@@ -64,13 +58,12 @@ public class Client {
 			}
 
 			System.out.println("Client>executed chosen parameter...");
-			
-			
+
 		} catch (Exception ex) {
-			System.err.println(ex);
+			System.out.println(ex);
 			System.exit(1);
 		}
-		
+
 		System.out.println("Client>exit successful ...");
 
 	}
@@ -86,11 +79,9 @@ public class Client {
 		try {
 			coordRef.start(minProcess, maxProcess, minDelay, maxDelay, timeout, ggt, monitorRef);
 		} catch (noStarters e) {
-			System.err.println(e.getMessage());
-			System.err.println("Client>keine Starter angemeldet");
+			System.out.println(e.s);
 		} catch (calculationInProgress e) {
-			System.err.println(e.getMessage());
-			System.err.println("Client>Es laeuft bereits eine Berechnung");
+			System.out.println(e.s);
 		}
 	}
 

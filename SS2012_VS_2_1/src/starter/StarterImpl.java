@@ -45,7 +45,7 @@ public class StarterImpl extends StarterPOA {
 			@Override
 			public void run() {
 				System.out.print("Starter>Killing all processes...");
-				 killProcesses();
+				killProcesses();
 				System.out.print("OK\nStarter>shutting down ORB...");
 				orb.shutdown(true);
 				System.out.println("OK\nStarter>shutdown was successful...");
