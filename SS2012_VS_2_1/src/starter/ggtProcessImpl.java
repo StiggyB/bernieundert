@@ -26,6 +26,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	private final Coordinator coordRef;
 	private ggtProcess ggtProcess;
 	private boolean isTerminated =  false;
+	private boolean isTermTerminated =  false;
 	private Thread calcThread;
 	private Thread termThread;
 	private long lastMsg;
@@ -74,8 +75,10 @@ public class ggtProcessImpl extends ggtProcessPOA {
 							}
 						} else {
 							//retval vom poll war null, also timeout abgelaufen, starte terminierungsanfrage
-							right.terminate(processName, true);
-							System.out.println(processName + " started term req");
+//							if(!isTerminated){
+								right.terminate(processName, true);
+								System.out.println(processName + " started term req");
+//							}
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -96,7 +99,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 				//solange laufen, bis der starter mich killt... ich wois, frisst viel cpu zeit ... kA wie man das verbessern kann, da ich ja nicht
 				//weiss, ob die anderen prozesse noch arbeiten und ich noch msges zum verarbeiten kriege
 				while (true) {
-					req = terminateRequests.poll();
+					req = terminateRequests.poll(); //TODO: blockingQueue
 					//wenn beim poll nix drin war -> NULL und damit neuer anlauf ...
 					if (req != null) {
 						// wenn die gepollte term anfrage von mir selbst kam und sie immer noch true ist, kann ich aufhören .... 
@@ -159,7 +162,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 
 	@Override
 	public void kill() {
-//		Runtime.getRuntime().exit(1);
+		isTermTerminated = true;
 		System.out.println(processName + " has exited ... now die ..");
 	}
 	

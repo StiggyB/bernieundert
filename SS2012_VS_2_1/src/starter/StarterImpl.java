@@ -63,6 +63,7 @@ public class StarterImpl extends StarterPOA {
 			for (ggtProcessImpl s : ggtProcesses) {
 				s.kill();
 			}
+			ggtProcesses.clear();
 		}
 	}
 }
