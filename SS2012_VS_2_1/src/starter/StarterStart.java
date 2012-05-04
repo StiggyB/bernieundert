@@ -57,10 +57,12 @@ public class StarterStart {
 
 				@Override
 				public void handle(Signal arg0) {
+					// Berechnung kann nicht unterbrochen werden, nur wenn keine Berechnung in Gange ist, kann der Starter beendet werden.
 					if (!coordRef.isCalculating()) {
 
 						System.out.print("Starter>remove Starter from Coordinator...");
 						try {
+							// Abmeldung am Coordinator
 							coordRef.unregisterStarter(href);
 						} catch (starterDoesNotExists e) {
 							e.printStackTrace();

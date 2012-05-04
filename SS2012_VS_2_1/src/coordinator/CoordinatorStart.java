@@ -60,12 +60,16 @@ public class CoordinatorStart {
 			ncRef.rebind(path, href);
 			System.out.println("Coordinator>coordinator was started...");
 
+			// Signal Handler fuer das Beenden, ShutdownHook kann das Beenden
+			// der VM nicht mehr abbrechen.
 			Signal.handle(new Signal("INT"), new SignalHandler() {
 
 				@Override
 				public void handle(Signal arg0) {
 					System.out.println("Coordinator>invoked strg+c");
 					System.out.print("Coordinator>telling all starters to quit...");
+					// Auf allen angemeldeten Startern shutdown() aufrufen, damit alle eventuell noch laufenden Prozesse gekillt werden.
+					// Eventuell laufende Berechnungen werden unterbrochen und beendet!
 					coordServant.unregisterAllStarters();
 					System.out.print("OK\nCoordinator>unbinding...");
 					try {

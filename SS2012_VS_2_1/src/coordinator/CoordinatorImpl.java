@@ -24,13 +24,14 @@ import monitor.Monitor;
 public class CoordinatorImpl extends CoordinatorPOA {
 
 	private Set<Starter> starters = new HashSet<Starter>();
-	private ProcessStruct processes = new ProcessStruct();
+	private ProcessManager processes = new ProcessManager();
 	private int processCount;
 	private ORB orb;
 	private NamingContextExt ncRef;
 	private NameComponent[] path;
 	private boolean isCalculating = false;
 
+	//Liefert Array über alle angemeldeten Starter zurück, z.B. fuer Ausgabe beim Client
 	@Override
 	public Starter[] getStarters() {
 		return starters.toArray(new Starter[starters.size()]);
@@ -55,34 +56,35 @@ public class CoordinatorImpl extends CoordinatorPOA {
 			s.createProcesses(processCountTmp);
 		}
 
-		// TODO: - Timeout beim Warten einbauen (Exception), dann alles auf
-		// Anfang, wenn bedingung nicht erfuellt wurde
-		// - Sleep einbauen, um CPU Zeit zu sparen
-		// - wenn nicht alle Prozesse bis Timeout da sind, prozesse killen,
-		// prozess liste leeren, isCalculating = false;
-		while (processCount != processes.size())
-			;
-		// prozesse zufällig wählen (liste shufflen?!)
+		// Auf alle gestarteten Prozesse warten
+		// TODO: - Timeout beim Warten, falls Prozesse/Starter sich nicht melden.
+		// TODO: - CPU Zeit sparen, also bspw. in der while-Schleife sleep() einbauen.
+		while (processCount != processes.size());
+
+		// Prozesse in zufaellige Reihenfolge bringen
 		processes.shuffleProcesses();
 
-		// ring aufbauen
-		// daten setzen, nachbarn, ....
-		// monitor zahlen und ringbaufbau mitteilen
+		// Monitor Ringaufbau mitteilen
 		mntr.ring(processes.getProcessNames());
+		// Prozesse initialisieren
 		int startValues[] = processes.initProcesses(minDelay, maxDelay, timeout, ggt, mntr);
+		// Monitor Startzahlen mitteilen
 		mntr.startzahlen(startValues);
+		// Die drei Startprozesse auswaehlen
 		final ggtProcess[] startProcesses = processes.getStartProcesses();
 
-		// berechnung starten, 3 prozesse mit kleinsten zahlen auswählen
+		// Berechnung starten
 		for (ggtProcess s : startProcesses) {
 			s.start();
 		}
 
+		// Damit Aufruf von start asynchron, Thread starten fuer weiteren Programmablauf
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 
+				// Warten, bis alle Prozesse processCalcDone() aufgerufen haben und damit geloescht wurden
 				while (processes.size() != 0) {
 					try {
 						Thread.sleep(1000);
@@ -90,21 +92,23 @@ public class CoordinatorImpl extends CoordinatorPOA {
 						e.printStackTrace();
 					}
 				}
-				// TODO: wenn eine berechnung fertig ist, alles wieder in
-				// ursprungszustand setzen (starter, coord) fuer neue berechnung
 
+				// Allen Startern mitteilen, ihre Prozesse nun zu beenden
 				for (Starter s : starters) {
 					s.killProcesses();
 				}
-				// jetzt muesste die prozesstruktur wieder leer sein ... also
+
 				// neue Berechnung kann gestartet werden
 				isCalculating = false;
+				System.out.println("Coordinator>Ready for new calculation");
 
 			}
 		}).start();
 
 	}
 
+	// Methode ist fuer Aufruf durch Client gedacht, wenn eine Berechnung in Gange ist, liefert die Methode false, ist keine Berechnung in Gange,
+	// werden alle Starter beendet und das System heruntergefahren.
 	@Override
 	public boolean shutdown() {
 		System.out.println("Coordinator>Client quitted coordinator");
@@ -141,6 +145,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		return true;
 	}
 
+	// Neue Starter anmelden
 	@Override
 	public void registerStarter(Starter starter) throws starterAlreadyExists {
 		for (Starter s : starters) {
@@ -153,16 +158,15 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		System.out.println("Coordinator>Starter " + starter.getName() + " was added...");
 	}
 
+	// Wird von allen Prozessen im Konstruktor aufgerufen == Anmeldung der Prozesse am Koordinator
 	@Override
 	public void registerProcess(ggtProcess process, String processName) {
 		processes.add(process);
 	}
 
+	// Abmelden von Startern, wenn eine Berechnung in Gange ist, kann der Starter sich nicht abmelden; siehe SigHandler im Starter
 	@Override
 	public void unregisterStarter(Starter starter) throws starterDoesNotExists {
-		// TODO: wenn isCalculating == true ist abfangen? was wäre sinnvoll bei
-		// laufender berechnung? alles beenden oder cleanup und dann neue
-		// Berechnung möglich, wenn Berechnung rennt unregister nicht zulassen?!
 		if (!starters.contains(starter)) {
 			throw new starterDoesNotExists("Exception: Starter " + starter.getName() + " does not exist!");
 		}
@@ -175,6 +179,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		return isCalculating;
 	}
 
+	// Alle Starter samt Prozesse beenden, beendet laufende Berechnung; siehe SigHandler Coordinator
 	public void unregisterAllStarters() {
 		for (Starter s : starters) {
 			s.shutdown();
@@ -190,6 +195,7 @@ public class CoordinatorImpl extends CoordinatorPOA {
 		this.path = path;
 	}
 
+	// Signalisiert, dass ein Prozess mit der Berechnung abgeschlossen hat
 	@Override
 	public void processCalcDone(ggtProcess process) {
 		System.out.println("Coordinator>Process " + process.getName() + " has finished calculation");
