@@ -24,6 +24,7 @@ public class StarterImpl extends StarterPOA {
 		return this.starterName;
 	}
 
+	// Anlegen der gewuenschten Prozesse, wird vom Coordinator aufgerufen.
 	@Override
 	public void createProcesses(int count) {
 		ggtProcesses = new ArrayList<ggtProcessImpl>();
@@ -37,6 +38,7 @@ public class StarterImpl extends StarterPOA {
 
 	}
 
+	// Beendet alle Prozesse und den Starter, wird durch Client-Shutdown ausgeloest.
 	@Override
 	public void shutdown() {
 		System.out.println("Starter>recved shutdown from Coordinator");
@@ -57,6 +59,7 @@ public class StarterImpl extends StarterPOA {
 		this.orb = orb;
 	}
 
+	// Beendet alle Prozesse, wird vom Coordinator nach einer Berechnung gerufen.
 	@Override
 	public void killProcesses() {
 		if (ggtProcesses != null) {

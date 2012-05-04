@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import monitor.Monitor;
@@ -13,27 +13,36 @@ import monitor.Monitor;
 import ggtCorba.ggtProcess;
 
 /**
+ * Management- and adapter-class for administration of the registered
+ * {@link ggtProcess}. Processes are hold in a LinkedList. The TreeMap is used
+ * to have all processes sorted by their startValue. So with this it is fairly
+ * easy to determine the three processes with the smallest startValue to start
+ * the algorithm.
  * 
  * @author Martin
- *
+ * 
  */
-public class ProcessStruct {
+public class ProcessManager {
 
 	private List<ggtProcess> processes = new LinkedList<ggtProcess>();
-	private SortedMap<Integer, ggtProcess> sortedProcesses = new TreeMap<Integer, ggtProcess>();
+	private Map<Integer, ggtProcess> sortedProcesses = new TreeMap<Integer, ggtProcess>();
 
 	/**
+	 * Adds a new {@link ggtProcess} to the list.
 	 * 
 	 * @param process
+	 *            new process
 	 */
 	public void add(ggtProcess process) {
 		processes.add(process);
 	}
 
 	/**
+	 * Determines the left neighbor of a given {@link ggtProcess} .
 	 * 
 	 * @param process
-	 * @return
+	 *            a {@link ggtProcess}
+	 * @return left neighbor
 	 */
 	private ggtProcess left(ggtProcess process) {
 		return processes.get(processes.indexOf(process) == 0 ? processes.size() - 1 : processes.indexOf(process) - 1);
@@ -41,45 +50,61 @@ public class ProcessStruct {
 
 	/**
 	 * 
+	 * Determines the left right of a given {@link ggtProcess} .
+	 * 
 	 * @param process
-	 * @return
+	 *            a {@link ggtProcess}
+	 * @return right neighbor
 	 */
 	private ggtProcess right(ggtProcess process) {
 		return processes.get((processes.indexOf(process) + 1) % processes.size());
 	}
 
 	/**
-	 * 
+	 * Mixes all processes in the list to get a random order.
 	 */
 	public void shuffleProcesses() {
 		Collections.shuffle(processes);
 	}
 
 	/**
+	 * Size of the list, means count of {@link ggtProcess} inside the list.
 	 * 
-	 * @return
+	 * @return count of {@link ggtProcess} in the list.
 	 */
 	public int size() {
 		return processes.size();
 	}
 
 	/**
+	 * Get a {@link ggtProcess} from a specific position within the list.
 	 * 
 	 * @param i
-	 * @return
+	 *            index of {@link ggtProcess}
+	 * @return {@link ggtProcess} with given index
 	 */
 	public ggtProcess get(int i) {
 		return processes.get(i);
 	}
 
 	/**
+	 * Sets up all processes to be ready for start of calculation. Each process
+	 * gets its right and left neighbor, a random startValue based on the given
+	 * ggt, random delay based on given delay-interval, a preset timeout and a
+	 * monitor-reference for logging purpose.
 	 * 
 	 * @param minDelay
+	 *            minimum interval boundary for delay in seconds
 	 * @param maxDelay
+	 *            maximum interval boundary for delay in seconds
 	 * @param timeout
+	 *            time in seconds before a termination request will be started
 	 * @param ggt
+	 *            greatest common divisor to calculate random startValues for
+	 *            the processes
 	 * @param mntr
-	 * @return
+	 *            reference for a logging monitor
+	 * @return startValues of all processes in an array
 	 */
 	public int[] initProcesses(int minDelay, int maxDelay, int timeout, int ggt, Monitor mntr) {
 
@@ -91,16 +116,6 @@ public class ProcessStruct {
 		int[] startValues = new int[processes.size()];
 
 		for (int i = 0; i < processes.size(); i++) {
-			// es können doppelte startValues entstehen ... das gibt n knall in
-			// der map oder nicht?
-			// beim löschen kenn ich den startValue nicht mehr ... da jedes mal
-			// Mi mit y überschrieben wird, also ursprünglichen wert merken ...
-			// ich habs nun angepasst, aber wenn der startwert bei mind. 2
-			// identisch war, könnte es sein, dass er dann einfach den falschen
-			// prozess
-			// aus der liste löscht. dürfte THEORETISCH nicht weiter schlimm
-			// sein .. geht ja nur um die anzahl ... beenden tut der starter ja
-			// dann...
 			right = right(processes.get(i));
 			left = left(processes.get(i));
 			startValue = ggt * (rnd.nextInt(100) + 1) * (rnd.nextInt(100) + 1);
@@ -113,8 +128,9 @@ public class ProcessStruct {
 	}
 
 	/**
+	 * Getter method for all process names.
 	 * 
-	 * @return
+	 * @return all process names
 	 */
 	public String[] getProcessNames() {
 		String[] processNames = new String[processes.size()];
@@ -125,24 +141,29 @@ public class ProcessStruct {
 	}
 
 	/**
+	 * Method determines the three processes with the smallest startValues and
+	 * returns them.
 	 * 
-	 * @return
+	 * @return three processes with the smallest startValues
 	 */
 	public ggtProcess[] getStartProcesses() {
 		return Arrays.copyOf(sortedProcesses.values().toArray(new ggtProcess[sortedProcesses.size()]), 3);
 	}
 
 	/**
+	 * Determines if the list of processes is empty or has elements.
 	 * 
-	 * @return
+	 * @return <code>true</code> if list is empty, <code>false</code> if not.
 	 */
 	public boolean isEmpty() {
 		return processes.isEmpty();
 	}
 
 	/**
+	 * Method removes a process from the list of processes.
 	 * 
 	 * @param process
+	 *            process to be removed
 	 */
 	public void remove(ggtProcess process) {
 		if (processes.contains(process)) {

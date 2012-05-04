@@ -1,7 +1,6 @@
 package starter;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -30,14 +29,16 @@ public class ggtProcessImpl extends ggtProcessPOA {
 	private boolean isFirstCalculationRunning = true;
 	private Thread calcThread;
 	private Thread termThread;
-	private LinkedBlockingQueue<Integer> msges = new LinkedBlockingQueue<Integer>();
-	private Queue<TerminateRequest> terminateRequests = new LinkedList<TerminateRequest>();
+	private BlockingQueue<Integer> msges = new LinkedBlockingQueue<Integer>();
+	private BlockingQueue<TerminateRequest> terminateRequests = new LinkedBlockingQueue<TerminateRequest>();
 
+	// Konstruktor: ID, Referenz auf Starter und Coordinator setzen
 	public ggtProcessImpl(int processId, StarterImpl starterImpl, Coordinator coordRef) {
 		this.coordRef = coordRef;
 		this.processName = starterImpl.getName() + "_" + processId;
 		try {
 			ggtProcess = ggtProcessHelper.narrow(starterImpl._poa().servant_to_reference(this));
+			// Prozess meldet sich am Coordinator an, ist damit rechenbereit.
 			coordRef.registerProcess(ggtProcess, processName);
 		} catch (ServantNotActive e) {
 			e.printStackTrace();
@@ -47,6 +48,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 
 	}
 
+	// Initialisiert den Prozess, dann werden zwei Threads gestartet; einer fuer die Berechnung, einer fuer die Terminierung -> Aufruf asynchron!
 	@Override
 	public void initProcess(final ggtProcess left, final ggtProcess right, int startValue, final int delay, final int timeout, final Monitor mntr) {
 		this.left = left;
@@ -59,6 +61,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 		calcThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				// Rechenthread rennt solange, bis eine ausgeloeste Terminierungsanfrage erfolgreich einmal im Kreis gelaufen ist
 				while (!isCalculationTerminated) {
 					try {
 						Integer y = msges.poll(timeout, TimeUnit.SECONDS);
@@ -98,21 +101,18 @@ public class ggtProcessImpl extends ggtProcessPOA {
 				TerminateRequest terminationRequest;
 
 				boolean isOwnCalcFinished = true;
-				// solange laufen, bis der starter mich killt... ich wois,
-				// frisst viel cpu zeit ... kA wie man das verbessern kann, da
-				// ich ja nicht
-				// weiss, ob die anderen prozesse noch arbeiten und ich noch
-				// msges zum verarbeiten kriege
+				// solange laufen, bis der starter mich killt... 
 				while (!isTerminationDone) {
-					terminationRequest = terminateRequests.poll(); // TODO:
-																	// blockingQueue
-					// wenn beim poll nix drin war -> NULL und damit neuer
-					// anlauf ...
+					try {
+						// Solange blockieren, bis ein Terminierungsrequest da ist 
+						terminationRequest = terminateRequests.take();
+					} catch (InterruptedException e) {
+						// kommt der Interrupt aus kill, req auf null und raus aus der while -> Thread endet
+						terminationRequest = null;
+					} 
 					if (terminationRequest != null) {
-						// wenn die gepollte term anfrage von mir selbst kam und
-						// sie immer noch true ist, kann ich aufhören ....
-						// war die msg zwar von mir, aber false, verwirf sie
-						// einfach...deswegen das else if in z. 113
+						// wenn die gepollte term anfrage von mir selbst kam und sie immer noch true ist, kann ich aufhören ....
+						// war die msg zwar von mir, aber false, verwirf sie einfach...deswegen das else if 
 						if (terminationRequest.getProcessName().equals(processName) && terminationRequest.isTerminationOk() && isOwnCalcFinished) {
 							System.out.println(processName + " isTerminated == true;");
 							// calc thread auslaufen lassen -> ist dann beendet
@@ -125,21 +125,14 @@ public class ggtProcessImpl extends ggtProcessPOA {
 							coordRef.processCalcDone(ggtProcess);
 							// kam die msg nicht von mir selbst, weiterleiten
 						} else if (!terminationRequest.getProcessName().equals(processName)) {
-							// kam die gepollte nachricht nicht von mir, dann
-							// weiterleiten ...
-							// Zeit vergleichen, wenn timeout/2 verstrichen ist,
-							// seit dem letzten aufruf von calc() und true drin
-							// stand, an
-							// nachbar entsprechend mit dem urspürnglichen
-							// absender und dem true weitersenden
+							// Zeit vergleichen, wenn timeout/2 verstrichen ist, seit dem letzten aufruf von calc() und true drin stand, an
+							// nachbar entsprechend mit dem urspürnglichen absender und dem true weitersenden
 							boolean isTerminationTimeoutReached = (System.currentTimeMillis() - lastMsg) >= (timeout * 1000 / 2);
 							if (isTerminationTimeoutReached && terminationRequest.isTerminationOk()) {
 								right.terminate(terminationRequest.getProcessName(), true);
 								System.out.println(processName + " forwarded positive req");
 							} else {
-								// timeout ist nocht nicht abgelaufen oder es
-								// stand eh false im request, dann eben false
-								// weiterleiten ...
+								// timeout ist nocht nicht abgelaufen oder es stand eh false im request, dann eben false weiterleiten ...
 								right.terminate(terminationRequest.getProcessName(), false);
 								System.out.println(processName + " forwarded negative req");
 							}
@@ -153,22 +146,27 @@ public class ggtProcessImpl extends ggtProcessPOA {
 		termThread.start();
 	}
 
+	// start wird nur auf den drei Prozessen mit den kleinsten Startwerten gerufen, damit der Algorithmus funktioniert
 	@Override
 	public void start() {
 		left.calc(Mi, processName);
 		right.calc(Mi, processName);
 	}
 
+	// neue Nachricht mit neuer Zahl, da asynchron sein soll, Wert in Queue legen, Zeit merken, wann das war, Monitor bescheid geben
 	@Override
 	public void calc(int y, String msgFrom) {
+		// Damit keine Terminierung ausgelöst wird, ohne dass der Thread einmal gerechnet hat ...
 		isFirstCalculationRunning = false;
 		msges.offer(y);
 		lastMsg = System.currentTimeMillis();
 		monitor.rechnen(processName, msgFrom, y);
 	}
 
+	// Eingehende Terminierungsrequests, enthalten Absender, Status
 	@Override
 	public void terminate(String processName, boolean isAllowed) {
+		// Req queuen und Monitor bescheid geben
 		terminateRequests.offer(new TerminateRequest(processName, System.currentTimeMillis(), isAllowed));
 		monitor.terminieren(this.processName, processName, isAllowed);
 	}
@@ -178,9 +176,11 @@ public class ggtProcessImpl extends ggtProcessPOA {
 		return processName;
 	}
 
+	// Prozess beenden
 	@Override
 	public void kill() {
 		isTerminationDone = true;
+		termThread.interrupt();
 		System.out.println(processName + " has exited ... now die ..");
 	}
 
