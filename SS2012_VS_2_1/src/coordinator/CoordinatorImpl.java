@@ -147,7 +147,10 @@ public class CoordinatorImpl extends CoordinatorPOA {
 
 	// Neue Starter anmelden
 	@Override
-	public void registerStarter(Starter starter) throws starterAlreadyExists {
+	public void registerStarter(Starter starter) throws starterAlreadyExists, calculationInProgress {
+		if(isCalculating){
+			throw new calculationInProgress("Exception: Calculation in progress ... try again later!");
+		}
 		for (Starter s : starters) {
 			if (s.getName().equals(starter.getName())) {
 				throw new starterAlreadyExists("Exception: Starter " + starter.getName() + " is already registered");
