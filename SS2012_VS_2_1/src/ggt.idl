@@ -83,7 +83,7 @@ module ggtCorba {
 		void start(in long minProcess, in long maxProcess, in long minDelay, in long maxDelay, in long timeout, in long ggt, in monitor::Monitor mntr) raises (noStarters, calculationInProgress);
 		boolean shutdown();
 		boolean isCalculating();
-		void registerStarter(in Starter starter) raises (starterAlreadyExists);
+		void registerStarter(in Starter starter) raises (starterAlreadyExists, calculationInProgress);
 		void registerProcess(in ggtProcess process, in string processName);
 		void unregisterStarter(in Starter starter) raises (starterDoesNotExists);
 		void processCalcDone(in ggtProcess process);
