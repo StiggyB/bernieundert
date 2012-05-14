@@ -22,14 +22,18 @@ import javax.xml.ws.Endpoint;
 
 public class HAWSensor {
 	
-	//C:\Users\martin\workspace\HAWSensor>wsimport -d src -keep  http://localhost:9998/hawmetering/sensor?wsdl
-	
+//	C:\Users\martin\workspace\HAWSensor>wsimport -d src -keep  http://localhost:9998/hawmetering/sensor?wsdl
+//	http://www.vorlesungen.uni-osnabrueck.de/informatik/da02/va.pdf
+//	http://computersciencesource.wordpress.com/2009/09/10/year-1-distributed-systems-bully-algorithm/
+//	http://de.wikipedia.org/wiki/Ringalgorithmus
 
     public static void main(String[] args) {
     	new HAWSensor().run(args);
     }
 
     private Map<String, hawmetering.HAWSensorWebservice> sensorUrls = new HashMap<String, hawmetering.HAWSensorWebservice>();
+    
+//  TODO: eigene url und coord url müssen verfügbar sein für versenden von msges
     private URL coordinatorUrl;
     
 	public void run(String[] args) {
