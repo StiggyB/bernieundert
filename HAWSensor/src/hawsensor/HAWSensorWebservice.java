@@ -29,6 +29,9 @@ public class HAWSensorWebservice {
 //	- was ist mit dem prozess der coord ist, ruft der sich aus der sensorUrl liste einfach selber auf? z.B. bei trigger?
 //	- bully oder ring algo ... meine methoden unten sehen bully vor, hat im schlechtesten fall n², ring hätte n als aufwand
 //	- bei coord ausfall, startet ein sensor die wahl oder können eben einfach alle die es merken starten? wie verwaltet man die msges davon, geht das?
+//	- scheinbar muss man bei anderen als einfachen datentypen oder string noch $mehr tun ...
+//		-> http://www.heise.de/developer/artikel/Webservices-mit-Java-EE-6-JAX-WS-und-RESTful-Services-1247464.html?artikelseite=2
+//		-> http://predic8.de/groovy-web-services-jax-ws.htm
 //	TODO: Fragen
 //	- Was passiert mit dem aufruf von trigger, wenn eine wahl startet oder rennt?
 //	- Was passiert, wenn der coord wegen vielen ausgefallenen sensoren länger braucht? kann das trigger ausbleiben? was passiert, wenn dann eine wahl
