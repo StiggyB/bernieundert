@@ -23,6 +23,7 @@ import javax.xml.ws.Endpoint;
 public class HAWSensor {
 	
 	//C:\Users\martin\workspace\HAWSensor>wsimport -d src -keep  http://localhost:9998/hawmetering/sensor?wsdl
+	
 
     public static void main(String[] args) {
     	new HAWSensor().run(args);
