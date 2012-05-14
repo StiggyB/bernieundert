@@ -30,11 +30,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link WebColor }
+     * Create an instance of {@link HawSensor }
      * 
      */
-    public WebColor createWebColor() {
-        return new WebColor();
+    public HawSensor createHawSensor() {
+        return new HawSensor();
     }
 
 }

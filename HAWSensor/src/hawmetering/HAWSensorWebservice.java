@@ -21,21 +21,21 @@ public interface HAWSensorWebservice {
 
     /**
      * 
-     * @param url
-     */
-    @WebMethod
-    public void registerSensor(
-        @WebParam(name = "url", partName = "url")
-        String url);
-
-    /**
-     * 
      * @return
      *     returns java.lang.String
      */
     @WebMethod
     @WebResult(partName = "return")
     public String getCoordinatorUrl();
+
+    /**
+     * 
+     * @param url
+     */
+    @WebMethod
+    public void registerSensor(
+        @WebParam(name = "url", partName = "url")
+        String url);
 
     /**
      * 
