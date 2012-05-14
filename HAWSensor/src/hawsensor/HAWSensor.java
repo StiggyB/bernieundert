@@ -30,39 +30,46 @@ public class HAWSensor {
     }
 
     private Map<String, hawmetering.HAWSensorWebservice> sensorUrls = new HashMap<String, hawmetering.HAWSensorWebservice>();
-
+    private URL coordinatorUrl;
+    
 	public void run(String[] args) {
     	startWebservice(args[0]);
         
     	try {
 	    	if (args.length == 3) {
 	    		// coordinator angegeben
-	    		URL coordinatorUrl = new URL(args[2]);
+	    		URL sensorUrl = new URL(args[2]);
 	
-	            HAWSensorWebserviceService service = new HAWSensorWebserviceService(coordinatorUrl, new QName("http://hawmetering/", "HAWSensorWebserviceService"));
-	            hawmetering.HAWSensorWebservice coordinator = service.getHAWSensorWebservicePort();
-	    		coordinator.registerSensor(args[0]);
+	    		HAWSensorWebserviceService service = new HAWSensorWebserviceService(sensorUrl, new QName("http://hawmetering/", "HAWSensorWebserviceService"));
+	    		hawmetering.HAWSensorWebservice anySensor = service.getHAWSensorWebservicePort();
+	    		
+	    		coordinatorUrl = new URL(anySensor.getCoordinatorUrl());
+//	    		
+//	    		HAWSensorWebserviceService service2 = new HAWSensorWebserviceService(coordUrl, new QName("http://hawmetering/", "HAWSensorWebserviceService"));
+//	    		hawmetering.HAWSensorWebservice coordinator = service2.getHAWSensorWebservicePort();
+//	    		
+//	    		coordinator.registerSensor(args[0]);
 	    	} else {
+	    		coordinatorUrl = new URL(args[0] + "?wsdl");
 	    		new SensorTriggerThread(sensorUrls).start();
 	    	}
     	
-            URL url = new URL(args[1]);
 
-            HAWMeteringWebserviceService service = new HAWMeteringWebserviceService(url, new QName("http://hawmetering/", "HAWMeteringWebserviceService"));
-            HAWMeteringWebservice metering = service.getHAWMeteringWebservicePort();
+//            HAWMeteringWebserviceService service = new HAWMeteringWebserviceService(coordinatorUrl, new QName("http://hawmetering/", "HAWMeteringWebserviceService"));
+//            HAWMeteringWebservice metering = service.getHAWMeteringWebservicePort();
             
-			while (true) {
-				long messwert = System.currentTimeMillis() % 200;
-				if (messwert > 100) {
-					messwert = 200 - messwert;
-				}
-				metering.setValue(messwert);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			while (true);//s {
+//				long messwert = System.currentTimeMillis() % 200;
+//				if (messwert > 100) {
+//					messwert = 200 - messwert;
+//				}
+//				metering.setValue(messwert);
+//				try {
+//					Thread.sleep(1000);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//			}
         } catch (MalformedURLException ex) {
             Logger.getLogger(HAWSensor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -84,4 +91,7 @@ public class HAWSensor {
 		}
 	}
 
+	public URL getCoordinatorUrl() {
+		return coordinatorUrl;
+	}
 }

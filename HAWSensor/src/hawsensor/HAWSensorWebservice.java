@@ -4,6 +4,8 @@
  */
 package hawsensor;
 
+import java.net.URL;
+
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -14,24 +16,23 @@ import javax.jws.soap.SOAPBinding;
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public class HAWSensorWebservice {
 
-  private final HAWSensor hawSensor;
+	private final HAWSensor hawSensor;
 
-  public HAWSensorWebservice(HAWSensor hawSensor) {
-	  this.hawSensor = hawSensor;
-  }
+	public HAWSensorWebservice(HAWSensor hawSensor) {
+		this.hawSensor = hawSensor;
+	}
 
-  public void registerSensor(
-          @WebParam(name = "url") String url) {
-	  System.out.println(url);
-	  hawSensor.registerSensor(url);
-  }
+	public void registerSensor(@WebParam(name = "url") String url) {
+		System.out.println(url);
+		hawSensor.registerSensor(url);
+	}
 
-  public void trigger() {
-	  System.out.println("triggered");
-  }
-  
-  public void blub() {
-	  System.out.println("triggered");
-  }
-  
+	public void trigger() {
+		System.out.println("triggered");
+	}
+
+	public URL getCoordinatorUrl() {
+		return hawSensor.getCoordinatorUrl();
+	}
+
 }

@@ -3,6 +3,7 @@ package hawmetering;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
+import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
@@ -20,18 +21,21 @@ public interface HAWSensorWebservice {
 
     /**
      * 
-     */
-    @WebMethod
-    public void blub();
-
-    /**
-     * 
      * @param url
      */
     @WebMethod
     public void registerSensor(
         @WebParam(name = "url", partName = "url")
         String url);
+
+    /**
+     * 
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public String getCoordinatorUrl();
 
     /**
      * 
