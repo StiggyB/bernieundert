@@ -68,7 +68,7 @@ public class HAWSensorWebservice {
 	 * in der trigger methode soll der messwert berechnet und auf die anzeige gepackt werden.
 	 */
 	public void trigger() {
-		System.out.println("triggered");
+		hawSensor.trigger();
 	}
 
 	/*
