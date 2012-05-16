@@ -31,12 +31,13 @@ public class SensorTriggerThread extends Thread {
 		for (Iterator<Entry<String, hawmetering.HAWSensorWebservice>> iterator = sensorUrls.entrySet().iterator(); iterator.hasNext();) {
 			Entry<String, hawmetering.HAWSensorWebservice> entry = iterator.next();
 			try {
-				System.out.println("triggerung url: " + entry.getKey() + "---" + entry.getValue());
+//				System.out.println("triggerung url: " + entry.getKey() + "---" + entry.getValue());
 				entry.getValue().trigger();
 			} catch (Exception e) {
 				// wenn nicht erreichbar
 				e.printStackTrace();
 				iterator.remove();
+				System.out.println("Sensor '" + entry.getKey() + "' failed, removing... ");
 			}
 		}
 	}

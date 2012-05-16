@@ -6,6 +6,7 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 
 /**
@@ -16,6 +17,9 @@ import javax.jws.soap.SOAPBinding;
  */
 @WebService(name = "HAWSensorWebservice", targetNamespace = "http://hawmetering/")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
+@XmlSeeAlso({
+    ObjectFactory.class
+})
 public interface HAWSensorWebservice {
 
 
@@ -32,13 +36,16 @@ public interface HAWSensorWebservice {
      * 
      * @param hawmeterChart
      * @param url
+     * @throws Exception_Exception
      */
     @WebMethod
     public void registerSensor(
         @WebParam(name = "url", partName = "url")
         String url,
         @WebParam(name = "hawmeterChart", partName = "hawmeterChart")
-        String hawmeterChart);
+        String hawmeterChart)
+        throws Exception_Exception
+    ;
 
     /**
      * 
