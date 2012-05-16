@@ -55,9 +55,12 @@ public class HAWSensorWebservice {
 	 * wenn ein sensor nicht mehr existiert, muss er aus der sensorliste gelöscht werden und die anzeige url auch aus der entsprechenden liste.
 	 * 
 	 */
-	public void registerSensor(@WebParam(name = "url") String url) {
-		System.out.println(url);
-		hawSensor.registerSensor(url);
+	public void registerSensor(
+			@WebParam(name = "url") String url, 
+			@WebParam(name = "hawmeterChart") String chart) throws Exception
+	{
+		System.out.println("\n\nNew sensor connecting from:\n" + url + "\n wants to use chart:\n" + chart);
+		hawSensor.registerSensor(url, chart);
 	}
 
 	/*
@@ -74,7 +77,7 @@ public class HAWSensorWebservice {
 	 * url/id des coord muss sich jeder sensor merken, falls er befragt wird.
 	 * ist grad eine wahl in gange, muss der neue sensor warten, dann nochmal probieren -> keine exception, thread sleep oder so ...
 	 */
-	public URL getCoordinatorUrl() {
+	public String getCoordinatorUrl() {
 		return hawSensor.getCoordinatorUrl();
 	}
 	
