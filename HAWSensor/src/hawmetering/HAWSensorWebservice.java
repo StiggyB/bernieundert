@@ -30,12 +30,15 @@ public interface HAWSensorWebservice {
 
     /**
      * 
+     * @param hawmeterChart
      * @param url
      */
     @WebMethod
     public void registerSensor(
         @WebParam(name = "url", partName = "url")
-        String url);
+        String url,
+        @WebParam(name = "hawmeterChart", partName = "hawmeterChart")
+        String hawmeterChart);
 
     /**
      * 
