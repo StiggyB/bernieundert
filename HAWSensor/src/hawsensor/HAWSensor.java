@@ -45,6 +45,15 @@ public class HAWSensor {
 	private Timer timer;
 
 	public void run(String[] args) {
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				System.out.println("shutdownhook tut dinge ...");
+				endpoint.stop();
+			}
+		}));
+		
 		startWebservice(args[0]);
 
 		try {
@@ -74,7 +83,7 @@ public class HAWSensor {
 				coordinatorString = args[0];
 				registerSensor(coordinatorString, args[1]);
 
-				new SensorTriggerThread(sensorUrls).start();
+				new SensorTriggerThread(sensorUrls, hawmeterUrls).start();
 			}
 			
 
@@ -105,7 +114,7 @@ public class HAWSensor {
 			HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
 			hawmetering.HAWSensorWebservice sensor = service.getHAWSensorWebservicePort();
 			sensorUrls.put(url, sensor);
-			hawmeterUrls.put(chart, url);
+			hawmeterUrls.put(url, chart);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

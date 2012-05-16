@@ -2,6 +2,7 @@ package hawsensor;
 
 import hawmetering.HAWSensorWebservice;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,10 +10,12 @@ import java.util.Set;
 
 public class SensorTriggerThread extends Thread {
 
-	private final Map<String, hawmetering.HAWSensorWebservice> sensorUrls;
+	private Map<String, hawmetering.HAWSensorWebservice> sensorUrls;
+	private Map<String, String> hawmeterUrls = new HashMap<String, String>();
 
-	public SensorTriggerThread(Map<String, HAWSensorWebservice> sensorUrls) {
+	public SensorTriggerThread(Map<String, HAWSensorWebservice> sensorUrls, Map<String, String> hawmeterUrls) {
 		this.sensorUrls = sensorUrls;
+		this.hawmeterUrls = hawmeterUrls;
 	}
 
 	@Override
@@ -35,8 +38,9 @@ public class SensorTriggerThread extends Thread {
 				entry.getValue().trigger();
 			} catch (Exception e) {
 				// wenn nicht erreichbar
-				e.printStackTrace();
+				System.out.println(e.toString());
 				iterator.remove();
+				hawmeterUrls.remove(entry.getKey());
 				System.out.println("Sensor '" + entry.getKey() + "' failed, removing... ");
 			}
 		}

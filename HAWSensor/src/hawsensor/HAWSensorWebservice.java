@@ -59,7 +59,7 @@ public class HAWSensorWebservice {
 			@WebParam(name = "url") String url, 
 			@WebParam(name = "hawmeterChart") String chart) throws Exception
 	{
-		System.out.println("\n\nNew sensor connecting from:\n" + url + "\n wants to use chart:\n" + chart);
+		System.out.println("\n\nNew sensor connecting from:\n" + url + "\nwants to use chart:\n" + chart);
 		hawSensor.registerSensor(url, chart);
 	}
 
