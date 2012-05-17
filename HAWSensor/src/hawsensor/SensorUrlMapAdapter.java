@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public class SensorUrlMapAdapter extends XmlAdapter<StringStringMap, Map<String, String>> {
-	
+
 	@Override
 	public StringStringMap marshal(Map<String, String> map) throws Exception {
 		return new StringStringMap(map);
