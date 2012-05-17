@@ -36,7 +36,7 @@ public class HAWSensor {
 	private Map<String, hawmetering.HAWSensorWebservice> sensorUrls = new HashMap<String, hawmetering.HAWSensorWebservice>();
 //	http://svn.apache.org/repos/asf/cxf/trunk/distribution/src/main/release/samples/java_first_jaxws/src/main/java/demo/hw/server/
 //	http://mycenes.wordpress.com/2009/10/27/apache-cxf-how-tos-well-not-exactly/
-	@XmlJavaTypeAdapter(value=SensorUrlMapAdapter.class)
+	@XmlJavaTypeAdapter(value = SensorUrlMapAdapter.class)
 	@XmlElement(name = "sensorUrls")
 	private Map<String, String> hawmeterUrls = new HashMap<String, String>();
 	private String coordinatorString;
@@ -48,14 +48,14 @@ public class HAWSensor {
 
 	private void run(String[] args) {
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				System.out.println("shutdownhook tut dinge ...");
 				endpoint.stop();
 			}
 		}));
-		
+
 		startWebservice(args[0]);
 
 		try {
@@ -87,7 +87,6 @@ public class HAWSensor {
 
 				new SensorTriggerThread(sensorUrls, hawmeterUrls).start();
 			}
-			
 
 		} catch (MalformedURLException ex) {
 			Logger.getLogger(HAWSensor.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,14 +123,14 @@ public class HAWSensor {
 		}
 	}
 	
-	private void sendUpdateAllSensors(){
+	private void sendUpdateAllSensors() {
 		System.out.println("new sensor was registered, broadcasting update to all known sensors");
 		for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorUrls.entrySet()) {
-//			entry.getValue().
+			// entry.getValue().
 		}
 	}
-	
-	public void sendUpdate(Map<String, hawmetering.HAWSensorWebservice> sensorUrls, Map<String, String> hawchartMap){
+
+	public void sendUpdate(Map<String, hawmetering.HAWSensorWebservice> sensorUrls, Map<String, String> hawchartMap) {
 		// hat der sensortriggerthread damit automatishc auch die neue liste?
 		this.sensorUrls = sensorUrls;
 		this.hawmeterUrls = hawchartMap;
