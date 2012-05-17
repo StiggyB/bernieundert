@@ -1,31 +1,28 @@
 package hawsensor;
 
-import java.util.LinkedHashMap;
+import hawsensor.StringStringMap.StringString;
+
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class SensorUrlMapAdapter extends XmlAdapter<StringStringMap, Map<String, String> >{
-
+public class SensorUrlMapAdapter extends XmlAdapter<StringStringMap, Map<String, String>> {
+	
 	@Override
-	public StringStringMap marshal(Map<String, String> v) throws Exception {
-        StringStringMap map = new StringStringMap();
-        for (Map.Entry<String, String> e : v.entrySet()) { 
-        	StringStringMap.StringStringEntry iue = new StringStringMap.StringStringEntry();
-            iue.setValue(e.getValue());
-            iue.setKey(e.getKey());
-            map.getEntries().add(iue);
-        }
-        return map;
+	public StringStringMap marshal(Map<String, String> map) throws Exception {
+		return new StringStringMap(map);
 	}
 
 	@Override
-	public Map<String, String> unmarshal(StringStringMap v) throws Exception {
-        Map<String, String> map = new LinkedHashMap<String, String>();
-        for (StringStringMap.StringStringEntry e : v.getEntries()) {
-            map.put(e.getKey(), e.getValue());
-        }
-        return map;
-    }
+	public Map<String, String> unmarshal(StringStringMap type) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		List<StringString> users = type.getUsers();
+		for (StringStringMap.StringString idUser : users) {
+			map.put(idUser.getId(), idUser.getUser());
+		}
+		return map;
+	}
 
 }
