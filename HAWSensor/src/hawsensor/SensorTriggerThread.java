@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 public class SensorTriggerThread extends Thread {
 
@@ -32,16 +31,21 @@ public class SensorTriggerThread extends Thread {
 
 	private void sendTriggers() {
 		for (Iterator<Entry<String, hawmetering.HAWSensorWebservice>> iterator = sensorUrls.entrySet().iterator(); iterator.hasNext();) {
-			Entry<String, hawmetering.HAWSensorWebservice> entry = iterator.next();
+			Entry<String, hawmetering.HAWSensorWebservice> sensorUrlsEntry = iterator.next();
 			try {
 //				System.out.println("triggerung url: " + entry.getKey() + "---" + entry.getValue());
-				entry.getValue().trigger();
+				sensorUrlsEntry.getValue().trigger();
 			} catch (Exception e) {
 				// wenn nicht erreichbar
 				System.out.println(e.toString());
 				iterator.remove();
-				hawmeterUrls.remove(entry.getKey());
-				System.out.println("Sensor '" + entry.getKey() + "' failed, removing... ");
+				for (Iterator<Entry<String, String>> iterator2 = hawmeterUrls.entrySet().iterator(); iterator2.hasNext();) {
+					Entry<String, String> hawmeterUrls = iterator2.next();
+					if(hawmeterUrls.getValue().equals(sensorUrlsEntry.getKey())){
+						iterator2.remove();
+					}
+				}
+				System.out.println("Sensor '" + sensorUrlsEntry.getKey() + "' failed, removing... ");
 			}
 		}
 	}

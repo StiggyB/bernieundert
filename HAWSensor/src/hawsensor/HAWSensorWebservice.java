@@ -4,11 +4,13 @@
  */
 package hawsensor;
 
-import java.net.URL;
+
+import java.util.Map;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 //@WebService
 //@SOAPBinding(style = Style.RPC)
@@ -57,8 +59,7 @@ public class HAWSensorWebservice {
 	 */
 	public void registerSensor(
 			@WebParam(name = "url") String url, 
-			@WebParam(name = "hawmeterChart") String chart) throws Exception
-	{
+			@WebParam(name = "hawmeterChart") String chart) throws Exception {
 		System.out.println("\n\nNew sensor connecting from:\n" + url + "\nwants to use chart:\n" + chart);
 		hawSensor.registerSensor(url, chart);
 	}
@@ -82,7 +83,16 @@ public class HAWSensorWebservice {
 	}
 	
 
-//	public void sendUpdate();		wurde ein neuer sensor zugefügt, muss das allen mitgeteilt werden (nur neuen sensor publishen oder ganze liste 
+//	TODO: geht nicht, Map is an interafac e...
+//	http://jaxb.java.net/guide/Mapping_your_favorite_class.html
+//	http://mycenes.wordpress.com/2009/10/27/apache-cxf-how-tos-well-not-exactly/
+	@XmlJavaTypeAdapter(SensorUrlMapAdapter.class)
+	public void sendUpdate(
+//			@WebParam(name = "sensorUrlMap") Map<String, hawmetering.HAWSensorWebservice> sensorUrls, 
+			@WebParam(name = "hawmeterUrlsMap") Map<String, String> hawmeterUrls){
+//		hawSensor.sendUpdate(sensorUrls, hawmeterUrls);
+	};		
+//	wurde ein neuer sensor zugefügt, muss das allen mitgeteilt werden (nur neuen sensor publishen oder ganze liste 
 //									senden und auf jedem sensor speichern?! natürlich nicht nur sensoren sondern auch anzeigenliste versenden ->
 //									eigene klasse/struktur?!
 //									WICHTIG: Wann update versenden? wenn eine iteration in gange ist direkt wenn ein sensor vom iterator removed wird?
