@@ -83,15 +83,17 @@ public class HAWSensorWebservice {
 	}
 	
 
-//	TODO: geht nicht, Map is an interafac e...
+//	TODO: geht nicht, Map is an interaface... hab den zweiten link befolgt, aber mit dem original bsp. von apache kommt immer noch selbst exception
+//	hab bisher nur den einen Map Adapter gebaut, ...
 //	http://jaxb.java.net/guide/Mapping_your_favorite_class.html
 //	http://mycenes.wordpress.com/2009/10/27/apache-cxf-how-tos-well-not-exactly/
-	@XmlJavaTypeAdapter(SensorUrlMapAdapter.class)
+	@XmlJavaTypeAdapter(value=SensorUrlMapAdapter.class)
 	public void sendUpdate(
 //			@WebParam(name = "sensorUrlMap") Map<String, hawmetering.HAWSensorWebservice> sensorUrls, 
 			@WebParam(name = "hawmeterUrlsMap") Map<String, String> hawmeterUrls){
 //		hawSensor.sendUpdate(sensorUrls, hawmeterUrls);
-	};		
+	};	
+	
 //	wurde ein neuer sensor zugefügt, muss das allen mitgeteilt werden (nur neuen sensor publishen oder ganze liste 
 //									senden und auf jedem sensor speichern?! natürlich nicht nur sensoren sondern auch anzeigenliste versenden ->
 //									eigene klasse/struktur?!
