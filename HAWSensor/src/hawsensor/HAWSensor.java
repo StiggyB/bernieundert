@@ -11,15 +11,13 @@ import hawmetering.HAWSensorWebserviceService;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.jws.WebResult;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Endpoint;
 
@@ -36,6 +34,8 @@ public class HAWSensor {
 	}
 
 	private Map<String, hawmetering.HAWSensorWebservice> sensorUrls = new HashMap<String, hawmetering.HAWSensorWebservice>();
+	@XmlJavaTypeAdapter(SensorUrlMapAdapter.class)
+//	@XmlElement(name = "sensorUrls")
 	private Map<String, String> hawmeterUrls = new HashMap<String, String>();
 	private String coordinatorString;
 	private String ownString;
@@ -44,7 +44,7 @@ public class HAWSensor {
 	private Endpoint endpoint;
 	private Timer timer;
 
-	public void run(String[] args) {
+	private void run(String[] args) {
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			
 			@Override
@@ -90,7 +90,6 @@ public class HAWSensor {
 		} catch (MalformedURLException ex) {
 			Logger.getLogger(HAWSensor.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception e) {
-			System.out.println("zeile 90");
 			endpoint.stop();
 			e.printStackTrace();
 		}
@@ -114,10 +113,26 @@ public class HAWSensor {
 			HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
 			hawmetering.HAWSensorWebservice sensor = service.getHAWSensorWebservicePort();
 			sensorUrls.put(url, sensor);
-			hawmeterUrls.put(url, chart);
+			hawmeterUrls.put(chart, url);
+			
+//			TODO: eigentlich doch an alle ausser mich selbst oder?!
+			sendUpdateAllSensors();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void sendUpdateAllSensors(){
+		System.out.println("new sensor was registered, broadcasting update to all known sensors");
+		for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorUrls.entrySet()) {
+//			entry.getValue().
+		}
+	}
+	
+	public void sendUpdate(Map<String, hawmetering.HAWSensorWebservice> sensorUrls, Map<String, String> hawchartMap){
+		// hat der sensortriggerthread damit automatishc auch die neue liste?
+		this.sensorUrls = sensorUrls;
+		this.hawmeterUrls = hawchartMap;
 	}
 
 	public String getCoordinatorUrl() {
