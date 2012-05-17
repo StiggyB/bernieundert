@@ -34,8 +34,8 @@ public class HAWSensor {
 	}
 
 	private Map<String, hawmetering.HAWSensorWebservice> sensorUrls = new HashMap<String, hawmetering.HAWSensorWebservice>();
-	@XmlJavaTypeAdapter(SensorUrlMapAdapter.class)
-//	@XmlElement(name = "sensorUrls")
+	@XmlJavaTypeAdapter(value=SensorUrlMapAdapter.class)
+	@XmlElement(name = "sensorUrls")
 	private Map<String, String> hawmeterUrls = new HashMap<String, String>();
 	private String coordinatorString;
 	private String ownString;

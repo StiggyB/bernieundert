@@ -2,45 +2,60 @@ package hawsensor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
-
 
 @XmlType(name = "StringStringMap")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class StringStringMap {
-	@XmlElement(nillable = false, name = "entry")
-    List<StringStringEntry> entries = new ArrayList<StringStringEntry>();
+	// produce a wrapper XML element around this collection
+	@XmlElementWrapper(name = "sensorList")
+	// map each member of this list to an XML element named appointment
+	@XmlElement(name = "sensorUrls")
+	private List<StringString> users;
 
-    public List<StringStringEntry> getEntries() {
-        return entries;
-    }
+	public StringStringMap() {
+	}
 
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "urlsInMap")
-    static class StringStringEntry {
-        //Map keys cannot be null
-        @XmlElement(required = true, nillable = false)
-        String key;
+	public StringStringMap(Map<String, String> map) {
+		users = new ArrayList<StringString>();
+		Set<Entry<String, String>> set = map.entrySet();
+		for (Entry<String, String> idUserEntry : set) {
+			users.add(new StringString(idUserEntry.getKey(), idUserEntry.getValue()));
+		}
+	}
 
-        String value;
+	public List<StringString> getUsers() {
+		return users;
+	}
 
-        public void setKey(String k) {
-            key = k;
-        }
-        public String getKey() {
-            return key;
-        }
+	protected static class StringString {
+		@XmlElement(name = "id")
+		private String id;
+		@XmlElement(name = "user")
+		private String user;
 
-        public void setValue(String u) {
-            value = u;
-        }
-        public String getValue() {
-            return value;
-        }
-    }
+		protected StringString() {
+		}
 
+		protected StringString(String id, String user) {
+			this.id = id;
+			this.user = user;
+		}
+
+		protected String getId() {
+			return id;
+		}
+
+		protected String getUser() {
+			return user;
+		}
+	}
 }
