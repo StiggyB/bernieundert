@@ -34,6 +34,8 @@ public class HAWSensor {
 	}
 
 	private Map<String, hawmetering.HAWSensorWebservice> sensorUrls = new HashMap<String, hawmetering.HAWSensorWebservice>();
+//	http://svn.apache.org/repos/asf/cxf/trunk/distribution/src/main/release/samples/java_first_jaxws/src/main/java/demo/hw/server/
+//	http://mycenes.wordpress.com/2009/10/27/apache-cxf-how-tos-well-not-exactly/
 	@XmlJavaTypeAdapter(value=SensorUrlMapAdapter.class)
 	@XmlElement(name = "sensorUrls")
 	private Map<String, String> hawmeterUrls = new HashMap<String, String>();
