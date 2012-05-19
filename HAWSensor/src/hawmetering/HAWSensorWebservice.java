@@ -1,13 +1,14 @@
 
 package hawmetering;
 
-
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import net.java.dev.jaxb.array.StringArray;
+import net.java.dev.jaxb.array.StringArrayArray;
 
 
 /**
@@ -19,7 +20,8 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @WebService(name = "HAWSensorWebservice", targetNamespace = "http://hawmetering/")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @XmlSeeAlso({
-    ObjectFactory.class
+    net.java.dev.jaxb.array.ObjectFactory.class,
+    hawmetering.ObjectFactory.class
 })
 public interface HAWSensorWebservice {
 
@@ -47,6 +49,18 @@ public interface HAWSensorWebservice {
         String hawmeterChart)
         throws Exception_Exception
     ;
+
+    /**
+     * 
+     * @param hawmeterUrlsMap
+     * @param sensorUrlMap
+     */
+    @WebMethod
+    public void sendUpdate(
+        @WebParam(name = "sensorUrlMap", partName = "sensorUrlMap")
+        StringArray sensorUrlMap,
+        @WebParam(name = "hawmeterUrlsMap", partName = "hawmeterUrlsMap")
+        StringArrayArray hawmeterUrlsMap);
 
     /**
      * 

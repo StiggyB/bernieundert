@@ -1,7 +1,5 @@
 package hawsensor;
 
-import hawmetering.HAWSensorWebservice;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -9,12 +7,10 @@ import java.util.Map.Entry;
 
 public class SensorTriggerThread extends Thread {
 
-	private Map<String, hawmetering.HAWSensorWebservice> sensorUrls;
-	private Map<String, String> hawmeterUrls = new HashMap<String, String>();
+	private final HAWSensor hawSensor;
 
-	public SensorTriggerThread(Map<String, HAWSensorWebservice> sensorUrls, Map<String, String> hawmeterUrls) {
-		this.sensorUrls = sensorUrls;
-		this.hawmeterUrls = hawmeterUrls;
+	public SensorTriggerThread(HAWSensor hawSensor) {
+		this.hawSensor = hawSensor;
 	}
 
 	@Override
@@ -30,23 +26,34 @@ public class SensorTriggerThread extends Thread {
 	}
 
 	private void sendTriggers() {
-		for (Iterator<Entry<String, hawmetering.HAWSensorWebservice>> iterator = sensorUrls.entrySet().iterator(); iterator.hasNext();) {
-			Entry<String, hawmetering.HAWSensorWebservice> sensorUrlsEntry = iterator.next();
-			try {
-				// System.out.println("triggerung url: " + entry.getKey() + "---" + entry.getValue());
-				sensorUrlsEntry.getValue().trigger();
-			} catch (Exception e) {
-				// wenn nicht erreichbar
-				System.out.println(e.toString());
-				iterator.remove();
-				for (Iterator<Entry<String, String>> iterator2 = hawmeterUrls.entrySet().iterator(); iterator2.hasNext();) {
-					Entry<String, String> hawmeterUrls = iterator2.next();
-					if (hawmeterUrls.getValue().equals(sensorUrlsEntry.getKey())) {
-						iterator2.remove();
+		boolean updateNeeded = false;
+		Map<String, hawmetering.HAWSensorWebservice> sensorWebservices = hawSensor.getSensorWebservices();
+		Map<String, String> hawmeterUrlMap = hawSensor.getHawmeterUrls();
+		synchronized (sensorWebservices) {
+			for (Iterator<Entry<String, hawmetering.HAWSensorWebservice>> iterator = sensorWebservices.entrySet().iterator(); iterator.hasNext();) {
+				Entry<String, hawmetering.HAWSensorWebservice> sensorUrlsEntry = iterator.next();
+				try {
+					// System.out.println("triggerung url: " + entry.getKey() + "---" + entry.getValue());
+					sensorUrlsEntry.getValue().trigger();
+				} catch (Exception e) {
+					updateNeeded = true;
+					// wenn nicht erreichbar
+					System.out.println(e.toString());
+					iterator.remove();
+					// remove sensor from hawmeterUrl
+					for (Iterator<Entry<String, String>> iterator2 = hawmeterUrlMap.entrySet().iterator(); iterator2.hasNext();) {
+						Entry<String, String> hawmeterUrls = iterator2.next();
+						if (hawmeterUrls.getValue().equals(sensorUrlsEntry.getKey())) {
+							iterator2.remove();
+						}
 					}
+					System.out.println("Sensor '" + sensorUrlsEntry.getKey() + "' failed, removing... ");
 				}
-				System.out.println("Sensor '" + sensorUrlsEntry.getKey() + "' failed, removing... ");
 			}
 		}
+		if (updateNeeded) {
+			hawSensor.sendUpdateAllSensors();
+		}
+		
 	}
 }
