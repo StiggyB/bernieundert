@@ -100,15 +100,15 @@ public class HAWSensorWebservice {
 	/*
 	 * wenn der aufgerufene Prozess noch lebt, sendet er dem Aufrufenden ein reply, dieser macht dann nuescht weiter mehr  ...
 	 */
-	public void replyElection(){
-		System.out.println("HAWSensorWebservice.replyElection()");
-	}; 	
+//	public void replyElection(){
+//		System.out.println("HAWSensorWebservice.replyElection()");
+//	}; 	
 	
 	/*
 	 * wenn die wahl gelaufen ist, teilt der neue coord allen prozessen mit, dass er neuer coord ist ...
 	 */
 	public void newCoordinator(String url){
-		System.out.println("HAWSensorWebservice.newCoordinator()");
+		System.out.println("HAWSensorWebservice.newCoordinator(): " + url);
 		hawSensor.newCoordinator(url);
 	}; 
 
