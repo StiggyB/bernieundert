@@ -205,6 +205,7 @@ public class HAWSensor {
 				
 				//TODO: bei nicht coords rennt nun wohl der immer dauernd im hintergrund ... mit dem else ok behoben?
 				//wait $appropriate time, if no msges recved, i am coord; else i do nothing ...
+				//TODO: Bei der Wahl stürzt neuer Coord ab ... keiner triggert das mehr ...
 			}
 		};
 	}
