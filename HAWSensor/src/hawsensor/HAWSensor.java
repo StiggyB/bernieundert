@@ -157,7 +157,7 @@ public class HAWSensor {
 	}
 
 	public String getCoordinatorUrl() {
-		return coordinatorUrl + "?wsdl";
+		return coordinatorUrl;
 	}
 
 	public void trigger() {
@@ -203,6 +203,7 @@ public class HAWSensor {
 				isCoord = true;
 				electionLoop();
 				
+				//TODO: bei nicht coords rennt nun wohl der immer dauernd im hintergrund ... mit dem else ok behoben?
 				//wait $appropriate time, if no msges recved, i am coord; else i do nothing ...
 			}
 		};
@@ -226,6 +227,8 @@ public class HAWSensor {
 					}
 
 					new SensorTriggerThread(hawSensor).start();
+				} else {
+					task.cancel();
 				}
 			}
 		};

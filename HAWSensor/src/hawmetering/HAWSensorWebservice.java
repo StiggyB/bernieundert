@@ -87,12 +87,6 @@ public interface HAWSensorWebservice {
      * 
      */
     @WebMethod
-    public void replyElection();
-
-    /**
-     * 
-     */
-    @WebMethod
     public void trigger();
 
 }
