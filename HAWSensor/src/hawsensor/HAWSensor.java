@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +36,8 @@ public class HAWSensor {
 		new HAWSensor().run(args);
 	}
 
+	//TODO: geht sowas? damit ich in der inneren klasse für den einen timertask das obj einpacken kann für den neuen triggerthread?
+	private HAWSensor hawSensor = this;
 	private Map<String, hawmetering.HAWSensorWebservice> sensorWebservices = new HashMap<String, hawmetering.HAWSensorWebservice>();
 	private Map<String, String> hawmeterUrls = new HashMap<String, String>();
 	private String coordinatorUrl;
@@ -42,6 +45,10 @@ public class HAWSensor {
 	private hawmetering.HAWSensorWebservice coordinator;
 	private HAWMeteringWebservice meteringChart;
 	private Endpoint endpoint;
+	private String sensorName;
+	private Timer timer;
+	private TimerTask task;
+	private boolean isCoord;
 
 	private void run(String[] args) {
 		installShutdownHook();
@@ -55,7 +62,8 @@ public class HAWSensor {
 			// meine eigene url abspeichern
 			ownUrl = args[0];
 			
-			if (args.length == 3) {
+			if (args.length == 4) {
+				sensorName = args[3];
 				// $beliebiger sensor angegeben, coord finden
 				hawmetering.HAWSensorWebservice anySensor = createHAWSensorWebservice(args[2]);
 
@@ -63,9 +71,17 @@ public class HAWSensor {
 
 				coordinator = createHAWSensorWebservice(coordinatorUrl);
 				coordinator.registerSensor(args[0], args[1]);
+				meteringChart.setTitle(sensorName);
+				
+				task = createTask();
+				timer = new Timer("coordTimeout");
+				timer.schedule(task, 2500);
 
 			} else {
 				// kein sensor angegeben, make me coord
+				isCoord = true;
+				sensorName = args[2];
+				meteringChart.setTitle(sensorName);
 				coordinatorUrl = args[0];
 				registerSensor(coordinatorUrl, args[1]);
 
@@ -89,17 +105,17 @@ public class HAWSensor {
 
 	public void registerSensor(String url, String chart) throws Exception {
 		synchronized (sensorWebservices) {
-			if (getHawmeterUrls().containsKey(chart)) {
-				System.out.println("chart is NOT free for use");
+			if (hawmeterUrls.containsKey(chart)) {
+				System.out.println("chart is NOT free for use\n==========");
 				throw new Exception("Selected chart is already in use, try later or with different chart");
 			}
 	
-			System.out.println("chart is free for use, sensor will be registered");
+			System.out.println("chart is free for use, sensor will be registered\n==========");
 	
 			try {
 				hawmetering.HAWSensorWebservice sensor = createHAWSensorWebservice(url);
-				getSensorWebservices().put(url, sensor);
-				getHawmeterUrls().put(chart, url);
+				sensorWebservices.put(url, sensor);
+				hawmeterUrls.put(chart, url);
 				
 	//			TODO: eigentlich doch an alle ausser mich selbst oder?! oder macht das nüscht, dass ichs auch nochmal kriege?!
 				sendUpdateAllSensors();
@@ -110,12 +126,12 @@ public class HAWSensor {
 	}
 	
 	public void sendUpdateAllSensors() {
-		System.out.println("new sensor was registered, broadcasting update to all known sensors");
-		String[] sensorUrlsArray = getSensorWebservices().keySet().toArray(new String[0]);
-		String[][] hawmeterUrlsArray = MapArrayAdapter.toArray(getHawmeterUrls());
-		StringArray sensors = new BlubStringArray(sensorUrlsArray);
-		StringArrayArray meters = new BlubStringArrayArray(hawmeterUrlsArray);
-		for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : getSensorWebservices().entrySet()) {
+		System.out.println("sensor list changed, broadcasting update to all known sensors");
+		String[] sensorUrlsArray = sensorWebservices.keySet().toArray(new String[0]);
+		String[][] hawmeterUrlsArray = MapArrayAdapter.toArray(hawmeterUrls);
+		StringArray sensors = new StringArrayConverter(sensorUrlsArray);
+		StringArrayArray meters = new StringArrayArrayConverter(hawmeterUrlsArray);
+		for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorWebservices.entrySet()) {
 			entry.getValue().sendUpdate(sensors, meters);
 		}
 	}
@@ -125,8 +141,8 @@ public class HAWSensor {
 		System.out.println(Arrays.toString(sensorUrls));
 		HashMap<String, hawmetering.HAWSensorWebservice> newSensorWebservices = new HashMap<String, hawmetering.HAWSensorWebservice>();
 		for (String sensorUrl : sensorUrls) {
-			if (getSensorWebservices().containsKey(sensorUrl)) {
-				newSensorWebservices.put(sensorUrl, getSensorWebservices().get(sensorUrl));
+			if (sensorWebservices.containsKey(sensorUrl)) {
+				newSensorWebservices.put(sensorUrl, sensorWebservices.get(sensorUrl));
 			} else {
 				try {
 					newSensorWebservices.put(sensorUrl, createHAWSensorWebservice(sensorUrl));
@@ -135,7 +151,7 @@ public class HAWSensor {
 				}
 			}
 		}
-		sensorWebservices = (newSensorWebservices);
+		sensorWebservices = newSensorWebservices;
 		
 		hawmeterUrls = MapArrayAdapter.toMap(hawmeterUrls2);
 	}
@@ -145,7 +161,12 @@ public class HAWSensor {
 	}
 
 	public void trigger() {
-		System.out.println("i am " + ownUrl + ", have been triggered by coord");
+		if (!isCoord) {
+			task.cancel();
+			task = createTask();
+			timer.schedule(task, 2500);
+		}
+		System.out.println("i am '" + ownUrl + "', have been triggered by coord");
 		long messwert = System.currentTimeMillis() % 200;
 		if (messwert > 100) {
 			messwert = 200 - messwert;
@@ -171,7 +192,63 @@ public class HAWSensor {
 		}));
 	}
 
+	private TimerTask createTask() {
+		return new TimerTask() {
+			@Override
+			public void run() {
+				System.out.println("Wahl gestartet");
+				task.cancel();
+				task = createCoordTask();
+				timer.schedule(task, 2500);
+				isCoord = true;
+				electionLoop();
+				
+				//wait $appropriate time, if no msges recved, i am coord; else i do nothing ...
+			}
+		};
+	}
+	
 
+	private TimerTask createCoordTask() {
+		return new TimerTask() {
+			@Override
+			public void run() {
+				if (isCoord) {
+					System.out.println("I is admin nao!");
+
+					for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorWebservices.entrySet()) {
+						try {
+							entry.getValue().newCoordinator(ownUrl);
+
+						} catch (Exception e) {
+							System.out.println(e.toString());
+						}
+					}
+
+					new SensorTriggerThread(hawSensor).start();
+				}
+			}
+		};
+	}
+	
+	public void startElection(){
+		electionLoop();
+	}
+	
+	private void electionLoop(){
+		for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorWebservices.entrySet()) {
+			try {
+				if (entry.getKey().compareTo(ownUrl) > 0) {
+					if(entry.getValue().startElection("abc")){
+						isCoord = false;
+					}
+				}
+			} catch (Exception e) {
+				System.out.println(e.toString());
+			}
+		}
+	}
+	
 	public Map<String, hawmetering.HAWSensorWebservice> getSensorWebservices() {
 		return sensorWebservices;
 	}
@@ -179,6 +256,11 @@ public class HAWSensor {
 
 	public Map<String, String> getHawmeterUrls() {
 		return hawmeterUrls;
+	}
+
+
+	public void newCoordinator(String url) {
+		coordinatorUrl = url;
 	}
 
 
