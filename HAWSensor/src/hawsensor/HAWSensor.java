@@ -10,16 +10,18 @@ import hawmetering.HAWSensorWebserviceService;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Endpoint;
+
+import net.java.dev.jaxb.array.StringArray;
+import net.java.dev.jaxb.array.StringArrayArray;
 
 public class HAWSensor {
 
@@ -33,29 +35,16 @@ public class HAWSensor {
 		new HAWSensor().run(args);
 	}
 
-	private Map<String, hawmetering.HAWSensorWebservice> sensorUrls = new HashMap<String, hawmetering.HAWSensorWebservice>();
-//	http://svn.apache.org/repos/asf/cxf/trunk/distribution/src/main/release/samples/java_first_jaxws/src/main/java/demo/hw/server/
-//	http://mycenes.wordpress.com/2009/10/27/apache-cxf-how-tos-well-not-exactly/
-	@XmlJavaTypeAdapter(value = SensorUrlMapAdapter.class)
-	@XmlElement(name = "sensorUrls")
+	private Map<String, hawmetering.HAWSensorWebservice> sensorWebservices = new HashMap<String, hawmetering.HAWSensorWebservice>();
 	private Map<String, String> hawmeterUrls = new HashMap<String, String>();
-	private String coordinatorString;
-	private String ownString;
+	private String coordinatorUrl;
+	private String ownUrl;
 	private hawmetering.HAWSensorWebservice coordinator;
 	private HAWMeteringWebservice meteringChart;
 	private Endpoint endpoint;
-	private Timer timer;
 
 	private void run(String[] args) {
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				System.out.println("shutdownhook tut dinge ...");
-				endpoint.stop();
-			}
-		}));
-
+		installShutdownHook();
 		startWebservice(args[0]);
 
 		try {
@@ -64,28 +53,23 @@ public class HAWSensor {
 			HAWMeteringWebserviceService service2 = new HAWMeteringWebserviceService(new URL(args[1]), new QName("http://hawmetering/",	"HAWMeteringWebserviceService"));
 			meteringChart = service2.getHAWMeteringWebservicePort();
 			// meine eigene url abspeichern
-			ownString = args[0];
+			ownUrl = args[0];
 			
 			if (args.length == 3) {
 				// $beliebiger sensor angegeben, coord finden
-				URL sensorUrl = new URL(args[2]);
+				hawmetering.HAWSensorWebservice anySensor = createHAWSensorWebservice(args[2]);
 
-				HAWSensorWebserviceService service = new HAWSensorWebserviceService(sensorUrl, new QName("http://hawmetering/", "HAWSensorWebserviceService"));
-				hawmetering.HAWSensorWebservice anySensor = service.getHAWSensorWebservicePort();
+				coordinatorUrl = anySensor.getCoordinatorUrl();
 
-				coordinatorString = anySensor.getCoordinatorUrl();
-
-				service = new HAWSensorWebserviceService(new URL(coordinatorString), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
-				coordinator = service.getHAWSensorWebservicePort();
-
+				coordinator = createHAWSensorWebservice(coordinatorUrl);
 				coordinator.registerSensor(args[0], args[1]);
 
 			} else {
 				// kein sensor angegeben, make me coord
-				coordinatorString = args[0];
-				registerSensor(coordinatorString, args[1]);
+				coordinatorUrl = args[0];
+				registerSensor(coordinatorUrl, args[1]);
 
-				new SensorTriggerThread(sensorUrls, hawmeterUrls).start();
+				new SensorTriggerThread(this).start();
 			}
 
 		} catch (MalformedURLException ex) {
@@ -97,51 +81,71 @@ public class HAWSensor {
 
 	}
 
+
 	private void startWebservice(String url) {
 		HAWSensorWebservice webservice = new HAWSensorWebservice(this);
 		endpoint = Endpoint.publish(url, webservice);
 	}
 
-	public synchronized void registerSensor(String url, String chart) throws Exception {
-		if (hawmeterUrls.containsKey(chart)) {
-			System.out.println("chart is NOT free for use");
-			throw new Exception("Selected chart is already in use, try later or with different chart");
-		}
-
-		System.out.println("chart is free for use, sensor will be registered");
-
-		try {
-			HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
-			hawmetering.HAWSensorWebservice sensor = service.getHAWSensorWebservicePort();
-			sensorUrls.put(url, sensor);
-			hawmeterUrls.put(chart, url);
-			
-//			TODO: eigentlich doch an alle ausser mich selbst oder?!
-			sendUpdateAllSensors();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+	public void registerSensor(String url, String chart) throws Exception {
+		synchronized (sensorWebservices) {
+			if (getHawmeterUrls().containsKey(chart)) {
+				System.out.println("chart is NOT free for use");
+				throw new Exception("Selected chart is already in use, try later or with different chart");
+			}
+	
+			System.out.println("chart is free for use, sensor will be registered");
+	
+			try {
+				hawmetering.HAWSensorWebservice sensor = createHAWSensorWebservice(url);
+				getSensorWebservices().put(url, sensor);
+				getHawmeterUrls().put(chart, url);
+				
+	//			TODO: eigentlich doch an alle ausser mich selbst oder?! oder macht das nüscht, dass ichs auch nochmal kriege?!
+				sendUpdateAllSensors();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	private void sendUpdateAllSensors() {
+	public void sendUpdateAllSensors() {
 		System.out.println("new sensor was registered, broadcasting update to all known sensors");
-		for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorUrls.entrySet()) {
-			// entry.getValue().
+		String[] sensorUrlsArray = getSensorWebservices().keySet().toArray(new String[0]);
+		String[][] hawmeterUrlsArray = MapArrayAdapter.toArray(getHawmeterUrls());
+		StringArray sensors = new BlubStringArray(sensorUrlsArray);
+		StringArrayArray meters = new BlubStringArrayArray(hawmeterUrlsArray);
+		for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : getSensorWebservices().entrySet()) {
+			entry.getValue().sendUpdate(sensors, meters);
 		}
 	}
 
-	public void sendUpdate(Map<String, hawmetering.HAWSensorWebservice> sensorUrls, Map<String, String> hawchartMap) {
+	public void sendUpdate(String[] sensorUrls, String[][] hawmeterUrls2) {
 		// hat der sensortriggerthread damit automatishc auch die neue liste?
-		this.sensorUrls = sensorUrls;
-		this.hawmeterUrls = hawchartMap;
+		System.out.println(Arrays.toString(sensorUrls));
+		HashMap<String, hawmetering.HAWSensorWebservice> newSensorWebservices = new HashMap<String, hawmetering.HAWSensorWebservice>();
+		for (String sensorUrl : sensorUrls) {
+			if (getSensorWebservices().containsKey(sensorUrl)) {
+				newSensorWebservices.put(sensorUrl, getSensorWebservices().get(sensorUrl));
+			} else {
+				try {
+					newSensorWebservices.put(sensorUrl, createHAWSensorWebservice(sensorUrl));
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		sensorWebservices = (newSensorWebservices);
+		
+		hawmeterUrls = MapArrayAdapter.toMap(hawmeterUrls2);
 	}
 
 	public String getCoordinatorUrl() {
-		return coordinatorString + "?wsdl";
+		return coordinatorUrl + "?wsdl";
 	}
 
 	public void trigger() {
-		System.out.println("i am " + ownString + ", have been triggered by coord");
+		System.out.println("i am " + ownUrl + ", have been triggered by coord");
 		long messwert = System.currentTimeMillis() % 200;
 		if (messwert > 100) {
 			messwert = 200 - messwert;
@@ -149,4 +153,33 @@ public class HAWSensor {
 		meteringChart.setValue(messwert);
 
 	}
+	
+	private hawmetering.HAWSensorWebservice createHAWSensorWebservice(String url) throws MalformedURLException{
+		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
+		hawmetering.HAWSensorWebservice sensor = service.getHAWSensorWebservicePort();
+		return sensor;
+	}
+	
+	private void installShutdownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				System.out.println("shutdownhook tut dinge ...");
+				endpoint.stop();
+			}
+		}));
+	}
+
+
+	public Map<String, hawmetering.HAWSensorWebservice> getSensorWebservices() {
+		return sensorWebservices;
+	}
+
+
+	public Map<String, String> getHawmeterUrls() {
+		return hawmeterUrls;
+	}
+
+
 }

@@ -5,6 +5,8 @@
 package hawsensor;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.jws.WebParam;
@@ -87,11 +89,12 @@ public class HAWSensorWebservice {
 //	hab bisher nur den einen Map Adapter gebaut, ...
 //	http://jaxb.java.net/guide/Mapping_your_favorite_class.html
 //	http://mycenes.wordpress.com/2009/10/27/apache-cxf-how-tos-well-not-exactly/
-	@XmlJavaTypeAdapter(value=SensorUrlMapAdapter.class)
 	public void sendUpdate(
 //			@WebParam(name = "sensorUrlMap") Map<String, hawmetering.HAWSensorWebservice> sensorUrls, 
-			@WebParam(name = "hawmeterUrlsMap") Map<String, String> hawmeterUrls){
-//		hawSensor.sendUpdate(sensorUrls, hawmeterUrls);
+//			@WebParam(name = "hawmeterUrlsMap") Map<String, String> hawmeterUrls){
+			@WebParam(name = "sensorUrlMap") String[] sensorUrls, 
+			@WebParam(name = "hawmeterUrlsMap") String[][] hawmeterUrls){
+		hawSensor.sendUpdate(sensorUrls, hawmeterUrls);
 	};	
 	
 //	wurde ein neuer sensor zugefügt, muss das allen mitgeteilt werden (nur neuen sensor publishen oder ganze liste 
