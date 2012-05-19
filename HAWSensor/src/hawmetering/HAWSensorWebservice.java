@@ -20,8 +20,8 @@ import net.java.dev.jaxb.array.StringArrayArray;
 @WebService(name = "HAWSensorWebservice", targetNamespace = "http://hawmetering/")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @XmlSeeAlso({
-    net.java.dev.jaxb.array.ObjectFactory.class,
-    hawmetering.ObjectFactory.class
+    hawmetering.ObjectFactory.class,
+    net.java.dev.jaxb.array.ObjectFactory.class
 })
 public interface HAWSensorWebservice {
 
@@ -61,6 +61,33 @@ public interface HAWSensorWebservice {
         StringArray sensorUrlMap,
         @WebParam(name = "hawmeterUrlsMap", partName = "hawmeterUrlsMap")
         StringArrayArray hawmeterUrlsMap);
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns boolean
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public boolean startElection(
+        @WebParam(name = "arg0", partName = "arg0")
+        String arg0);
+
+    /**
+     * 
+     * @param arg0
+     */
+    @WebMethod
+    public void newCoordinator(
+        @WebParam(name = "arg0", partName = "arg0")
+        String arg0);
+
+    /**
+     * 
+     */
+    @WebMethod
+    public void replyElection();
 
     /**
      * 

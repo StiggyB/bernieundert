@@ -28,28 +28,17 @@ public class HAWSensorWebservice {
 	
 	
 //	TODO: Allgemeines:
-//	- http://www.iks.hs-merseburg.de/~uschroet/Literatur/Java_Lit/JAVA_Insel/javainsel_19_007.htm
-//		-> WebParam und WebResult machen den code nur schoener/lesbarer, needed sind die nicht.
-//	- was ist mit dem prozess der coord ist, ruft der sich aus der sensorUrl liste einfach selber auf? z.B. bei trigger?
-//	- bully oder ring algo ... meine methoden unten sehen bully vor, hat im schlechtesten fall n², ring hätte n als aufwand
 //	- bei coord ausfall, startet ein sensor die wahl oder können eben einfach alle die es merken starten? wie verwaltet man die msges davon, geht das?
-//	- scheinbar muss man bei anderen als einfachen datentypen oder string noch $mehr tun ...
-//		-> http://www.heise.de/developer/artikel/Webservices-mit-Java-EE-6-JAX-WS-und-RESTful-Services-1247464.html?artikelseite=2
-//		-> http://predic8.de/groovy-web-services-jax-ws.htm
 //	TODO: Fragen
-//	- Was passiert mit dem aufruf von trigger, wenn eine wahl startet oder rennt?
+//	- Was passiert mit dem aufruf von trigger, wenn eine wahl startet oder rennt? -> coord tot, kommt kein trigger, right? :> es sei denn, er hatte lag
+//	  dann rennt wahl ins leere ... da coord ja wieder antwortet
 //	- Was passiert, wenn der coord wegen vielen ausgefallenen sensoren länger braucht? kann das trigger ausbleiben? was passiert, wenn dann eine wahl
-//	  startet und der coord aber noch da ist?
+//	  startet und der coord aber noch da ist? -> siehe darüber
 //	- prozess fällt während der wahl aus:
 //		-> wer merkt das und wie? anzeigen freigeben? wer speichert/reicht das weiter, es gibt ja keinen coord ...?! oder merkt das der neue coord erst?
-//	- gibt es ein timeout, wann der coord einen toten sensor löscht? oder kommt die exception sofort beim triggern? 
 //	- ein sensor wird für tot erklärt, ist es aber nicht, war vlt nur lag oder trigger msg verpasst, dann ist seine anzeige freigegeben und sensor
 //	  wird wohl noch ne wahl starten?! was tun?!
 //	- nie mehr als einen coord haben, sonst problem.
-//	- wird ein sensor beendet, z.B. strg+c, meldet er sich nicht ab oder? also einfach killen und beim nächsten trigger failed das ganze und er wird
-//	- gelöscht?!
-//	- reihenfolge?! neuer sensor meldet sich bei einem sensor, erhält cord url, meldet sich am coord an, wann bekommt er trigger? bevor das update an
-//	  alle sensoren ging oder schon währenddessen? wenn das zulange dauern sollte, würde der sensor ja ne wahl starten sofort ...
 
 	/*
 	 * neuer sensor registriert sich beim coord. mit übergeben muss er noch die gewünschte anzeige-url, auf der er arbeiten will.
@@ -62,7 +51,7 @@ public class HAWSensorWebservice {
 	public void registerSensor(
 			@WebParam(name = "url") String url, 
 			@WebParam(name = "hawmeterChart") String chart) throws Exception {
-		System.out.println("\n\nNew sensor connecting from:\n" + url + "\nwants to use chart:\n" + chart);
+		System.out.println("==========\nNew sensor connecting from:\n" + url + "\nwants to use chart:\n" + chart);
 		hawSensor.registerSensor(url, chart);
 	}
 
@@ -85,28 +74,42 @@ public class HAWSensorWebservice {
 	}
 	
 
-//	TODO: geht nicht, Map is an interaface... hab den zweiten link befolgt, aber mit dem original bsp. von apache kommt immer noch selbst exception
-//	hab bisher nur den einen Map Adapter gebaut, ...
-//	http://jaxb.java.net/guide/Mapping_your_favorite_class.html
-//	http://mycenes.wordpress.com/2009/10/27/apache-cxf-how-tos-well-not-exactly/
+	/*
+	 * wurde ein neuer sensor zugefügt, muss das allen mitgeteilt werden (nur neuen sensor publishen oder ganze liste senden und auf jedem sensor 
+	 * speichern?! natürlich nicht nur sensoren sondern auch anzeigenliste versenden -> eigene klasse/struktur?! 
+	 * WICHTIG: Wann update versenden? wenn eine iteration in gange ist direkt wenn ein sensor vom iterator removed wird?
+	 * oder am ende eines kompletten schleifendurchslauf ganze liste senden an alle?!
+	 */
 	public void sendUpdate(
-//			@WebParam(name = "sensorUrlMap") Map<String, hawmetering.HAWSensorWebservice> sensorUrls, 
-//			@WebParam(name = "hawmeterUrlsMap") Map<String, String> hawmeterUrls){
 			@WebParam(name = "sensorUrlMap") String[] sensorUrls, 
 			@WebParam(name = "hawmeterUrlsMap") String[][] hawmeterUrls){
 		hawSensor.sendUpdate(sensorUrls, hawmeterUrls);
 	};	
 	
-//	wurde ein neuer sensor zugefügt, muss das allen mitgeteilt werden (nur neuen sensor publishen oder ganze liste 
-//									senden und auf jedem sensor speichern?! natürlich nicht nur sensoren sondern auch anzeigenliste versenden ->
-//									eigene klasse/struktur?!
-//									WICHTIG: Wann update versenden? wenn eine iteration in gange ist direkt wenn ein sensor vom iterator removed wird?
-//									oder am ende eines kompletten schleifendurchslauf ganze liste senden an alle?!
-//	public void startElection(); 	auslösender Prozess muss seine ID (URL) übergeben, aufgerufener Prozess weiss sonst nich, wer das war, right?
-//									wenn aufgerufener prozess nicht tot, schickt er reply zurueck als "lebenszeichen". er schickt dann ebenfalls an 
-//									alle prozesse, die eine groessere id als er selbst haben eine startElection msg.
-//									Bekommt urspruenglicher prozess kein reply, ist er neuer coord...
-//	public void replyElection(); 	wenn der aufgerufene Prozess noch lebt, sendet er dem Aufrufenden ein reply, dieser macht dann nuescht weiter mehr  ...
-//	public void newCoordinator(); wenn die wahl gelaufen ist, teilt der neue coord allen prozessen mit, dass er neuer coord ist ...
+	/*
+	 * auslösender Prozess muss seine ID (URL) übergeben, aufgerufener Prozess weiss sonst nich, wer das war, right?
+	 * wenn aufgerufener prozess nicht tot, schickt er reply zurueck als "lebenszeichen". er schickt dann ebenfalls an alle prozesse, die eine 
+	 * groessere id als er selbst haben eine startElection msg. Bekommt urspruenglicher prozess kein reply, ist er neuer coord...
+	 */
+	public boolean startElection(String url){
+		System.out.println("HAWSensorWebservice.startElection()");
+		hawSensor.startElection();
+		return true;
+	}; 	
+	
+	/*
+	 * wenn der aufgerufene Prozess noch lebt, sendet er dem Aufrufenden ein reply, dieser macht dann nuescht weiter mehr  ...
+	 */
+	public void replyElection(){
+		System.out.println("HAWSensorWebservice.replyElection()");
+	}; 	
+	
+	/*
+	 * wenn die wahl gelaufen ist, teilt der neue coord allen prozessen mit, dass er neuer coord ist ...
+	 */
+	public void newCoordinator(String url){
+		System.out.println("HAWSensorWebservice.newCoordinator()");
+		hawSensor.newCoordinator(url);
+	}; 
 
 }
