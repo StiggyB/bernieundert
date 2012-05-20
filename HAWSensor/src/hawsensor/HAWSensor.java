@@ -8,8 +8,12 @@ import hawmetering.HAWMeteringWebservice;
 import hawmetering.HAWMeteringWebserviceService;
 import hawmetering.HAWSensorWebserviceService;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Endpoint;
 
 import net.java.dev.jaxb.array.StringArray;
@@ -34,6 +39,9 @@ public class HAWSensor {
 	// http://www.java.net/node/667072
 
 	public static void main(String[] args) {
+		System.setProperty("sun.net.client.defaultConnectTimeout", "3000");
+		System.setProperty("sun.net.client.defaultReadTimeout", "3000");
+
 		new HAWSensor().run(args);
 	}
 
@@ -177,6 +185,7 @@ public class HAWSensor {
 	}
 	
 	// TODO: changed -> appended ?wsdl ...????!!!!
+	// http://stackoverflow.com/questions/2148915/how-do-i-set-the-timeout-for-a-jax-ws-webservice-client
 	private hawmetering.HAWSensorWebservice createHAWSensorWebservice(String url) throws MalformedURLException{
 		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
 //		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url + "?wsdl"), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
@@ -220,6 +229,7 @@ public class HAWSensor {
 			public void run() {
 				if (isCoord) {
 					System.out.println("I is admin nao!");
+					meteringChart.setTitle("newCoord " + sensorName);
 
 					for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorWebservices.entrySet()) {
 						try {
