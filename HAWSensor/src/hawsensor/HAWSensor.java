@@ -39,6 +39,8 @@ public class HAWSensor {
 	// http://www.java.net/node/667072
 
 	public static void main(String[] args) {
+		// Timeouts:
+		// http://stackoverflow.com/questions/808487/how-to-set-a-connection-timeout-when-using-jaxrpc-ri-web-services-client
 		System.setProperty("sun.net.client.defaultConnectTimeout", "3000");
 		System.setProperty("sun.net.client.defaultReadTimeout", "3000");
 
@@ -185,7 +187,6 @@ public class HAWSensor {
 	}
 	
 	// TODO: changed -> appended ?wsdl ...????!!!!
-	// http://stackoverflow.com/questions/2148915/how-do-i-set-the-timeout-for-a-jax-ws-webservice-client
 	private hawmetering.HAWSensorWebservice createHAWSensorWebservice(String url) throws MalformedURLException{
 		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
 //		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url + "?wsdl"), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
