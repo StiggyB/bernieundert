@@ -31,6 +31,7 @@ public class HAWSensor {
 	// http://www.vorlesungen.uni-osnabrueck.de/informatik/da02/va.pdf
 	// http://computersciencesource.wordpress.com/2009/09/10/year-1-distributed-systems-bully-algorithm/
 	// http://de.wikipedia.org/wiki/Ringalgorithmus
+	// http://www.java.net/node/667072
 
 	public static void main(String[] args) {
 		new HAWSensor().run(args);
@@ -55,7 +56,7 @@ public class HAWSensor {
 		startWebservice(args[0]);
 
 		try {
-			
+			// TODO: zwei coords sind noch möglich .... wenn man sie manuell startet!
 			// webservice fuer chart, worauf angezeigt werden soll, anlegen
 			HAWMeteringWebserviceService service2 = new HAWMeteringWebserviceService(new URL(args[1]), new QName("http://hawmetering/",	"HAWMeteringWebserviceService"));
 			meteringChart = service2.getHAWMeteringWebservicePort();
@@ -175,8 +176,10 @@ public class HAWSensor {
 
 	}
 	
+	// TODO: changed -> appended ?wsdl ...????!!!!
 	private hawmetering.HAWSensorWebservice createHAWSensorWebservice(String url) throws MalformedURLException{
 		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
+//		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url + "?wsdl"), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
 		hawmetering.HAWSensorWebservice sensor = service.getHAWSensorWebservicePort();
 		return sensor;
 	}
