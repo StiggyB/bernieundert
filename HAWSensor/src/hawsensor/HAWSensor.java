@@ -47,8 +47,6 @@ public class HAWSensor {
 		new HAWSensor().run(args);
 	}
 
-	//TODO: geht sowas? damit ich in der inneren klasse für den einen timertask das obj einpacken kann für den neuen triggerthread?
-	private HAWSensor hawSensor = this;
 	private Map<String, hawmetering.HAWSensorWebservice> sensorWebservices = new HashMap<String, hawmetering.HAWSensorWebservice>();
 	private Map<String, String> hawmeterUrls = new HashMap<String, String>();
 	private String coordinatorUrl;
@@ -57,9 +55,11 @@ public class HAWSensor {
 	private HAWMeteringWebservice meteringChart;
 	private Endpoint endpoint;
 	private String sensorName;
-	private Timer timer;
-	private TimerTask task;
+	private Timer timer = new Timer("coordTimeout");
+	private TimerTask triggerTimeoutTask;
 	private boolean isCoord;
+	private boolean electionRunning;
+	private SensorTriggerThread sensorTriggerThread;
 
 	private void run(String[] args) {
 		installShutdownHook();
@@ -84,9 +84,7 @@ public class HAWSensor {
 				coordinator.registerSensor(args[0], args[1]);
 				meteringChart.setTitle(sensorName);
 				
-				task = createTask();
-				timer = new Timer("coordTimeout");
-				timer.schedule(task, 2500);
+				scheduleTriggerTimeoutTask();
 
 			} else {
 				// kein sensor angegeben, make me coord
@@ -96,7 +94,7 @@ public class HAWSensor {
 				coordinatorUrl = args[0];
 				registerSensor(coordinatorUrl, args[1]);
 
-				new SensorTriggerThread(this).start();
+				createSensorTriggerThread();
 			}
 
 		} catch (MalformedURLException ex) {
@@ -172,24 +170,23 @@ public class HAWSensor {
 	}
 
 	public void trigger() {
-		if (!isCoord) {
-			task.cancel();
-			task = createTask();
-			timer.schedule(task, 2500);
+		if (electionRunning) {
+			System.err.println("election is already running, ignoring trigger()");
+		} else {
+			if (!isCoord) {
+				scheduleTriggerTimeoutTask();
+			}
+			System.out.println("i am '" + ownUrl + "', have been triggered by coord");
+			long messwert = System.currentTimeMillis() % 200;
+			if (messwert > 100) {
+				messwert = 200 - messwert;
+			}
+			meteringChart.setValue(messwert);
 		}
-		System.out.println("i am '" + ownUrl + "', have been triggered by coord");
-		long messwert = System.currentTimeMillis() % 200;
-		if (messwert > 100) {
-			messwert = 200 - messwert;
-		}
-		meteringChart.setValue(messwert);
-
 	}
 	
-	// TODO: changed -> appended ?wsdl ...????!!!!
 	private hawmetering.HAWSensorWebservice createHAWSensorWebservice(String url) throws MalformedURLException{
 		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
-//		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url + "?wsdl"), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
 		hawmetering.HAWSensorWebservice sensor = service.getHAWSensorWebservicePort();
 		return sensor;
 	}
@@ -205,66 +202,71 @@ public class HAWSensor {
 		}));
 	}
 
-	private TimerTask createTask() {
+	private void scheduleTriggerTimeoutTask() {
+		if (triggerTimeoutTask != null) {
+			triggerTimeoutTask.cancel();
+		}
+		
+		triggerTimeoutTask = createTriggerTimeoutTask();
+		timer.schedule(triggerTimeoutTask, 5000);
+	}
+	
+	private TimerTask createTriggerTimeoutTask() {
 		return new TimerTask() {
 			@Override
 			public void run() {
-				System.out.println("Wahl gestartet");
-				task.cancel();
-				task = createCoordTask();
-				timer.schedule(task, 2500);
-				isCoord = true;
-				electionLoop();
-				
-				//TODO: bei nicht coords rennt nun wohl der immer dauernd im hintergrund ... mit dem else ok behoben?
-				//wait $appropriate time, if no msges recved, i am coord; else i do nothing ...
-				//TODO: Bei der Wahl stürzt neuer Coord ab ... keiner triggert das mehr ...
+				doElection();
 			}
 		};
 	}
 	
-
-	private TimerTask createCoordTask() {
-		return new TimerTask() {
-			@Override
-			public void run() {
-				if (isCoord) {
-					System.out.println("I is admin nao!");
-					meteringChart.setTitle("newCoord " + sensorName);
-
-					for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorWebservices.entrySet()) {
-						try {
-							entry.getValue().newCoordinator(ownUrl);
-
-						} catch (Exception e) {
-							System.out.println(e.toString());
-						}
-					}
-
-					new SensorTriggerThread(hawSensor).start();
-				} else {
-					task.cancel();
-				}
-			}
-		};
-	}
 	
-	public void startElection(){
-		electionLoop();
-	}
-	
-	private void electionLoop(){
-		for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorWebservices.entrySet()) {
-			try {
-				if (entry.getKey().compareTo(ownUrl) > 0) {
-					if(entry.getValue().startElection("abc")){
+	public void doElection(){
+		if (electionRunning) {
+			System.err.println("election already running, called from: " + Thread.currentThread().getName());
+		} else {
+			electionRunning = true;
+			System.out.println("Wahl gestartet");
+			isCoord = true;
+			for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorWebservices.entrySet()) {
+				try {
+					if (entry.getKey().compareTo(ownUrl) > 0) {
+						entry.getValue().startElection("abc");
 						isCoord = false;
 					}
+				} catch (Exception e) {
+					System.err.println("couldn't reach " + entry.getValue() + ", " + e.toString());
 				}
-			} catch (Exception e) {
-				System.out.println(e.toString());
 			}
+			System.out.println("electionLoop finished");
+			
+			if (isCoord) {
+				System.out.println("I is admin nao!");
+				meteringChart.setTitle("newCoord " + sensorName);
+
+				for (Map.Entry<String, hawmetering.HAWSensorWebservice> entry : sensorWebservices.entrySet()) {
+					try {
+						entry.getValue().newCoordinator(ownUrl);
+					} catch (Exception e) {
+						System.err.println("couldn't set coordinator on " + entry.getValue() + ", " + e.toString());
+					}
+				}
+				createSensorTriggerThread();
+			} else {
+				scheduleTriggerTimeoutTask();
+			}
+			electionRunning = false;
 		}
+	}
+
+
+	private void createSensorTriggerThread() {
+		if (sensorTriggerThread != null) {
+			sensorTriggerThread.shutdown();
+			sensorTriggerThread.interrupt();
+		}
+		sensorTriggerThread = new SensorTriggerThread(this);
+		sensorTriggerThread.start();
 	}
 	
 	public Map<String, hawmetering.HAWSensorWebservice> getSensorWebservices() {
