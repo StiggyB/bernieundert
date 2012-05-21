@@ -100,6 +100,7 @@ public class HAWSensor {
 		} catch (MalformedURLException ex) {
 			Logger.getLogger(HAWSensor.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception e) {
+			timer.cancel();
 			endpoint.stop();
 			e.printStackTrace();
 		}
