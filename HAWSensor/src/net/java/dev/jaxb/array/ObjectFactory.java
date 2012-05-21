@@ -30,19 +30,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link StringArray }
-     * 
-     */
-    public StringArray createStringArray() {
-        return new StringArray();
-    }
-
-    /**
      * Create an instance of {@link StringArrayArray }
      * 
      */
     public StringArrayArray createStringArrayArray() {
         return new StringArrayArray();
+    }
+
+    /**
+     * Create an instance of {@link StringArray }
+     * 
+     */
+    public StringArray createStringArray() {
+        return new StringArray();
     }
 
 }

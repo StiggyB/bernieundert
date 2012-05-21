@@ -23,8 +23,6 @@ public class HAWSensorWebservice {
 	}
 	
 	
-//	TODO: Allgemeines:
-//	- bei coord ausfall, startet ein sensor die wahl oder können eben einfach alle die es merken starten? wie verwaltet man die msges davon, geht das?
 //	TODO: Fragen
 //	- Was passiert mit dem aufruf von trigger, wenn eine wahl startet oder rennt? -> coord tot, kommt kein trigger, right? :> es sei denn, er hatte lag
 //	  dann rennt wahl ins leere ... da coord ja wieder antwortet
@@ -87,10 +85,9 @@ public class HAWSensorWebservice {
 	 * wenn aufgerufener prozess nicht tot, schickt er reply zurueck als "lebenszeichen". er schickt dann ebenfalls an alle prozesse, die eine 
 	 * groessere id als er selbst haben eine startElection msg. Bekommt urspruenglicher prozess kein reply, ist er neuer coord...
 	 */
-	public boolean startElection(String url){
+	public void startElection(String url){
 		System.out.println("HAWSensorWebservice.startElection()");
-		hawSensor.startElection();
-		return true;
+		hawSensor.doElection();
 	}; 	
 	
 	/*

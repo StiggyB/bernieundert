@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 public class SensorTriggerThread extends Thread {
 
 	private final HAWSensor hawSensor;
+	private boolean isRunning = true;
 
 	public SensorTriggerThread(HAWSensor hawSensor) {
 		this.hawSensor = hawSensor;
@@ -14,12 +15,12 @@ public class SensorTriggerThread extends Thread {
 
 	@Override
 	public void run() {
-		while (true) {
+		while (isRunning) {
 			sendTriggers();
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				System.out.println("thread interrupted while sleep: " + e.getMessage());
 			}
 		}
 	}
@@ -54,5 +55,9 @@ public class SensorTriggerThread extends Thread {
 			hawSensor.sendUpdateAllSensors();
 		}
 		
+	}
+	
+	public void shutdown() {
+		isRunning = false;
 	}
 }
