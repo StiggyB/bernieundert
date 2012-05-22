@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.1
  * 
  */
-@WebServiceClient(name = "HAWSensorWebserviceService", targetNamespace = "http://hawmetering/", wsdlLocation = "http://192.168.2.7:9998/hawmetering/sensor?wsdl")
+@WebServiceClient(name = "HAWSensorWebserviceService", targetNamespace = "http://hawmetering/", wsdlLocation = "http://192.168.1.26:9998/hawmetering/sensor?wsdl")
 public class HAWSensorWebserviceService
     extends Service
 {
@@ -30,9 +30,9 @@ public class HAWSensorWebserviceService
         try {
             URL baseUrl;
             baseUrl = hawmetering.HAWSensorWebserviceService.class.getResource(".");
-            url = new URL(baseUrl, "http://192.168.2.7:9998/hawmetering/sensor?wsdl");
+            url = new URL(baseUrl, "http://192.168.1.26:9998/hawmetering/sensor?wsdl");
         } catch (MalformedURLException e) {
-            logger.warning("Failed to create URL for the wsdl Location: 'http://192.168.2.7:9998/hawmetering/sensor?wsdl', retrying as a local file");
+            logger.warning("Failed to create URL for the wsdl Location: 'http://192.168.1.26:9998/hawmetering/sensor?wsdl', retrying as a local file");
             logger.warning(e.getMessage());
         }
         HAWSENSORWEBSERVICESERVICE_WSDL_LOCATION = url;

@@ -26,8 +26,7 @@ import net.java.dev.jaxb.array.StringArrayArray;
 
 public class HAWSensor {
 
-	// C:\Users\martin\workspace\HAWSensor>wsimport -d src -keep
-	// http://localhost:9998/hawmetering/sensor?wsdl
+	// C:\Users\martin\workspace\HAWSensor>wsimport -d src -keep http://localhost:9998/hawmetering/sensor?wsdl
 	// http://www.vorlesungen.uni-osnabrueck.de/informatik/da02/va.pdf
 	// http://computersciencesource.wordpress.com/2009/09/10/year-1-distributed-systems-bully-algorithm/
 	// http://de.wikipedia.org/wiki/Ringalgorithmus
@@ -36,8 +35,8 @@ public class HAWSensor {
 	public static void main(String[] args) {
 		// Timeouts:
 		// http://stackoverflow.com/questions/808487/how-to-set-a-connection-timeout-when-using-jaxrpc-ri-web-services-client
-		System.setProperty("sun.net.client.defaultConnectTimeout", "3000");
-		System.setProperty("sun.net.client.defaultReadTimeout", "3000");
+//		System.setProperty("sun.net.client.defaultConnectTimeout", "3000");
+//		System.setProperty("sun.net.client.defaultReadTimeout", "3000");
 
 		new HAWSensor().run(args);
 	}
@@ -73,9 +72,15 @@ public class HAWSensor {
 				// $beliebiger sensor angegeben, coord finden
 				hawmetering.HAWSensorWebservice anySensor = createHAWSensorWebservice(args[2]);
 
+				// TODO: wenn electionRunning == true, aufrufer thread.sleep und retry, sonst kriegt der alte url und connect timeout
+				while(anySensor.isElectionRunning()){
+					System.out.println("Election in progress, i have to wait ...");
+					Thread.sleep(1000);
+				}
 				coordinatorUrl = anySensor.getCoordinatorUrl();
 
 				coordinator = createHAWSensorWebservice(coordinatorUrl);
+				
 				coordinator.registerSensor(args[0], args[1]);
 				meteringChart.setTitle(sensorName);
 				
@@ -279,5 +284,8 @@ public class HAWSensor {
 		coordinatorUrl = url;
 	}
 
+	public boolean isElectionRunning(){
+		return electionRunning;
+	}
 
 }

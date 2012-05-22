@@ -28,18 +28,6 @@ public interface HAWSensorWebservice {
 
     /**
      * 
-     * @param hawmeterUrlsMap
-     * @param sensorUrlMap
-     */
-    @WebMethod
-    public void sendUpdate(
-        @WebParam(name = "sensorUrlMap", partName = "sensorUrlMap")
-        StringArray sensorUrlMap,
-        @WebParam(name = "hawmeterUrlsMap", partName = "hawmeterUrlsMap")
-        StringArrayArray hawmeterUrlsMap);
-
-    /**
-     * 
      * @return
      *     returns java.lang.String
      */
@@ -64,6 +52,18 @@ public interface HAWSensorWebservice {
 
     /**
      * 
+     * @param hawmeterUrlsMap
+     * @param sensorUrlMap
+     */
+    @WebMethod
+    public void sendUpdate(
+        @WebParam(name = "sensorUrlMap", partName = "sensorUrlMap")
+        StringArray sensorUrlMap,
+        @WebParam(name = "hawmeterUrlsMap", partName = "hawmeterUrlsMap")
+        StringArrayArray hawmeterUrlsMap);
+
+    /**
+     * 
      * @param arg0
      */
     @WebMethod
@@ -79,6 +79,15 @@ public interface HAWSensorWebservice {
     public void newCoordinator(
         @WebParam(name = "arg0", partName = "arg0")
         String arg0);
+
+    /**
+     * 
+     * @return
+     *     returns boolean
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public boolean isElectionRunning();
 
     /**
      * 
