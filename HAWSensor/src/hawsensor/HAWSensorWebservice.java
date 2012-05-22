@@ -104,5 +104,9 @@ public class HAWSensorWebservice {
 		System.out.println("HAWSensorWebservice.newCoordinator(): " + url);
 		hawSensor.newCoordinator(url);
 	}; 
+	
+	public boolean isElectionRunning(){
+		return hawSensor.isElectionRunning();
+	}
 
 }
