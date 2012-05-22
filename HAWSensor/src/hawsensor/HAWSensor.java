@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package hawsensor;
 
 import hawmetering.HAWMeteringWebservice;
@@ -27,16 +23,12 @@ import net.java.dev.jaxb.array.StringArrayArray;
 public class HAWSensor {
 
 	// C:\Users\martin\workspace\HAWSensor>wsimport -d src -keep http://localhost:9998/hawmetering/sensor?wsdl
-	// http://www.vorlesungen.uni-osnabrueck.de/informatik/da02/va.pdf
-	// http://computersciencesource.wordpress.com/2009/09/10/year-1-distributed-systems-bully-algorithm/
-	// http://de.wikipedia.org/wiki/Ringalgorithmus
-	// http://www.java.net/node/667072
 
 	public static void main(String[] args) {
 		// Timeouts:
 		// http://stackoverflow.com/questions/808487/how-to-set-a-connection-timeout-when-using-jaxrpc-ri-web-services-client
-//		System.setProperty("sun.net.client.defaultConnectTimeout", "3000");
-//		System.setProperty("sun.net.client.defaultReadTimeout", "3000");
+		System.setProperty("sun.net.client.defaultConnectTimeout", "3000");
+		System.setProperty("sun.net.client.defaultReadTimeout", "3000");
 
 		new HAWSensor().run(args);
 	}
@@ -60,30 +52,28 @@ public class HAWSensor {
 		startWebservice(args[0]);
 
 		try {
-			// TODO: zwei coords sind noch möglich .... wenn man sie manuell startet!
 			// webservice fuer chart, worauf angezeigt werden soll, anlegen
-			HAWMeteringWebserviceService service2 = new HAWMeteringWebserviceService(new URL(args[1]), new QName("http://hawmetering/",	"HAWMeteringWebserviceService"));
+			HAWMeteringWebserviceService service2 = new HAWMeteringWebserviceService(new URL(args[1]), new QName("http://hawmetering/", "HAWMeteringWebserviceService"));
 			meteringChart = service2.getHAWMeteringWebservicePort();
 			// meine eigene url abspeichern
 			ownUrl = args[0];
-			
+
 			if (args.length == 4) {
 				sensorName = args[3];
 				// $beliebiger sensor angegeben, coord finden
 				hawmetering.HAWSensorWebservice anySensor = createHAWSensorWebservice(args[2]);
 
-				// TODO: wenn electionRunning == true, aufrufer thread.sleep und retry, sonst kriegt der alte url und connect timeout
-				while(anySensor.isElectionRunning()){
+				while (anySensor.isElectionRunning()) {
 					System.out.println("Election in progress, i have to wait ...");
 					Thread.sleep(1000);
 				}
 				coordinatorUrl = anySensor.getCoordinatorUrl();
 
 				coordinator = createHAWSensorWebservice(coordinatorUrl);
-				
+
 				coordinator.registerSensor(args[0], args[1]);
 				meteringChart.setTitle(sensorName);
-				
+
 				scheduleTriggerTimeoutTask();
 
 			} else {
@@ -107,34 +97,27 @@ public class HAWSensor {
 
 	}
 
-
-	private void startWebservice(String url) {
-		HAWSensorWebservice webservice = new HAWSensorWebservice(this);
-		endpoint = Endpoint.publish(url, webservice);
-	}
-
 	public void registerSensor(String url, String chart) throws Exception {
 		synchronized (sensorWebservices) {
 			if (hawmeterUrls.containsKey(chart)) {
 				System.out.println("chart is NOT free for use\n==========");
 				throw new Exception("Selected chart is already in use, try later or with different chart");
 			}
-	
+
 			System.out.println("chart is free for use, sensor will be registered\n==========");
-	
+
 			try {
 				hawmetering.HAWSensorWebservice sensor = createHAWSensorWebservice(url);
 				sensorWebservices.put(url, sensor);
 				hawmeterUrls.put(chart, url);
-				
-	//			TODO: eigentlich doch an alle ausser mich selbst oder?! oder macht das nüscht, dass ichs auch nochmal kriege?!
+
 				sendUpdateAllSensors();
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	public void sendUpdateAllSensors() {
 		System.out.println("sensor list changed, broadcasting update to all known sensors");
 		String[] sensorUrlsArray = sensorWebservices.keySet().toArray(new String[0]);
@@ -162,7 +145,7 @@ public class HAWSensor {
 			}
 		}
 		sensorWebservices = newSensorWebservices;
-		
+
 		hawmeterUrls = MapArrayAdapter.toMap(hawmeterUrls2);
 	}
 
@@ -185,33 +168,16 @@ public class HAWSensor {
 			meteringChart.setValue(messwert);
 		}
 	}
-	
-	private hawmetering.HAWSensorWebservice createHAWSensorWebservice(String url) throws MalformedURLException{
-		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
-		hawmetering.HAWSensorWebservice sensor = service.getHAWSensorWebservicePort();
-		return sensor;
-	}
-	
-	private void installShutdownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				System.out.println("shutdownhook tut dinge ...");
-				endpoint.stop();
-			}
-		}));
-	}
 
 	private void scheduleTriggerTimeoutTask() {
 		if (triggerTimeoutTask != null) {
 			triggerTimeoutTask.cancel();
 		}
-		
+
 		triggerTimeoutTask = createTriggerTimeoutTask();
 		timer.schedule(triggerTimeoutTask, 5000);
 	}
-	
+
 	private TimerTask createTriggerTimeoutTask() {
 		return new TimerTask() {
 			@Override
@@ -220,9 +186,17 @@ public class HAWSensor {
 			}
 		};
 	}
-	
-	
-	public void doElection(){
+
+	private void createSensorTriggerThread() {
+		if (sensorTriggerThread != null) {
+			sensorTriggerThread.shutdown();
+			sensorTriggerThread.interrupt();
+		}
+		sensorTriggerThread = new SensorTriggerThread(this);
+		sensorTriggerThread.start();
+	}
+
+	public void doElection() {
 		if (electionRunning) {
 			System.err.println("election already running, called from: " + Thread.currentThread().getName());
 		} else {
@@ -240,7 +214,7 @@ public class HAWSensor {
 				}
 			}
 			System.out.println("electionLoop finished");
-			
+
 			if (isCoord) {
 				System.out.println("I is admin nao!");
 				meteringChart.setTitle("newCoord " + sensorName);
@@ -260,31 +234,41 @@ public class HAWSensor {
 		}
 	}
 
+	private void installShutdownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 
-	private void createSensorTriggerThread() {
-		if (sensorTriggerThread != null) {
-			sensorTriggerThread.shutdown();
-			sensorTriggerThread.interrupt();
-		}
-		sensorTriggerThread = new SensorTriggerThread(this);
-		sensorTriggerThread.start();
+			@Override
+			public void run() {
+				System.out.println("shutdownhook tut dinge ...");
+				endpoint.stop();
+			}
+		}));
 	}
-	
+
+	private hawmetering.HAWSensorWebservice createHAWSensorWebservice(String url) throws MalformedURLException {
+		HAWSensorWebserviceService service = new HAWSensorWebserviceService(new URL(url), new QName("http://hawmetering/", "HAWSensorWebserviceService"));
+		hawmetering.HAWSensorWebservice sensor = service.getHAWSensorWebservicePort();
+		return sensor;
+	}
+
+	private void startWebservice(String url) {
+		HAWSensorWebservice webservice = new HAWSensorWebservice(this);
+		endpoint = Endpoint.publish(url, webservice);
+	}
+
 	public Map<String, hawmetering.HAWSensorWebservice> getSensorWebservices() {
 		return sensorWebservices;
 	}
-
 
 	public Map<String, String> getHawmeterUrls() {
 		return hawmeterUrls;
 	}
 
-
 	public void newCoordinator(String url) {
 		coordinatorUrl = url;
 	}
 
-	public boolean isElectionRunning(){
+	public boolean isElectionRunning() {
 		return electionRunning;
 	}
 
