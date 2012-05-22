@@ -8,12 +8,8 @@ import hawmetering.HAWMeteringWebservice;
 import hawmetering.HAWMeteringWebserviceService;
 import hawmetering.HAWSensorWebserviceService;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Endpoint;
 
 import net.java.dev.jaxb.array.StringArray;
