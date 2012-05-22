@@ -33,7 +33,6 @@ public class SensorTriggerThread extends Thread {
 			for (Iterator<Entry<String, hawmetering.HAWSensorWebservice>> iterator = sensorWebservices.entrySet().iterator(); iterator.hasNext();) {
 				Entry<String, hawmetering.HAWSensorWebservice> sensorUrlsEntry = iterator.next();
 				try {
-					// System.out.println("triggerung url: " + entry.getKey() + "---" + entry.getValue());
 					sensorUrlsEntry.getValue().trigger();
 				} catch (Exception e) {
 					updateNeeded = true;
@@ -54,9 +53,9 @@ public class SensorTriggerThread extends Thread {
 		if (updateNeeded) {
 			hawSensor.sendUpdateAllSensors();
 		}
-		
+
 	}
-	
+
 	public void shutdown() {
 		isRunning = false;
 	}

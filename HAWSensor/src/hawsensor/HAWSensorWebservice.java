@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package hawsensor;
 
 
@@ -10,8 +6,6 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
-//@WebService
-//@SOAPBinding(style = Style.RPC)
 @WebService(name = "HAWSensorWebservice", targetNamespace = "http://hawmetering/")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public class HAWSensorWebservice {
@@ -22,18 +16,6 @@ public class HAWSensorWebservice {
 		this.hawSensor = hawSensor;
 	}
 	
-	
-//	TODO: Fragen
-//	- Was passiert mit dem aufruf von trigger, wenn eine wahl startet oder rennt? -> coord tot, kommt kein trigger, right? :> es sei denn, er hatte lag
-//	  dann rennt wahl ins leere ... da coord ja wieder antwortet
-//	- Was passiert, wenn der coord wegen vielen ausgefallenen sensoren länger braucht? kann das trigger ausbleiben? was passiert, wenn dann eine wahl
-//	  startet und der coord aber noch da ist? -> siehe darüber
-//	- prozess fällt während der wahl aus:
-//		-> wer merkt das und wie? anzeigen freigeben? wer speichert/reicht das weiter, es gibt ja keinen coord ...?! oder merkt das der neue coord erst?
-//	- ein sensor wird für tot erklärt, ist es aber nicht, war vlt nur lag oder trigger msg verpasst, dann ist seine anzeige freigegeben und sensor
-//	  wird wohl noch ne wahl starten?! was tun?!
-//	- nie mehr als einen coord haben, sonst problem.
-
 	/*
 	 * neuer sensor registriert sich beim coord. mit übergeben muss er noch die gewünschte anzeige-url, auf der er arbeiten will.
 	 * coord braucht eine liste/hashmap/set, welche anzeige-urls es gibt. immer wenn sich ein sensor registriert, muss er schauen, ob die 
@@ -85,26 +67,22 @@ public class HAWSensorWebservice {
 	 * wenn aufgerufener prozess nicht tot, schickt er reply zurueck als "lebenszeichen". er schickt dann ebenfalls an alle prozesse, die eine 
 	 * groessere id als er selbst haben eine startElection msg. Bekommt urspruenglicher prozess kein reply, ist er neuer coord...
 	 */
-	public void startElection(String url){
+	public void startElection(String url) {
 		System.out.println("HAWSensorWebservice.startElection()");
 		hawSensor.doElection();
-	}; 	
-	
-	/*
-	 * wenn der aufgerufene Prozess noch lebt, sendet er dem Aufrufenden ein reply, dieser macht dann nuescht weiter mehr  ...
-	 */
-//	public void replyElection(){
-//		System.out.println("HAWSensorWebservice.replyElection()");
-//	}; 	
+	};
 	
 	/*
 	 * wenn die wahl gelaufen ist, teilt der neue coord allen prozessen mit, dass er neuer coord ist ...
 	 */
-	public void newCoordinator(String url){
+	public void newCoordinator(String url) {
 		System.out.println("HAWSensorWebservice.newCoordinator(): " + url);
 		hawSensor.newCoordinator(url);
-	}; 
+	};
 	
+	/*
+	 * rennt vielleicht noch ne wahl?
+	 */
 	public boolean isElectionRunning(){
 		return hawSensor.isElectionRunning();
 	}
