@@ -64,14 +64,15 @@ public class ggtProcessImpl extends ggtProcessPOA {
 				// Rechenthread rennt solange, bis eine ausgeloeste Terminierungsanfrage erfolgreich einmal im Kreis gelaufen ist
 				while (!isCalculationTerminated) {
 					try {
-						Integer y = msges.poll(timeout, TimeUnit.SECONDS);
+						Integer y = msges.poll(timeout, TimeUnit.MILLISECONDS);
 						// poll() liefert null, wenn das timeout erreicht wurde,
 						// ist also der retval != null -> rechnen!
 						if (y != null) {
 							if (y < Mi) {
 								Mi = ((Mi - 1) % y) + 1;
 								try {
-									Thread.sleep(delay * 1000);
+//									Thread.sleep(delay * 1000);
+									Thread.sleep(delay);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
@@ -127,7 +128,7 @@ public class ggtProcessImpl extends ggtProcessPOA {
 						} else if (!terminationRequest.getProcessName().equals(processName)) {
 							// Zeit vergleichen, wenn timeout/2 verstrichen ist, seit dem letzten aufruf von calc() und true drin stand, an
 							// nachbar entsprechend mit dem urspürnglichen absender und dem true weitersenden
-							boolean isTerminationTimeoutReached = (System.currentTimeMillis() - lastMsg) >= (timeout * 1000 / 2);
+							boolean isTerminationTimeoutReached = (System.currentTimeMillis() - lastMsg) >= (timeout / 2);
 							if (isTerminationTimeoutReached && terminationRequest.isTerminationOk()) {
 								right.terminate(terminationRequest.getProcessName(), true);
 								System.out.println(processName + " forwarded positive req");
