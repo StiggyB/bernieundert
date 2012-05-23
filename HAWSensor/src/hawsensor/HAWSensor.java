@@ -23,7 +23,7 @@ import net.java.dev.jaxb.array.StringArrayArray;
 public class HAWSensor {
 
 	// C:\Users\martin\workspace\HAWSensor>wsimport -d src -keep http://localhost:9998/hawmetering/sensor?wsdl
-
+	// TODO: if coord gets trigger, start election!
 	public static void main(String[] args) {
 		// Timeouts:
 		// http://stackoverflow.com/questions/808487/how-to-set-a-connection-timeout-when-using-jaxrpc-ri-web-services-client
@@ -161,7 +161,7 @@ public class HAWSensor {
 				scheduleTriggerTimeoutTask();
 			}
 			System.out.println("i am '" + ownUrl + "', have been triggered by coord");
-			long messwert = System.currentTimeMillis() % 200;
+			long messwert = (System.currentTimeMillis() % 20000) / 100;
 			if (messwert > 100) {
 				messwert = 200 - messwert;
 			}
