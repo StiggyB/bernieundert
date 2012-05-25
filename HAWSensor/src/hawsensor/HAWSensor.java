@@ -23,7 +23,7 @@ import net.java.dev.jaxb.array.StringArrayArray;
 public class HAWSensor {
 
 	// C:\Users\martin\workspace\HAWSensor>wsimport -d src -keep http://localhost:9998/hawmetering/sensor?wsdl
-	// TODO: if coord gets trigger, start election!
+	// TODO: if coord gets trigger, start election! -> http://jax-ws.java.net/articles/MessageContext.html
 	public static void main(String[] args) {
 		// Timeouts:
 		// http://stackoverflow.com/questions/808487/how-to-set-a-connection-timeout-when-using-jaxrpc-ri-web-services-client
