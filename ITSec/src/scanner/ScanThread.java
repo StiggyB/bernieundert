@@ -24,10 +24,10 @@ public class ScanThread implements Runnable {
 			String test = "GET / http1.1\n\n";
 			os.println(test);
 			BufferedReader in = new BufferedReader(new InputStreamReader(target.getInputStream()));
-			// String s = "";
+//			 String s = "";
 			String s = in.readLine();
 			target.close();
-			System.out.println("Found open Port: " + port + " --> " + s);
+			System.out.println("Found open Port: " + port + " --> \t" + s);
 		} catch (Exception e) {
 		}
 	}
