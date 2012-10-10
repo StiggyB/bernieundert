@@ -21,7 +21,7 @@ public class ScanThread implements Runnable {
 			Socket target = new Socket(host, port);
 
 			PrintStream os = new PrintStream(target.getOutputStream());
-			String test = "GET / http1.1";
+			String test = "GET / http1.1\n\n";
 			os.println(test);
 			BufferedReader in = new BufferedReader(new InputStreamReader(target.getInputStream()));
 			// String s = "";
