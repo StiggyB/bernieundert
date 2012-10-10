@@ -24,6 +24,7 @@ public class PortScanner {
 	}
 
 	private void startScan(String host, int startPort, int endPort) {
+		System.out.println("Portscan started...");
 		List<Thread> runningPortscans = new LinkedList<Thread>();
 		for (int i = startPort; i <= endPort; i++) {
 			Thread scanThread = new Thread(new ScanThread(host, i));
