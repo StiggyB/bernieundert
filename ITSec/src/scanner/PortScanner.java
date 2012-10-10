@@ -24,8 +24,14 @@ public class PortScanner {
 	}
 
 	private void startScan(String host, int startPort, int endPort) {
-		System.out.println("Portscan started...");
+		long startTime;
+		long endTime;
 		List<Thread> runningPortscans = new LinkedList<Thread>();
+
+		System.out.println("Portscan started...");
+		
+		startTime = System.currentTimeMillis();
+		
 		for (int i = startPort; i <= endPort; i++) {
 			Thread scanThread = new Thread(new ScanThread(host, i));
 			runningPortscans.add(scanThread);
@@ -37,6 +43,7 @@ public class PortScanner {
 				e.printStackTrace();
 			}
 		}
+		
 		for (Thread thread : runningPortscans) {
 			try {
 				thread.join();
@@ -45,5 +52,7 @@ public class PortScanner {
 			}
 		}
 		System.out.println("Portscan finished");
+		endTime = System.currentTimeMillis();
+		System.out.println("Consumed time: " + ((endTime - startTime)/1000) + " seconds");
 	}
 }
