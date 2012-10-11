@@ -19,12 +19,13 @@ public class ScanThread implements Runnable {
 	public void run() {
 		try {
 			Socket target = new Socket(host, port);
-
-			PrintStream os = new PrintStream(target.getOutputStream());
-			String test = "GET / http1.1\n\n";
-			os.println(test);
 			BufferedReader in = new BufferedReader(new InputStreamReader(target.getInputStream()));
-//			 String s = "";
+			// String s = "";
+			if (!in.ready()) {
+				String test = "GET / http1.1\n\n";
+				PrintStream os = new PrintStream(target.getOutputStream());
+				os.println(test);
+			}
 			String s = in.readLine();
 			target.close();
 			System.out.println("Found open Port: " + port + " --> \t" + s);
