@@ -18,6 +18,7 @@ public class ScanThread implements Runnable {
 			target.close();
 			System.out.println("Found open Port: " + port);
 		} catch (Exception e) {
+			// oeffnen des Sockets schlug fehl, Port closed/filtered
 		}
 	}
 }
