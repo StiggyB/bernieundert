@@ -3,9 +3,11 @@ package spoofmail;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -24,7 +26,6 @@ public class EmailSender {
 		properties.put("mail.smtp.port", port);
 		properties.put("mail.smtp.auth", "false");
 
-		// creates a new session with an authenticator
 		Session session = Session.getInstance(properties);
 
 		// creates a new e-mail message
@@ -51,5 +52,4 @@ public class EmailSender {
 		Transport.send(msg);
 
 	}
-
 }
