@@ -9,7 +9,7 @@ public class TestEmailSender {
 		// String host = "exchange.hansaholz.de";
 		String port = "587";
 		// String port = "25";
-		String mailFrom = "donald.daisy@entenhausen.de";
+		String mailFrom = "Donald.Duck@Disneyland.de";
 		String mailTo = "martin.slowikowski@haw-hamburg.de";
 		// String mailTo = "administrator@hansaholz.de";
 		String subject = "Hallo da drueben!";
