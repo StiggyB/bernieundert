@@ -22,9 +22,9 @@ public class LCG {
 		x0 = seed;
 	}
 	
-	public double nextValue() {
+	public int nextValue() {
 		x0 = (a * x0 + b) % N;
-		return (double) x0 / N;
+		return (int) x0 / N;
 	}
 
 }
