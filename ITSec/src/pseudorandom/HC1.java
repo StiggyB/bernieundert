@@ -16,15 +16,12 @@ public class HC1 {
 
 			System.out.println("Starting stream cipher...");
 
-			long b;
-			while (fis.available() > 0) {
-				b = fis.read();
-				// TODO wenn b ein int ist, geht das XOR nicht mehr, weil int und
-				// double zusammen nicht geht :(
-				b = b ^ Double.doubleToRawLongBits(lcg.nextValue());
-				// TODO wieder downcast...
-				fos.write((int) b);
-			}
+      int b;
+      while (fis.available() > 0) {
+            b = fis.read();
+            b = b ^ lcg.nextValue();
+            fos.write(b);
+      }
 
 			System.out.println("... stream cipher ending!");
 		} catch (Exception e) {
