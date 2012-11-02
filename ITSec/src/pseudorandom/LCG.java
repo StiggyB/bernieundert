@@ -24,7 +24,7 @@ public class LCG {
 	
 	public int nextValue() {
 		x0 = (a * x0 + b) % N;
-		return (int) x0 / N;
+		return (int) (x0 / N);
 	}
 
 }
