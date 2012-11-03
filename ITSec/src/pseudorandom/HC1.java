@@ -16,12 +16,14 @@ public class HC1 {
 
 			System.out.println("Starting stream cipher...");
 
-      int b;
-      while (fis.available() > 0) {
-            b = fis.read();
-            b = b ^ lcg.nextValue();
-            fos.write(b);
-      }
+			int b;
+			while (fis.available() > 0) {
+				b = fis.read();
+				b = b ^ lcg.nextValue();
+				fos.write(b);
+			}
+			fis.close();
+			fos.close();
 
 			System.out.println("... stream cipher ending!");
 		} catch (Exception e) {
