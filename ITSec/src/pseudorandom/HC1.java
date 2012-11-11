@@ -16,11 +16,11 @@ public class HC1 {
 
 			System.out.println("Starting stream cipher...");
 
-			int b;
+			long b;
 			while (fis.available() > 0) {
 				b = fis.read();
-				b = b ^ lcg.nextValue();
-				fos.write(b);
+				b = b ^ Double.doubleToRawLongBits(lcg.nextValue());
+				fos.write((int) b);
 			}
 			fis.close();
 			fos.close();
