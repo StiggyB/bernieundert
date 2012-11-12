@@ -3,7 +3,7 @@ package tripledes;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-public class TriplesDES {
+public class TripleDES {
 	private byte[] key1 = new byte[8];
 	private byte[] key2 = new byte[8];
 	private byte[] key3 = new byte[8];
@@ -59,6 +59,7 @@ public class TriplesDES {
 		if (args.length != 4) {
 			System.out.println("-- usage: java -cp tripledes.jar tripledes.TripleDES <input file> <key file> <output file> <mode>");
 			System.out.println("-- <input file> can be cipher text or plain text, <mode> can be set to encrypt or decrypt");
+			System.exit(1);
 		}
 		System.out.println("Triple DES encryption/decryption starting:");
 		// Uebergabe der noetigen Parameter an das Programm
@@ -75,7 +76,7 @@ public class TriplesDES {
 		String mode = args[3];
 		System.out.println("Mode: " + (mode.equals("decrypt") ? "decrypt" : "encrypt"));
 
-		TriplesDES tdes = new TriplesDES();
+		TripleDES tdes = new TripleDES();
 		// Keyfile auslesen und Variablen einstellen
 		tdes.readKeyFile(keyFile);
 		// IV (initVector) durch Fk schicken (verschluesseln)
