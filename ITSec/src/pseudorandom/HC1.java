@@ -5,6 +5,10 @@ import java.io.*;
 public class HC1 {
 	public static void main(String[] args) {
 		try {
+			if(args.length != 3){
+				System.out.println("-- usage: java -cp hc1.jar pseudorandom.HC1 <seed> <file2crypt/decrypt> <target>");
+				System.exit(1);
+			}
 			System.out.println("Inital seed value for pseudo random numbers: " + args[0]);
 			LCG lcg = new LCG(Long.valueOf(args[0]).longValue());
 
