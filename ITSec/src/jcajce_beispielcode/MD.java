@@ -1,4 +1,4 @@
-package jcajce;
+package jcajce_beispielcode;
 /* MD.java */
 
 import java.io.*;

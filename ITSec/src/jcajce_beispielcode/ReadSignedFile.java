@@ -1,4 +1,4 @@
-package jcajce;
+package jcajce_beispielcode;
 import java.security.*;
 import java.security.spec.*;
 import java.io.*;
