@@ -7,6 +7,12 @@ import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 
+/**
+ * Class for generate a RSA public/private-key-pair
+ *  
+ * @author Martin
+ *
+ */
 public class RSAKeyCreation {
 
 	public static void main(String[] args) {
@@ -22,7 +28,7 @@ public class RSAKeyCreation {
 		try {
 			// RSA nutzen
 			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-			// Schluessellaenge 1024 Bit 
+			// Schluessellaenge 1024 Bit
 			kpg.initialize(1024);
 			// Pub und Priv Key generieren
 			KeyPair keyPair = kpg.genKeyPair();
