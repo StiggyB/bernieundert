@@ -11,19 +11,19 @@ import java.security.spec.X509EncodedKeySpec;
 import javax.swing.JFileChooser;
 
 /**
+ * SecureFile Abstract class, just two static functions for opening pub and priv
+ * keys, methods do naerly the same. One returns a pub and the other one a
+ * private key for further usage in RSF and SSF.
+ * 
+ * Example on how to do this can be found in JCE-JCA class ReadSignedFile.java
  * 
  * @author Martin
- * 
- *         SecureFile Abstract class, just two static functions for opening pub
- *         and priv keys, methods do naerly the same. One returns a pub and the 
- *         other one a private key for further usage in RSF and SSF.
- *         
- *         Example on how to do this can be found in JCE-JCA class ReadSignedFile.java
  */
 public abstract class SFHelper {
 
 	/**
-	 * Reads in and extracts a public key over a FileChooser and converts it for further usage
+	 * Reads in and extracts a public key over a FileChooser and converts it for
+	 * further usage
 	 * 
 	 * @return Key public key in X.509 format
 	 * @throws Exception
@@ -35,9 +35,10 @@ public abstract class SFHelper {
 		File f = jfc.getSelectedFile();
 		// Daten aus gewaehlter Datei einlesen
 		DataInputStream dis = new DataInputStream(new FileInputStream(f));
-		// Laenge des Erstellernamens (als int wurde gespeichert) 
+		// Laenge des Erstellernamens (als int wurde gespeichert)
 		int creatorNameLength = dis.readInt();
-		// byte array fuer Erstellername vorbereiten mittels der gelesenen Laenge
+		// byte array fuer Erstellername vorbereiten mittels der gelesenen
+		// Laenge
 		byte[] creatorName = new byte[creatorNameLength];
 		// Namen einlesen
 		dis.read(creatorName);
@@ -59,7 +60,8 @@ public abstract class SFHelper {
 	}
 
 	/**
-	 * Reads in and extracts a private key over a FileChooser and converts it for further usage
+	 * Reads in and extracts a private key over a FileChooser and converts it
+	 * for further usage
 	 * 
 	 * @return Key private key in PKCS8 format
 	 * @throws Exception
