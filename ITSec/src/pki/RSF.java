@@ -73,8 +73,7 @@ public class RSF extends SFHelper {
 			Signature sign = Signature.getInstance("SHA1withRSA");
 			sign.initVerify(publicKey);
 			sign.update(aesKey.getEncoded());
-			JOptionPane.showMessageDialog(null, "Verifikation der Signatur verlief"
-					+ (sign.verify(ssfFile.getSecretKeySignature()) ? " " : " nicht ") + "erfolgreich");
+			JOptionPane.showMessageDialog(null, "Verifikation der Signatur verlief"	+ (sign.verify(ssfFile.getSecretKeySignature()) ? " " : " nicht ") + "erfolgreich");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
