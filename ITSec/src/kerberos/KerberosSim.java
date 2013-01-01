@@ -69,10 +69,10 @@ public class KerberosSim extends Object {
 		 */
 
 		// -------- Start Initialisierung des Systems ------------------
-		String userName = "myName";
-		char[] password = { 'S', 'e', 'c', 'r', 'e', 't', '!' };
-		String serverName = "myFileserver";
-		String tgsName = "myTGS";
+		String userName = "Martin";
+		char[] password = { 'g', 'e', 'h', 'e', 'i', 'm', '!' };
+		String serverName = "TXT-File Server";
+		String tgsName = "Martins TicketGrantingService";
 		String filePath = "ITS.txt";
 
 		boolean loginOK;

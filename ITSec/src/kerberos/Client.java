@@ -30,69 +30,86 @@ public class Client extends Object {
 
 	public boolean login(String userName, char[] password) {
 		boolean returnCode = false;
-		this.currentUser = userName;
-		long nonce = this.generateNonce();
+		currentUser = userName;
+		long nonce = generateNonce();
 
 		// TGS-Ticket holen (zunaechst TicketResponse)
-		TicketResponse tgsResponse = this.myKDC.requestTGSTicket(userName, this.myKDC.getName(), nonce);
+		TicketResponse tgsResponse = myKDC.requestTGSTicket(userName, myKDC.getName(), nonce);
 
-		// TGS-Response entschluesseln
-		if (tgsResponse.decrypt(this.generateSimpleKeyForPassword(password)) && tgsResponse.getNonce() == nonce) {
-			// Wenn der Schluessel der richtige und tgsResponse noch nicht
-			// entschluesselt
-			// Auswerten und speichern
-			// TGS-Ticeket
-			this.tgsTicket = tgsResponse.getResponseTicket();
-			// TGS-Session Key
-			this.tgsSessionKey = tgsResponse.getSessionKey();
-
-			this.tgsTicket.print();
-
-			returnCode = true;
+		// TGS-Response entschlüsseln und auswerten
+		if (tgsResponse == null) {
+			System.out.println("Kein Response Ticket erhalten");
+			return false;
+		} else {
+			// vorher
+			System.out.println("vorher...");
+			tgsResponse.print();
 		}
+		if (!tgsResponse.decrypt(generateSimpleKeyForPassword(password))) {
+			System.out.println("Response konnte nicht entschlüsselt werden");
+			return false;
+		}
+		if (tgsResponse.getNonce() != nonce) {
+			System.out.println("Nonce-Wert überprüfung fehlgeschlagen");
+			return false;
+		} else {
 
-		// Passwort im Hauptspeicher loeschen
-		Arrays.fill(password, ' ');
+			// nachher
+			// TicketResponse ausgeben
+			System.out.println("nachher...");
+			tgsResponse.print();
+
+			// Ticket extrahieren ({Ticket}Ktgs
+			tgsTicket = tgsResponse.getResponseTicket();
+
+			// TGS-Session-Key (Kc-tgs)
+			tgsSessionKey = tgsResponse.getSessionKey();
+
+			tgsTicket.print();
+			returnCode = true;
+
+			// Passwort im Hauptspeicher loeschen
+			Arrays.fill(password, ' ');
+		}
 
 		return returnCode;
 	}
 
 	public boolean showFile(String serverName, String filePath) {
 		boolean returnCode = false;
-		long nonce = this.generateNonce();
+		long nonce = generateNonce();
 
 		// Login pruefen: TGS-Ticket vorhanden?
-		if (this.tgsTicket != null) {
+		if (tgsTicket != null) {
 			// Serverticket vorhanden? Wenn nicht, neues Serverticket anfordern
-			// (Schritt 3: requestServerTicket) und Antwort auswerten
-			if (this.serverTicket == null) {
+			// und Antwort auswerten
+			if (serverTicket == null) {
 				// Authentification erzeugen
-				Auth tgsAuth = new Auth(this.currentUser, System.currentTimeMillis());
-				// Verschluesseln mit K C-TGS
-				tgsAuth.encrypt(this.tgsSessionKey);
+				Auth tgsAuth = new Auth(currentUser, System.currentTimeMillis());
+				// Verschluesseln mit tgs-Session-Key (Kc-tgs)
+				tgsAuth.encrypt(tgsSessionKey);
 				tgsAuth.print();
 
-				TicketResponse ticketRes = myKDC.requestServerTicket(this.tgsTicket, tgsAuth, serverName, nonce);
+				TicketResponse tgsResponse = myKDC.requestServerTicket(tgsTicket, tgsAuth, serverName, nonce);
 
-				// 4 Response auswerten
-				// Entschluesseln mit K C-TGS
-				if (ticketRes.decrypt(this.tgsSessionKey) && ticketRes.getNonce() == nonce) {
-					this.serverTicket = ticketRes.getResponseTicket();
-
-					this.serverSessionKey = ticketRes.getSessionKey();
-
-					this.serverTicket.print();
+				// Response auswerten
+				// Entschluesseln mit tgs-Session-Key (Kc-tgs)
+				if (tgsResponse.decrypt(tgsSessionKey) && tgsResponse.getNonce() == nonce) {
+					// bingo!
+					serverTicket = tgsResponse.getResponseTicket();
+					serverSessionKey = tgsResponse.getSessionKey();
+					serverTicket.print();
 				}
 			}
-
-			// Service beim Server anfordern (Schritt 5: requestService)
+			// Serverticket vorhanden
+			// Service beim Server anfordern
 			// Authentification erzeugen
-			Auth serverAuth = new Auth(this.currentUser, System.currentTimeMillis());
-			// Verschluesseln mit K C-S
-			serverAuth.encrypt(this.serverSessionKey);
+			Auth serverAuth = new Auth(currentUser, System.currentTimeMillis());
+			// Verschluesseln mit serverSessionKey (Kc-s)
+			serverAuth.encrypt(serverSessionKey);
 			serverAuth.print();
 
-			returnCode = this.myFileserver.requestService(this.serverTicket, serverAuth, "showFile", filePath);
+			returnCode = myFileserver.requestService(serverTicket, serverAuth, "showFile", filePath);
 		}
 
 		return returnCode;
