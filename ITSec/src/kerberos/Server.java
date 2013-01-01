@@ -33,27 +33,37 @@ public class Server extends Object {
 	}
 
 	public boolean requestService(Ticket srvTicket, Auth srvAuth, String command, String parameter) {
-		boolean status = false;
+		boolean noErrorOccured = true;
 
-		// Server-Ticket + Authentifikation pruefen
-		if (srvTicket.decrypt(this.myKey) && srvAuth.decrypt(srvTicket.getSessionKey())) {
-			System.out.println("Ticket und Authentication erfolgreich entschluesselt!");
-
-			// Namen pruefen
-			if (srvTicket.getServerName().equals(this.getName()) && srvAuth.getClientName().equals(srvTicket.getClientName())) {
-				System.out.println("Namen stimmen!");
-				// Zeiten pruefen
-				if (timeValid(srvTicket.getStartTime(), srvTicket.getEndTime()) && timeFresh(srvAuth.getCurrentTime())) {
-					System.out.println("Zeiten stimmen!");
-					if (command.equalsIgnoreCase("showFile")) {
-						System.out.println("Lese Datei: " + parameter);
-						status = this.showFile(parameter);
-					}
-				}
-			}
+		// Server-Ticket entschlüsseln + prüfen
+		if (srvTicket == null || !srvTicket.decrypt(myKey)) {
+			System.out.println("Fehler beim Entschlüsseln des Servertickets");
+			noErrorOccured = false;
+		} else if (!myName.equals(srvTicket.getServerName())) {
+			System.out.println("Fehler beim Servernamen");
+			noErrorOccured = false;
+		} else if (!timeValid(srvTicket.getStartTime(), srvTicket.getEndTime())) {
+			System.out.println("Zeit des Servertickets ist ungültig");
+			noErrorOccured = false;
 		}
 
-		return status;
+		// Authentifikation entschlüsseln + prüfen
+		if (srvAuth == null || !srvAuth.decrypt(srvTicket.getSessionKey())) {
+			System.out.println("Fehler beim Entschlüsseln der Authentifikation");
+			noErrorOccured = false;
+		} else if (!srvTicket.getClientName().equals(srvAuth.getClientName())) {
+			System.out.println("Clientnamen sind verschieden");
+			noErrorOccured = false;
+		} else if (!timeFresh(srvAuth.getCurrentTime())) {
+			System.out.println("Zeit in der Authentifikation ist ungültig");
+			noErrorOccured = false;
+		}
+
+		if(noErrorOccured){
+			noErrorOccured = showFile(parameter);
+		}
+		
+		return noErrorOccured;
 	}
 
 	/* *********** Services **************************** */
